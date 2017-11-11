@@ -1,0 +1,692 @@
+body {
+    font-family: 'Open Sans', 'Arial', sans-serif;
+    background: #803e6d;
+    color: #ffae7e;
+}
+
+/*===============   Темы   ====================*/
+
+.input_dark-theme {
+    border: none;
+
+    color: #ffae7e;
+    background: #4a2359;
+    outline: none;
+}
+
+.input_dark-theme::placeholder {
+    color: #ffd0b5;
+}
+
+.input_light-theme {
+    border: none;
+
+    color: #4a2359;
+    background: #ffae7e;
+    outline: none;
+}
+
+.input_light-theme::placeholder {
+    color: #6e3485;
+}
+
+.button_light-theme:focus {
+    outline: none;
+}
+
+.button_light-theme {
+    border: none;
+
+    background: #ffae7e;
+    color: #4a2359;
+
+    transition: background 0.5s, color 0.5s;
+}
+
+.button_light-theme:hover {
+    text-decoration: none;
+    color: #8b256e;
+    background: #ff7b2f;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+}
+
+.button_dark-theme:focus {
+    outline: none;
+}
+
+.button_dark-theme {
+    border: none;
+
+    background: #4a2359;
+    color: #ffae7e;
+
+    transition: background 0.5s, color 0.5s;
+}
+
+.button_dark-theme:hover {
+    text-decoration: none;
+    color: #ff7b2f;
+    background: #8b256e;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+}
+
+.form-link_light {
+    color: #ffd0b5;
+    font-weight: bold;
+}
+
+.form-link_light:hover {
+    color: #ffd0b5;
+}
+
+.checkbox_theme {
+    display: none;
+}
+
+.checkbox-label_theme {
+    position: relative;
+    margin: 0;
+    padding-left: 30px;
+}
+
+.checkbox-replaced_dark-theme {
+    position: absolute;
+    top: 2px;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ffae7e;
+
+    background: #4a2359;
+}
+
+.checkbox_theme:checked + .checkbox-replaced_dark-theme::before,
+.checkbox_theme:checked + .checkbox-replaced_dark-theme::after {
+    display: block;
+}
+
+.checkbox-replaced_dark-theme::before,
+.checkbox-replaced_dark-theme::after {
+    content: '';
+    display: none;
+    position: absolute;
+    height: 16px;
+    width: 2px;
+    left: 7px;
+    top: 0;
+
+    background: #ffae7e;
+
+    transform: rotate(45deg);
+}
+
+.checkbox-replaced_dark-theme::after {
+    transform: rotate(-45deg)
+}
+
+.checkbox-label_theme:hover {
+    cursor: pointer;
+}
+
+.window_default {
+    opacity: 0;
+    z-index: -1;
+    padding-top: 120px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+
+    color: #ffae7e;
+
+    transition: opacity 1s;
+}
+
+.show-window {
+    opacity: 1;
+    z-index: 10;
+}
+
+.form_default {
+    width: 324px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-heading_default {
+    margin-bottom: 40px;
+
+    font-family: 'Lobster', cursive;
+    text-align: center;
+}
+
+.overlay {
+    opacity: 0;
+    z-index: -1;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+
+    background: #4a2359;
+
+    transition: opacity 1s;
+}
+
+.show-overlay {
+    opacity: 1;
+    z-index: 5;
+}
+
+.hide {
+    opacity: 0;
+}
+
+/*===================   Кнопки закрытия   ===================*/
+
+.close-button {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    border: none;
+
+    background: transparent;
+}
+
+.close-button:hover {
+    transform: scale(1.15);
+    cursor: pointer;
+}
+
+.close-button:focus {
+    outline: none;
+}
+
+.close-button::before,
+.close-button::after {
+    content: '';
+    position: absolute;
+    height: 32px;
+    width: 4px;
+    top: -3px;
+    left: 12px;
+
+    transform: rotate(45deg);
+}
+
+.close-button::after {
+    transform: rotate(-45deg);
+}
+
+.window-close-button {
+    top: 50px;
+    right: 50px;
+}
+
+.window-close-button::before,
+.window-close-button::after {
+    background: #ffae7e;
+}
+
+/*====================   Анимации   ====================*/
+
+@keyframes hovering {
+    from {
+        top: 0;
+    }
+
+    to {
+        top: 60px;
+    }
+}
+
+@keyframes expansion {
+    from {
+        transform: scale(0.6);
+    }
+    to {
+        transform: scale(0.8);
+    }
+}
+
+@keyframes fade {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/*===================   ГЛАВНАЯ   ====================*/
+
+/*===================   Хэдер   ===================*/
+
+.header {
+    margin-top: 20px;
+    margin-bottom: 100px;
+}
+
+.header__logo-wrapper {
+    height: 83px;
+    line-height: 83px;
+    text-align: center;
+
+    background: url("../images/logo-bg.png") center no-repeat;
+}
+
+.main-navigation {
+    justify-content: center;
+}
+
+.main-navigation__link,
+.header__logo-name {
+    font-family: 'Lobster', cursive;
+    color: #ffae7e;
+    font-size: 1.3em;
+
+    transition:
+        color 0.5s ease;
+}
+
+.header__logo-name {
+    font-size: 1.5em;
+}
+
+.main-navigation__link:hover,
+.header__logo-name:hover {
+    text-decoration: none;
+    color: #ff7b2f;
+}
+
+.header__logo {
+    width: 100%;
+}
+
+/*===================   Главная часть   ===================*/
+
+.main {
+    margin-bottom: 100px;
+}
+
+.main-info__main-heading {
+    font-family: 'Lobster', cursive;
+}
+
+.main__buttons-holder {
+    font-size: 0;
+}
+
+.main__login,
+.main__reg {
+    display: inline-block;
+    padding: 15px;
+    width: 49%;
+
+    font-family: 'Lobster', cursive;
+    font-size: 1.3rem;
+    text-align: center;
+}
+
+.main__login {
+    margin-left: 1%;
+
+    border-radius: 0 30px 30px 0;
+}
+
+.main__reg {
+    margin-right: 1%;
+
+    border-radius: 30px 0 0 30px;
+}
+
+.main-info__description {
+    margin-bottom: 50px;
+}
+
+/*===================   Футер   ===================*/
+
+.footer {
+    padding-top: 100px;
+
+    background: #6a366b;
+    height: 400px;
+}
+
+.footer__tagline {
+    height: 111px;
+    padding-top: 20px;
+
+    font-family: 'Lobster', cursive;
+    color: #4a2359;
+    background: url("../images/footer-image.png") center no-repeat;
+    font-size: 2.3em;
+    line-height: 1em;
+    text-align: center;
+}
+
+/*===================   Форма регистрации/входа/восстановления   ===================*/
+
+.reg-form__input,
+.login-form__input,
+.reset-form__input {
+    height: 46px;
+    padding: 0 12px;
+    margin-bottom: 24px;
+    border: 1px solid;
+}
+
+.reg-form__button,
+.login-form__button,
+.reset-form__button {
+    margin-bottom: 24px;
+    height: 44px;
+
+    border-radius: 25px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.reg-form p {
+    text-align: center;
+}
+
+.login-form__row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+/*=========================   ОКНО ИГРЫ   =========================*/
+
+.playground {
+    padding: 40px 0;
+
+    background: #ffae7e;
+    color: #4a2359;
+    font-family: 'Lobster', cursive;
+    font-size: 1.25em;
+}
+
+/*=========================   Интерфейс игры   =========================*/
+
+.game-interface {
+
+}
+
+/*=========================   Анимированная картинка и тень   =================*/
+
+.centered-image {
+    position: relative;
+    display: block;
+    width: 80%;
+    margin: 0 auto 100px;
+
+    animation: hovering 1.5s alternate both infinite cubic-bezier(.42,.01,.58,.99);
+}
+
+.shadow__ratio-control-outer {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.shadow__ratio-control-inner {
+    height: 0;
+    position: relative;
+    padding-top: 15%;
+}
+.shadow {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+
+    border-radius: 300px/50px;
+    background: rgba(0, 0, 0, 0.1);
+    animation: expansion 1.5s alternate both infinite cubic-bezier(.42,.01,.58,.99)
+}
+
+/*============================   Элементы настроек   ==========================*/
+
+.settings__heading {
+    font-family: 'Lobster', cursive;
+}
+
+.settings__buttons-wrapper {
+    font-size: 0;
+}
+
+.settings__buttons-wrapper > * {
+    font-size: 1rem;
+}
+
+.settings__theme {
+    font-size: 0;
+}
+
+.settings__theme > * {
+    font-size: 1.25rem;
+}
+
+.settings__main-window {
+    position: relative;
+    text-align: center;
+
+    transition: opacity 1s;
+}
+
+/* Кнопки и поля */
+
+.settings__theme-option {
+    display: none;
+}
+
+.settings__opt-name {
+    display: inline-block;
+    margin-right: 1%;
+    min-width: 24%;
+    padding: 5px;
+    border: 5px solid;
+    color: #777;
+
+    cursor: pointer;
+    border-radius: 25px;
+
+    transition: color 0.5s;
+}
+
+.settings__opt-name:hover {
+    color: #4a2359;
+}
+
+.settings__theme-option:checked + .settings__opt-name {
+    border: 5px solid;
+
+    background: #ff7b2f;
+    color: #4a2359;
+
+    pointer-events: none;
+}
+
+.settings__capacity-value,
+.settings__quantity-value,
+.settings__speed-value {
+    min-width: 35%;
+    height: 46px;
+    padding: 0 12px;
+    border-top: 4px solid;
+    border-bottom: 4px solid;
+    vertical-align: top;
+
+    text-align: center;
+}
+
+.button_inc,
+.button_dec {
+    vertical-align: top;
+    height: 46px;
+    min-width: 7.5%;
+
+    border-radius: 0 25px 25px 0;
+}
+
+.button_dec {
+    border-radius: 25px 0 0 25px;
+}
+
+.button_inc:hover,
+.button_dec:hover {
+    box-shadow: none;
+}
+
+.settings__start-game {
+    display: block;
+    height: 46px;
+    margin: 0 auto;
+    min-width: 50%;
+
+    border-radius: 30px;
+}
+
+.settings__label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.settings__item {
+    margin-bottom: 10px;
+}
+
+.settings__item:last-of-type {
+    margin-bottom: 44px;
+}
+
+/*===============   Игровая доска   ======================*/
+
+.game-board {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border: 5px solid #4a2359;
+    padding: 50px;
+
+    border-radius: 25px;
+
+    animation: fade 1s both;
+}
+
+.game__heading {
+    text-align: center;
+    font-size: 3rem;
+}
+
+.game__button:focus {
+    outline: none;
+}
+
+.game__button {
+    position: absolute;
+
+    background-color: #ffae7e;
+    color: #4a2359;
+    border-radius: 25px;
+
+    cursor: pointer;
+
+    transition: transform 0.5s, background-color 0.5s;
+}
+
+.game__button:hover {
+    transform: scale(1.15);
+
+    background-color: #ff7b2f;
+}
+
+.game__restart-button {
+    right: 50px;
+    bottom: 50px;
+    padding-left: 40px;
+    border: 3px solid;
+    width: 150px;
+
+    background: url('../images/restart-icon.svg') left no-repeat;
+    background-size: contain;
+}
+
+.game__close-button {
+    left: 50px;
+    bottom: 50px;
+    padding-left: 40px;
+    border: 3px solid;
+    width: 150px;
+
+    background: url('../images/close-icon.svg') left no-repeat;
+    background-size: contain;
+}
+
+.game__fullscreen-on,
+.game__fullscreen-off {
+    left: 50px;
+    top: 50px;
+    border: 3px solid;
+    width: 40px;
+    height: 40px;
+
+    border-radius: 0;
+    background: url('../images/fullscreen-on.svg') center no-repeat;
+    background-size: 80%;
+}
+
+.game__fullscreen-off {
+    background-image: url('../images/fullscreen-off.svg');
+}
+
+.game__number {
+    position: absolute;
+    height: 120px;
+    top: 50%;
+    right: 0;
+    left: 0;
+    text-align: center;
+    font-size: 5rem;
+
+    transform: translateY(-50%);
+}
+
+@media (max-width: 450px) {
+    .game__number {
+        font-size: 3rem;
+    }
+
+    .game__restart-button,
+    .game__close-button {
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        bottom: 50px;
+    }
+
+    .game__close-button {
+        bottom: 100px;
+    }
+}
+
+.animation_slow {
+    animation-duration: 2s;
+}
+
+.animation_normal {
+    animation-duration: 1s;
+}
+
+.animation_fast {
+    animation-duration: 0.5s;
+}

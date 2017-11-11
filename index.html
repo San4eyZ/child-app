@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <title>Numbers!</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link href="https://fonts.googleapis.com/css?family=Lobster|Open+Sans" rel="stylesheet">
+</head>
+<body class="index-body">
+<header class="header container">
+    <div class="row">
+        <div class="header__logo-wrapper col-12 col-lg-3 offset-lg-0">
+            <a href="#" class="header__logo-name">Numbers!</a>
+        </div>
+        <nav class="main-navigation col-xl-8 col-lg-9 offset-xl-1 navbar navbar-expand-sm justify-content-lg-end">
+            <ul class="main-navigation__list navbar-nav">
+                <li class="main-navigation__item nav-item d-none d-lg-flex">
+                    <a href="#" class="main-navigation__link nav-link">Главная</a>
+                </li>
+                <li class="main-navigation__item nav-item">
+                    <a href="#" class="main-navigation__link nav-link">Играть</a>
+                </li>
+                <li class="main-navigation__item nav-item">
+                    <a href="#" class="main-navigation__link nav-link for-registered">Домашка</a>
+                </li>
+                <li class="main-navigation__item nav-item">
+                    <a href="#" class="main-navigation__link nav-link for-registered">Статистика</a>
+                </li>
+                <li class="main-navigation__item nav-item">
+                    <a href="#" class="main-navigation__link nav-link for-registered">Настройки</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
+<main class="main container">
+    <div class="row">
+        <section class="main-info col-12 col-md-6 col-lg-5 align-self-center">
+            <h1 class="main-info__main-heading">Numbers!</h1>
+            <h4 class="main-info__side-heading">Новая игра-тренажер</h4>
+            <p class="main-info__description">
+                Разнообразный и богатый опыт дальнейшее развитие различных форм деятельности
+                в значительной степени обуславливает создание существенных финансовых и
+                административных условий.
+            </p>
+            <div class="main__buttons-holder">
+                <a href="#" class="main__reg button_light-theme">Регистрация</a>
+                <a href="#" class="main__login button_light-theme">Вход</a>
+            </div>
+        </section>
+        <div class="main__image-wrapper d-none d-md-block col-md-6 col-lg-7 justify-content-center">
+            <img src="images/pc-template.png" alt="Изображение компьютера" class="main__computer-image img-fluid">
+        </div>
+    </div>
+</main>
+<footer class="footer">
+    <div class="container">
+        <div class="footer__tagline">
+            Развивайтесь<br>играя
+        </div>
+    </div>
+</footer>
+<div class="overlay"></div>
+<section class="reg-window window_default">
+    <button class="reg-window__close window-close-button close-button"></button>
+    <h1 class="reg-window__heading form-heading_default display-4">Регистрация</h1>
+    <form action="" class="reg-form form_default" method="post">
+        <input type="email" name="login" class="reg-form__input input_dark-theme" title="Email" placeholder="Email">
+        <input type="password" name="pass" class="reg-form__input input_dark-theme" title="Пароль" placeholder="Пароль">
+        <input type="password" name="pass-confirm" class="reg-form__input input_dark-theme" title="Повторите пароль"
+               placeholder="Повторите пароль">
+        <button class="reg-form__button button_light-theme">Ок</button>
+        <p class="text-center">
+            Уже есть аккаунт?
+            <a href="#" class="reg-form__to-login form-link_light">Войти</a>
+        </p>
+    </form>
+</section>
+<section class="login-window window_default">
+    <button class="login-window__close window-close-button close-button"></button>
+    <h1 class="login-window__heading form-heading_default display-4">Вход</h1>
+    <form action="" class="login-form form_default" method="post">
+        <input type="email" name="login" class="login-form__input input_dark-theme" title="Email" placeholder="Email">
+        <input type="password" name="pass" class="login-form__input input_dark-theme" title="Пароль" placeholder="Пароль">
+        <div class="login-form__row">
+            <label class="login-form__remember-label checkbox-label_theme">
+                <input type="checkbox" name="remember" class="login-form__remember checkbox_theme" checked>
+                <span class="checkbox-replaced_dark-theme"></span>
+                Запомнить меня
+            </label>
+            <a href="#" class="login-form__forgotten-pass form-link_light">Не помню пароль</a>
+        </div>
+        <button class="login-form__button button_light-theme">Ок</button>
+        <p class="text-center">
+            У вас нет аккаунта?
+            <a href="#" class="login-form__to-reg form-link_light">Регистрация</a>
+        </p>
+    </form>
+</section>
+<section class="reset-window window_default">
+    <button class="reset-window__close window-close-button close-button"></button>
+    <h1 class="reset-window__heading form-heading_default display-4">Смена пароля</h1>
+    <p class="text-center">Введите email<br>На него придут дальнейшие указания</p>
+    <form action="" class="reset-form form_default" method="post">
+        <input type="email" name="email" class="reset-form__input input_dark-theme" title="email" placeholder="Email">
+        <button class="reset-form__button button_light-theme">Ок</button>
+    </form>
+</section>
+<script src="dist/scripts/polyfill.min.js"></script>
+<script src="dist/scripts/form.js"></script>
+</body>
+</html>
