@@ -145,11 +145,6 @@ body {
     transition: opacity 1s;
 }
 
-.show-window {
-    opacity: 1;
-    z-index: 10;
-}
-
 .form_default {
     width: 324px;
     margin: 0 auto;
@@ -181,10 +176,6 @@ body {
 .show-overlay {
     opacity: 1;
     z-index: 5;
-}
-
-.hide {
-    opacity: 0;
 }
 
 /*===================   Кнопки закрытия   ===================*/
@@ -580,7 +571,17 @@ body {
 
     border-radius: 25px;
 
-    animation: fade 1s both;
+    animation: fade 1s;
+    transition: opacity 1s;
+}
+
+.show-window {
+    opacity: 1;
+    z-index: 10;
+}
+
+.hide {
+    opacity: 0;
 }
 
 .game__heading {
@@ -649,6 +650,16 @@ body {
     background-image: url('../images/fullscreen-off.svg');
 }
 
+.game-window_fullscreen {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    background: #ffae7e;
+}
+
 .game__number {
     position: absolute;
     height: 120px;
@@ -659,6 +670,8 @@ body {
     font-size: 5rem;
 
     transform: translateY(-50%);
+
+    transition: opacity 0.1s;
 }
 
 @media (max-width: 450px) {
@@ -689,4 +702,57 @@ body {
 
 .animation_fast {
     animation-duration: 0.5s;
+}
+
+/* ====================   Форма ответа   ======================*/
+
+
+.game__answer-form {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+
+    text-align: center;
+    transform: translateY(-50%);
+
+    animation: fade 1s;
+}
+
+.game__answer-field {
+    height: 70px;
+    border: 3px solid;
+    vertical-align: top;
+
+    border-radius: 50px 0 0 50px;
+    text-align: center;
+}
+
+.game__answer-field:focus {
+    background: #ff7b2f;
+}
+
+.game__answer-submit {
+    height: 70px;
+    vertical-align: top;
+    padding-right: 10px;
+
+    border-radius: 0 50px 50px 0;
+}
+
+@media (max-width: 450px) {
+    .game__answer-field {
+        width: 70%;
+        margin-bottom: 20px;
+
+        border-radius: 10px;
+    }
+
+    .game__answer-submit {
+        width: 70%;
+        height: 46px;
+
+        border-radius: 25px;
+    }
 }
