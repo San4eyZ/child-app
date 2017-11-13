@@ -5,6 +5,7 @@ let overlay = document.querySelector('.overlay');
 let regWindow = document.querySelector('.reg-window');
 let loginWindow = document.querySelector('.login-window');
 let resetWindow = document.querySelector('.reset-window');
+let navigationLogin = document.querySelector('.main-navigation__login');
 
 let windowCloseButtons = document.querySelectorAll('.window-close-button');
 let onlyForUsers = document.querySelectorAll('.for-registered');
@@ -40,6 +41,7 @@ if (document.body.className === 'index-body') {
     regButton.addEventListener('click', showWindow.bind(null, regWindow, true));
 }
 
+navigationLogin.addEventListener('click', showWindow.bind(null, loginWindow, true));
 linkToReg.addEventListener('click', showWindow.bind(null, regWindow, false));
 linkToLogin.addEventListener('click', showWindow.bind(null, loginWindow, false));
 linkToReset.addEventListener('click', showWindow.bind(null, resetWindow, false));
@@ -50,4 +52,8 @@ for (let button of windowCloseButtons) {
 
 for (let user of onlyForUsers) {
     user.addEventListener('click', showWindow.bind(null, regWindow, true));
+    user.addEventListener('click', function (event) {
+        event.preventDefault();
+        alert('Доступно только для зарегистрированных пользователей')
+    })
 }

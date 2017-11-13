@@ -4,6 +4,12 @@ body {
     color: #ffae7e;
 }
 
+.reg-body,
+.reset-body,
+.login-body {
+    background: #4a2359;
+}
+
 /*===============   Темы   ====================*/
 
 .input_dark-theme {
@@ -139,6 +145,7 @@ body {
     bottom: 0;
     right: 0;
     left: 0;
+    overflow: auto;
 
     color: #ffae7e;
 
@@ -259,6 +266,7 @@ body {
 /*===================   Хэдер   ===================*/
 
 .header {
+    position: relative;
     margin-top: 20px;
     margin-bottom: 100px;
 }
@@ -280,6 +288,7 @@ body {
     font-family: 'Lobster', cursive;
     color: #ffae7e;
     font-size: 1.3em;
+    text-align: center;
 
     transition:
         color 0.5s ease;
@@ -297,6 +306,14 @@ body {
 
 .header__logo {
     width: 100%;
+}
+
+.main-navigation__login {
+    border-bottom: 3px solid;
+}
+
+.for-registered {
+    opacity: 0.8;
 }
 
 /*===================   Главная часть   ===================*/
@@ -362,6 +379,16 @@ body {
 }
 
 /*===================   Форма регистрации/входа/восстановления   ===================*/
+
+.to-main {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+}
+
+.to-main::before {
+    content: '←';
+}
 
 .reg-form__input,
 .login-form__input,
