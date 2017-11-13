@@ -396,6 +396,7 @@ body {
 /*=========================   ОКНО ИГРЫ   =========================*/
 
 .playground {
+    position: relative;
     padding: 40px 0;
 
     background: #ffae7e;
@@ -656,6 +657,7 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
+    overflow: auto;
 
     background: #ffae7e;
 }
@@ -744,6 +746,7 @@ body {
 @media (max-width: 450px) {
     .game__answer-field {
         width: 70%;
+        height: 46px;
         margin-bottom: 20px;
 
         border-radius: 10px;

@@ -73,8 +73,6 @@ CreateGame.prototype = {
         let heading = document.createElement('h2');
         let closeButton = document.createElement('button');
         let restartButton = document.createElement('button');
-        let fullscreenOn = document.createElement('button');
-        let fullscreenOff = document.createElement('button');
         let numberHolder = document.createElement('div');
         board.className = 'game-board';
         heading.innerHTML = 'Numbers!';
@@ -83,8 +81,6 @@ CreateGame.prototype = {
         restartButton.innerHTML = 'Заново';
         closeButton.className = 'game__button game__close-button';
         closeButton.innerHTML = 'Закончить';
-        fullscreenOn.className = 'game__button game__fullscreen-on d-none d-md-block';
-        fullscreenOff.className = 'game__button game__fullscreen-off d-none';
         numberHolder.className = 'game__number';
         numberHolder.innerHTML = 'Вперед!';
         if (this.interval) {
@@ -121,7 +117,6 @@ CreateGame.prototype = {
                 /* Если поле для чисел было скрыто, показываем его */
                 that.numberField.classList.remove('hide');
                 /* Убираем форму ответа, если дошли до конца и она создалась */
-                console.log(that.answerForm);
                 if (that.answerForm) {
                     that.board.removeChild(that.answerForm);
                     that.answerForm = undefined;
@@ -137,27 +132,10 @@ CreateGame.prototype = {
             }, 1000)
         }).bind(this));
 
-        fullscreenOn.addEventListener('click', function (event) {
-            event.preventDefault();
-            document.querySelector('.game').classList.add('game-window_fullscreen');
-            board.style = 'border:none';
-            this.classList.remove('d-md-block');
-            fullscreenOff.classList.remove('d-none');
-        });
-
-        fullscreenOff.addEventListener('click', function (event) {
-            event.preventDefault();
-            document.querySelector('.game').classList.remove('game-window_fullscreen');
-            board.style = '';
-            this.classList.add('d-none');
-            fullscreenOn.classList.add('d-md-block');
-        });
         board.appendChild(heading);
         board.appendChild(numberHolder);
         board.appendChild(restartButton);
         board.appendChild(closeButton);
-        board.appendChild(fullscreenOn);
-        board.appendChild(fullscreenOff);
 
         this.board = board;
     },
@@ -218,10 +196,13 @@ function createCollection(capacity, quantity) {
 let startGame = document.querySelector('.settings__start-game');
 let settings = document.querySelector('.settings__main-window');
 let gameInterface = document.querySelector('.game-interface');
+let playground = document.querySelector('.playground');
 
 let incButtons = document.querySelectorAll('.button_inc');
 let decButtons = document.querySelectorAll('.button_dec');
 let field = document.querySelector('.settings__quantity-value');
+let fullscreenOn = document.querySelector('.game__fullscreen-on');
+let fullscreenOff = document.querySelector('.game__fullscreen-off');
 
 /* Увеличиваем значение на заданную величину */
 let incValue = function (value, amount) {
@@ -246,6 +227,20 @@ let restrictKeys = function (event) {
         event.preventDefault();
     }
 };
+
+fullscreenOn.addEventListener('click', function (event) {
+    event.preventDefault();
+    playground.classList.add('game-window_fullscreen');
+    this.classList.remove('d-md-block');
+    fullscreenOff.classList.remove('d-none');
+});
+
+fullscreenOff.addEventListener('click', function (event) {
+    event.preventDefault();
+    playground.classList.remove('game-window_fullscreen');
+    this.classList.add('d-none');
+    fullscreenOn.classList.add('d-md-block');
+});
 
 /*   Начало игры   */
 startGame.addEventListener('click', function (event) {
@@ -275,6 +270,16 @@ startGame.addEventListener('click', function (event) {
     /* Начинаем показ */
     game.gameInit();
 });
+
+/* Скрываем обьект на заданное время */
+function fade(obj, time) {
+    if (obj && obj.nodeName) {
+        obj.classList.add('hide');
+        setTimeout(function () {
+            obj.classList.remove('hide');
+        }, time)
+    }
+}
 
 /* Вешаем обработчики */
 for (let incButton of incButtons) {

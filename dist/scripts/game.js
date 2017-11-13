@@ -77,8 +77,6 @@ CreateGame.prototype = {
         var heading = document.createElement('h2');
         var closeButton = document.createElement('button');
         var restartButton = document.createElement('button');
-        var fullscreenOn = document.createElement('button');
-        var fullscreenOff = document.createElement('button');
         var numberHolder = document.createElement('div');
         board.className = 'game-board';
         heading.innerHTML = 'Numbers!';
@@ -87,8 +85,6 @@ CreateGame.prototype = {
         restartButton.innerHTML = 'Заново';
         closeButton.className = 'game__button game__close-button';
         closeButton.innerHTML = 'Закончить';
-        fullscreenOn.className = 'game__button game__fullscreen-on d-none d-md-block';
-        fullscreenOff.className = 'game__button game__fullscreen-off d-none';
         numberHolder.className = 'game__number';
         numberHolder.innerHTML = 'Вперед!';
         if (this.interval) {
@@ -125,7 +121,6 @@ CreateGame.prototype = {
                 /* Если поле для чисел было скрыто, показываем его */
                 that.numberField.classList.remove('hide');
                 /* Убираем форму ответа, если дошли до конца и она создалась */
-                console.log(that.answerForm);
                 if (that.answerForm) {
                     that.board.removeChild(that.answerForm);
                     that.answerForm = undefined;
@@ -141,27 +136,10 @@ CreateGame.prototype = {
             }, 1000);
         }.bind(this));
 
-        fullscreenOn.addEventListener('click', function (event) {
-            event.preventDefault();
-            document.querySelector('.game').classList.add('game-window_fullscreen');
-            board.style = 'border:none';
-            this.classList.remove('d-md-block');
-            fullscreenOff.classList.remove('d-none');
-        });
-
-        fullscreenOff.addEventListener('click', function (event) {
-            event.preventDefault();
-            document.querySelector('.game').classList.remove('game-window_fullscreen');
-            board.style = '';
-            this.classList.add('d-none');
-            fullscreenOn.classList.add('d-md-block');
-        });
         board.appendChild(heading);
         board.appendChild(numberHolder);
         board.appendChild(restartButton);
         board.appendChild(closeButton);
-        board.appendChild(fullscreenOn);
-        board.appendChild(fullscreenOff);
 
         this.board = board;
     },
@@ -222,10 +200,13 @@ function createCollection(capacity, quantity) {
 var startGame = document.querySelector('.settings__start-game');
 var settings = document.querySelector('.settings__main-window');
 var gameInterface = document.querySelector('.game-interface');
+var playground = document.querySelector('.playground');
 
 var incButtons = document.querySelectorAll('.button_inc');
 var decButtons = document.querySelectorAll('.button_dec');
 var field = document.querySelector('.settings__quantity-value');
+var fullscreenOn = document.querySelector('.game__fullscreen-on');
+var fullscreenOff = document.querySelector('.game__fullscreen-off');
 
 /* Увеличиваем значение на заданную величину */
 var incValue = function incValue(value, amount) {
@@ -256,6 +237,20 @@ var restrictKeys = function restrictKeys(event) {
     }
 };
 
+fullscreenOn.addEventListener('click', function (event) {
+    event.preventDefault();
+    playground.classList.add('game-window_fullscreen');
+    this.classList.remove('d-md-block');
+    fullscreenOff.classList.remove('d-none');
+});
+
+fullscreenOff.addEventListener('click', function (event) {
+    event.preventDefault();
+    playground.classList.remove('game-window_fullscreen');
+    this.classList.add('d-none');
+    fullscreenOn.classList.add('d-md-block');
+});
+
 /*   Начало игры   */
 startGame.addEventListener('click', function (event) {
     event.preventDefault();
@@ -284,6 +279,16 @@ startGame.addEventListener('click', function (event) {
     /* Начинаем показ */
     game.gameInit();
 });
+
+/* Скрываем обьект на заданное время */
+function fade(obj, time) {
+    if (obj && obj.nodeName) {
+        obj.classList.add('hide');
+        setTimeout(function () {
+            obj.classList.remove('hide');
+        }, time);
+    }
+}
 
 /* Вешаем обработчики */
 var _iteratorNormalCompletion = true;
