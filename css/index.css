@@ -139,7 +139,7 @@ body {
 .window_default {
     opacity: 0;
     z-index: -1;
-    padding-top: 120px;
+    padding-top: 10vh;
     position: fixed;
     top: 0;
     bottom: 0;
@@ -153,7 +153,7 @@ body {
 }
 
 .form_default {
-    width: 324px;
+    width: 320px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -410,14 +410,36 @@ body {
     text-transform: uppercase;
 }
 
-.reg-form p {
-    text-align: center;
-}
-
 .login-form__row {
     display: flex;
     justify-content: space-between;
     margin-bottom: 24px;
+}
+
+.form__social-login {
+    display: block;
+    height: 46px;
+
+    text-align: center;
+    line-height: 46px;
+    color: #fff;
+
+    transition: background 0.5s;
+}
+
+.form__social-login:hover {
+    color: #fff;
+    text-decoration: none;
+}
+
+.form__vk-login {
+    background: #507299;
+
+    border-radius: 25px;
+}
+
+.form__vk-login:hover {
+    background-color: #346399;
 }
 
 /*=========================   ОКНО ИГРЫ   =========================*/
@@ -434,9 +456,6 @@ body {
 
 /*=========================   Интерфейс игры   =========================*/
 
-.game-interface {
-
-}
 
 /*=========================   Анимированная картинка и тень   =================*/
 

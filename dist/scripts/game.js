@@ -51,6 +51,10 @@ CreateGame.prototype = {
             /* Показываем кнопку restart */
             that.restartButton.classList.remove('d-none');
         }, 3000);
+        /* Делаем затемнение стартового сообщения */
+        setTimeout(function () {
+            fade(that.numberField, 200);
+        }, 2800 + that.interval);
     },
     /* Завершение игры */
     gameEnd: function gameEnd() {
@@ -204,7 +208,7 @@ var playground = document.querySelector('.playground');
 
 var incButtons = document.querySelectorAll('.button_inc');
 var decButtons = document.querySelectorAll('.button_dec');
-var field = document.querySelector('.settings__quantity-value');
+var fields = document.querySelectorAll('.settings__input');
 var fullscreenOn = document.querySelector('.game__fullscreen-on');
 var fullscreenOff = document.querySelector('.game__fullscreen-off');
 
@@ -232,7 +236,10 @@ var inputControl = function inputControl(button, role, event) {
 
 /*   Запрет на ввод символов не являющихся цифрами   */
 var restrictKeys = function restrictKeys(event) {
-    if (!(event.which >= 48 && event.which <= 57 || event.which === '8' || event.which === '46')) {
+    if (event.key === '.' && this.classList.contains('settings__speed-value')) {
+        return true;
+    }
+    if (!(event.which >= 48 && event.which <= 57)) {
         event.preventDefault();
     }
 };
@@ -341,10 +348,42 @@ try {
     }
 }
 
-field.addEventListener('keypress', restrictKeys);
-field.addEventListener('blur', function () {
-    if (this.value < this.min) {
-        this.value = this.min;
+var _iteratorNormalCompletion3 = true;
+var _didIteratorError3 = false;
+var _iteratorError3 = undefined;
+
+try {
+    for (var _iterator3 = fields[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+        var field = _step3.value;
+
+        field.addEventListener('keypress', restrictKeys);
+        field.addEventListener('focus', function () {
+            this.value = '';
+        });
+        field.addEventListener('blur', function () {
+            if (Number(this.value) < Number(this.min)) {
+                this.value = this.min;
+            }
+            if (Number(this.value) > Number(this.max)) {
+                this.value = this.max;
+            }
+            if (this.classList.contains('settings__speed-value')) {
+                this.value = isNaN(Number(this.value)) ? this.min + ' сек' : Math.round(Number(this.value) * 10) / 10 + ' сек';
+            }
+        });
     }
-});
+} catch (err) {
+    _didIteratorError3 = true;
+    _iteratorError3 = err;
+} finally {
+    try {
+        if (!_iteratorNormalCompletion3 && _iterator3.return) {
+            _iterator3.return();
+        }
+    } finally {
+        if (_didIteratorError3) {
+            throw _iteratorError3;
+        }
+    }
+}
 //# sourceMappingURL=game.js.map

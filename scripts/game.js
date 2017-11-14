@@ -47,6 +47,10 @@ CreateGame.prototype = {
             /* Показываем кнопку restart */
             that.restartButton.classList.remove('d-none');
         }, 3000);
+        /* Делаем затемнение стартового сообщения */
+        setTimeout(function () {
+            fade(that.numberField, 200);
+        }, 2800 + that.interval)
     },
     /* Завершение игры */
     gameEnd: function () {
@@ -200,7 +204,7 @@ let playground = document.querySelector('.playground');
 
 let incButtons = document.querySelectorAll('.button_inc');
 let decButtons = document.querySelectorAll('.button_dec');
-let field = document.querySelector('.settings__quantity-value');
+let fields = document.querySelectorAll('.settings__input');
 let fullscreenOn = document.querySelector('.game__fullscreen-on');
 let fullscreenOff = document.querySelector('.game__fullscreen-off');
 
@@ -223,7 +227,10 @@ let inputControl = function (button, role, event) {
 
 /*   Запрет на ввод символов не являющихся цифрами   */
 let restrictKeys = function (event) {
-    if (!(event.which >= 48 && event.which <= 57 || event.which === '8' || event.which === '46')) {
+    if (event.key === '.' && this.classList.contains('settings__speed-value')) {
+        return true;
+    }
+    if (!(event.which >= 48 && event.which <= 57)) {
         event.preventDefault();
     }
 };
@@ -290,9 +297,20 @@ for (let decButton of decButtons) {
     decButton.addEventListener('click', inputControl.bind(null, decButton, 'dec'));
 }
 
-field.addEventListener('keypress', restrictKeys);
-field.addEventListener('blur', function () {
-    if (this.value < this.min) {
-        this.value = this.min;
-    }
-});
+for (let field of fields) {
+    field.addEventListener('keypress', restrictKeys);
+    field.addEventListener('focus', function () {
+        this.value = '';
+    });
+    field.addEventListener('blur', function () {
+        if (Number(this.value) < Number(this.min)) {
+            this.value = this.min;
+        }
+        if (Number(this.value) > Number(this.max)) {
+            this.value = this.max;
+        }
+        if (this.classList.contains('settings__speed-value')) {
+            this.value = isNaN(Number(this.value)) ? this.min + ' сек' : (Math.round(Number(this.value) * 10) / 10) + ' сек';
+        }
+    });
+}
