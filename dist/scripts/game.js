@@ -53,7 +53,7 @@ CreateGame.prototype = {
         }, 3000);
         /* Делаем затемнение стартового сообщения */
         setTimeout(function () {
-            fade(that.numberField, 200);
+            hideElement(that.numberField, 200);
         }, 2800 + that.interval);
     },
     /* Завершение игры */
@@ -190,17 +190,6 @@ CreateGame.prototype = {
     animShadow: document.querySelector('.shadow')
 };
 
-/* Создает набор из случайных чисел заданного разряда */
-function createCollection(capacity, quantity) {
-    var collection = [];
-    while (quantity > 0) {
-        collection.push(Math.floor(Math.random() * Math.pow(10, capacity)));
-        quantity--;
-    }
-
-    return collection;
-}
-
 var startGame = document.querySelector('.settings__start-game');
 var settings = document.querySelector('.settings__main-window');
 var gameInterface = document.querySelector('.game-interface');
@@ -211,38 +200,6 @@ var decButtons = document.querySelectorAll('.button_dec');
 var fields = document.querySelectorAll('.settings__input');
 var fullscreenOn = document.querySelector('.game__fullscreen-on');
 var fullscreenOff = document.querySelector('.game__fullscreen-off');
-
-/* Увеличиваем значение на заданную величину */
-var incValue = function incValue(value, amount) {
-    return '' + Math.round((Number(value) + Number(amount)) * 10) / 10;
-};
-
-/*   Контроль полей ввода   */
-var inputControl = function inputControl(button, role, event) {
-    event.preventDefault();
-    var controlledInput = role === 'inc' ? button.previousElementSibling : button.nextElementSibling;
-    var step = role === 'inc' ? controlledInput.step : -controlledInput.step;
-
-    var _controlledInput$valu = controlledInput.value.split(' '),
-        _controlledInput$valu2 = _slicedToArray(_controlledInput$valu, 2),
-        number = _controlledInput$valu2[0],
-        rest = _controlledInput$valu2[1];
-
-    var newNumber = incValue(number, step);
-    if (Number(newNumber) <= Number(controlledInput.max) && Number(newNumber) >= Number(controlledInput.min)) {
-        controlledInput.value = rest ? newNumber + (' ' + rest) : newNumber;
-    }
-};
-
-/*   Запрет на ввод символов не являющихся цифрами   */
-var restrictKeys = function restrictKeys(event) {
-    if (event.key === '.' && this.classList.contains('settings__speed-value')) {
-        return true;
-    }
-    if (!(event.which >= 48 && event.which <= 57)) {
-        event.preventDefault();
-    }
-};
 
 fullscreenOn.addEventListener('click', function (event) {
     event.preventDefault();
@@ -286,16 +243,6 @@ startGame.addEventListener('click', function (event) {
     /* Начинаем показ */
     game.gameInit();
 });
-
-/* Скрываем обьект на заданное время */
-function fade(obj, time) {
-    if (obj && obj.nodeName) {
-        obj.classList.add('hide');
-        setTimeout(function () {
-            obj.classList.remove('hide');
-        }, time);
-    }
-}
 
 /* Вешаем обработчики */
 var _iteratorNormalCompletion = true;
@@ -372,6 +319,8 @@ try {
             }
         });
     }
+
+    /* Создает набор из случайных чисел заданного разряда */
 } catch (err) {
     _didIteratorError3 = true;
     _iteratorError3 = err;
@@ -384,6 +333,58 @@ try {
         if (_didIteratorError3) {
             throw _iteratorError3;
         }
+    }
+}
+
+function createCollection(capacity, quantity) {
+    var collection = [];
+    while (quantity > 0) {
+        collection.push(Math.floor(Math.random() * Math.pow(10, capacity)));
+        quantity--;
+    }
+
+    return collection;
+}
+
+/* Скрываем обьект на заданное время */
+function hideElement(obj, time) {
+    if (obj && obj.nodeName) {
+        obj.classList.add('hide');
+        setTimeout(function () {
+            obj.classList.remove('hide');
+        }, time);
+    }
+}
+
+/*   Запрет на ввод символов не являющихся цифрами   */
+function restrictKeys(event) {
+    if (event.key === '.' && this.classList.contains('settings__speed-value')) {
+        return true;
+    }
+    if (!(event.which >= 48 && event.which <= 57)) {
+        event.preventDefault();
+    }
+}
+
+/* Увеличиваем значение на заданную величину */
+function incValue(value, amount) {
+    return '' + Math.round((Number(value) + Number(amount)) * 10) / 10;
+}
+
+/*   Контроль полей ввода   */
+function inputControl(button, role, event) {
+    event.preventDefault();
+    var controlledInput = role === 'inc' ? button.previousElementSibling : button.nextElementSibling;
+    var step = role === 'inc' ? controlledInput.step : -controlledInput.step;
+
+    var _controlledInput$valu = controlledInput.value.split(' '),
+        _controlledInput$valu2 = _slicedToArray(_controlledInput$valu, 2),
+        number = _controlledInput$valu2[0],
+        rest = _controlledInput$valu2[1];
+
+    var newNumber = incValue(number, step);
+    if (Number(newNumber) <= Number(controlledInput.max) && Number(newNumber) >= Number(controlledInput.min)) {
+        controlledInput.value = rest ? newNumber + (' ' + rest) : newNumber;
     }
 }
 //# sourceMappingURL=game.js.map

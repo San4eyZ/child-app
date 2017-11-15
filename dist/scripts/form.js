@@ -12,30 +12,6 @@ var navigationLogin = document.querySelector('.main-navigation__login');
 var windowCloseButtons = document.querySelectorAll('.window-close-button');
 var onlyForUsers = document.querySelectorAll('.for-registered');
 
-var showWindow = function showWindow(element, isFromPage, event) {
-    event.preventDefault();
-    if (isFromPage) {
-        element.classList.add('show-window');
-        overlay.classList.add('show-overlay');
-    } else {
-        loginWindow.classList.remove('show-window');
-        regWindow.classList.remove('show-window');
-        element.classList.add('show-window');
-    }
-};
-
-var hideWindow = function hideWindow(element, event) {
-    event.preventDefault();
-    element.classList.add('hide');
-    overlay.classList.add('hide');
-    setTimeout(function () {
-        overlay.classList.remove('hide');
-        overlay.classList.remove('show-overlay');
-        element.classList.remove('hide');
-        element.classList.remove('show-window');
-    }, 1000);
-};
-
 if (document.body.className === 'index-body') {
     var loginButton = document.querySelector('.main__login');
     var regButton = document.querySelector('.main__reg');
@@ -100,5 +76,29 @@ try {
             throw _iteratorError2;
         }
     }
+}
+
+function showWindow(element, isFromPage, event) {
+    event.preventDefault();
+    if (isFromPage) {
+        element.classList.add('show-window');
+        overlay.classList.add('show-overlay');
+    } else {
+        loginWindow.classList.remove('show-window');
+        regWindow.classList.remove('show-window');
+        element.classList.add('show-window');
+    }
+}
+
+function hideWindow(element, event) {
+    event.preventDefault();
+    element.classList.add('hide');
+    overlay.classList.add('hide');
+    setTimeout(function () {
+        overlay.classList.remove('hide');
+        overlay.classList.remove('show-overlay');
+        element.classList.remove('hide');
+        element.classList.remove('show-window');
+    }, 1000);
 }
 //# sourceMappingURL=form.js.map

@@ -805,3 +805,62 @@ body {
         border-radius: 25px;
     }
 }
+
+/*=======================   ОКНО ДОМАШКИ   ====================*/
+
+.homework {
+    height: 400px;
+    overflow: auto;
+
+    background: #ffae7e;
+    color: #4a2359;
+    font-family: 'Lobster', cursive;
+}
+
+.homework__message {
+    font-size: 1.25rem;
+}
+
+/*==========================   ОКНО СТАТИСТИКИ   =========================*/
+
+.stats {
+    padding-top: 40px;
+    padding-bottom: 40px;
+
+    background: #ffae7e;
+    color: #4a2359;
+    font-family: 'Lobster', cursive;
+    font-size: 1.25rem;
+}
+
+.stats__table {
+    margin: 0 auto;
+}
+
+.stats__table,
+.stats__heading,
+.stats__data {
+    border-collapse: collapse;
+}
+
+.stats__heading,
+.stats__data {
+    padding: 5px 10px;
+
+    text-align: center;
+}
+
+.table_light-theme {
+    border: 2px solid;
+
+    background: #ffae7e;
+    color: #4a2359;
+}
+
+.success {
+    background: #1fc113;
+}
+
+.failure {
+    background: #ff2b0a;
+}

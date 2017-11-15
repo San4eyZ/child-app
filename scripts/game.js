@@ -49,7 +49,7 @@ CreateGame.prototype = {
         }, 3000);
         /* Делаем затемнение стартового сообщения */
         setTimeout(function () {
-            fade(that.numberField, 200);
+            hideElement(that.numberField, 200);
         }, 2800 + that.interval)
     },
     /* Завершение игры */
@@ -186,17 +186,6 @@ CreateGame.prototype = {
     animShadow: document.querySelector('.shadow')
 };
 
-/* Создает набор из случайных чисел заданного разряда */
-function createCollection(capacity, quantity) {
-    let collection = [];
-    while (quantity > 0) {
-        collection.push(Math.floor(Math.random() * Math.pow(10, capacity)));
-        quantity--;
-    }
-
-    return collection;
-}
-
 let startGame = document.querySelector('.settings__start-game');
 let settings = document.querySelector('.settings__main-window');
 let gameInterface = document.querySelector('.game-interface');
@@ -207,33 +196,6 @@ let decButtons = document.querySelectorAll('.button_dec');
 let fields = document.querySelectorAll('.settings__input');
 let fullscreenOn = document.querySelector('.game__fullscreen-on');
 let fullscreenOff = document.querySelector('.game__fullscreen-off');
-
-/* Увеличиваем значение на заданную величину */
-let incValue = function (value, amount) {
-    return `${Math.round((Number(value) + Number(amount)) * 10) / 10}`;
-};
-
-/*   Контроль полей ввода   */
-let inputControl = function (button, role, event) {
-    event.preventDefault();
-    let controlledInput = role === 'inc' ? button.previousElementSibling : button.nextElementSibling;
-    let step = role === 'inc' ? controlledInput.step : -controlledInput.step;
-    let [number, rest] = controlledInput.value.split(' ');
-    let newNumber = incValue(number, step);
-    if (Number(newNumber) <= Number(controlledInput.max) && Number(newNumber) >= Number(controlledInput.min)) {
-        controlledInput.value = rest ? newNumber + ` ${rest}` : newNumber;
-    }
-};
-
-/*   Запрет на ввод символов не являющихся цифрами   */
-let restrictKeys = function (event) {
-    if (event.key === '.' && this.classList.contains('settings__speed-value')) {
-        return true;
-    }
-    if (!(event.which >= 48 && event.which <= 57)) {
-        event.preventDefault();
-    }
-};
 
 fullscreenOn.addEventListener('click', function (event) {
     event.preventDefault();
@@ -278,16 +240,6 @@ startGame.addEventListener('click', function (event) {
     game.gameInit();
 });
 
-/* Скрываем обьект на заданное время */
-function fade(obj, time) {
-    if (obj && obj.nodeName) {
-        obj.classList.add('hide');
-        setTimeout(function () {
-            obj.classList.remove('hide');
-        }, time)
-    }
-}
-
 /* Вешаем обработчики */
 for (let incButton of incButtons) {
     incButton.addEventListener('click', inputControl.bind(null, incButton, 'inc'));
@@ -313,4 +265,52 @@ for (let field of fields) {
             this.value = isNaN(Number(this.value)) ? this.min + ' сек' : (Math.round(Number(this.value) * 10) / 10) + ' сек';
         }
     });
+}
+
+/* Создает набор из случайных чисел заданного разряда */
+function createCollection(capacity, quantity) {
+    let collection = [];
+    while (quantity > 0) {
+        collection.push(Math.floor(Math.random() * Math.pow(10, capacity)));
+        quantity--;
+    }
+
+    return collection;
+}
+
+/* Скрываем обьект на заданное время */
+function hideElement(obj, time) {
+    if (obj && obj.nodeName) {
+        obj.classList.add('hide');
+        setTimeout(function () {
+            obj.classList.remove('hide');
+        }, time)
+    }
+}
+
+/*   Запрет на ввод символов не являющихся цифрами   */
+function restrictKeys(event) {
+    if (event.key === '.' && this.classList.contains('settings__speed-value')) {
+        return true;
+    }
+    if (!(event.which >= 48 && event.which <= 57)) {
+        event.preventDefault();
+    }
+}
+
+/* Увеличиваем значение на заданную величину */
+function incValue(value, amount) {
+    return `${Math.round((Number(value) + Number(amount)) * 10) / 10}`;
+}
+
+/*   Контроль полей ввода   */
+function inputControl(button, role, event) {
+    event.preventDefault();
+    let controlledInput = role === 'inc' ? button.previousElementSibling : button.nextElementSibling;
+    let step = role === 'inc' ? controlledInput.step : -controlledInput.step;
+    let [number, rest] = controlledInput.value.split(' ');
+    let newNumber = incValue(number, step);
+    if (Number(newNumber) <= Number(controlledInput.max) && Number(newNumber) >= Number(controlledInput.min)) {
+        controlledInput.value = rest ? newNumber + ` ${rest}` : newNumber;
+    }
 }

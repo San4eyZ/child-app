@@ -10,30 +10,6 @@ let navigationLogin = document.querySelector('.main-navigation__login');
 let windowCloseButtons = document.querySelectorAll('.window-close-button');
 let onlyForUsers = document.querySelectorAll('.for-registered');
 
-let showWindow = function (element, isFromPage, event) {
-    event.preventDefault();
-    if (isFromPage) {
-        element.classList.add('show-window');
-        overlay.classList.add('show-overlay');
-    } else {
-        loginWindow.classList.remove('show-window');
-        regWindow.classList.remove('show-window');
-        element.classList.add('show-window');
-    }
-};
-
-let hideWindow = function (element, event) {
-    event.preventDefault();
-    element.classList.add('hide');
-    overlay.classList.add('hide');
-    setTimeout(function () {
-        overlay.classList.remove('hide');
-        overlay.classList.remove('show-overlay');
-        element.classList.remove('hide');
-        element.classList.remove('show-window');
-    }, 1000)
-};
-
 if (document.body.className === 'index-body') {
     let loginButton = document.querySelector('.main__login');
     let regButton = document.querySelector('.main__reg');
@@ -56,4 +32,28 @@ for (let user of onlyForUsers) {
         event.preventDefault();
         alert('Доступно только для зарегистрированных пользователей')
     })
+}
+
+function showWindow(element, isFromPage, event) {
+    event.preventDefault();
+    if (isFromPage) {
+        element.classList.add('show-window');
+        overlay.classList.add('show-overlay');
+    } else {
+        loginWindow.classList.remove('show-window');
+        regWindow.classList.remove('show-window');
+        element.classList.add('show-window');
+    }
+}
+
+function hideWindow(element, event) {
+    event.preventDefault();
+    element.classList.add('hide');
+    overlay.classList.add('hide');
+    setTimeout(function () {
+        overlay.classList.remove('hide');
+        overlay.classList.remove('show-overlay');
+        element.classList.remove('hide');
+        element.classList.remove('show-window');
+    }, 1000)
 }
