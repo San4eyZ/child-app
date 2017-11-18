@@ -159,6 +159,13 @@ body {
     flex-direction: column;
 }
 
+@media (max-width: 350px) {
+    .form_default {
+        width: 90%;
+        padding: 0 5%;
+    }
+}
+
 .form-heading_default {
     margin-bottom: 40px;
 
@@ -224,6 +231,13 @@ body {
 .window-close-button {
     top: 50px;
     right: 50px;
+}
+
+@media (max-width: 576px) {
+    .window-close-button {
+        top: 10px;
+    }
+
 }
 
 .window-close-button::before,
@@ -357,6 +371,20 @@ body {
     margin-bottom: 50px;
 }
 
+.main__play {
+    display: block;
+    margin: 0 auto;
+    padding: 15px;
+    width: 50%;
+    min-width: 200px;
+
+    text-align: center;
+
+    border-radius: 40px;
+    font-family: 'Lobster', cursive;
+    font-size: 1.3rem;
+}
+
 /*===================   Футер   ===================*/
 
 .footer {
@@ -373,9 +401,17 @@ body {
     font-family: 'Lobster', cursive;
     color: #4a2359;
     background: url("../images/footer-image.png") center no-repeat;
+    background-size: contain;
     font-size: 2.3em;
     line-height: 1em;
     text-align: center;
+}
+
+@media (max-width: 576px) {
+    .footer__tagline {
+        background: #f9907a;
+        border-radius: 100px;
+    }
 }
 
 /*===================   Форма регистрации/входа/восстановления   ===================*/
@@ -388,6 +424,12 @@ body {
 
 .to-main::before {
     content: '←';
+}
+
+@media (max-width: 768px) {
+    .to-main {
+        top: 10px;
+    }
 }
 
 .reg-form__input,
@@ -622,6 +664,12 @@ body {
     transition: opacity 1s;
 }
 
+@media (max-width: 576px){
+    .game-interface {
+        height: auto;
+    }
+}
+
 .show-window {
     opacity: 1;
     z-index: 10;
@@ -824,17 +872,17 @@ body {
 /*==========================   ОКНО СТАТИСТИКИ   =========================*/
 
 .stats {
-    padding-top: 40px;
     padding-bottom: 40px;
 
     background: #ffae7e;
     color: #4a2359;
     font-family: 'Lobster', cursive;
     font-size: 1.25rem;
+    overflow: auto;
 }
 
 .stats__table {
-    margin: 0 auto;
+    margin: 0 auto 20px;
 }
 
 .stats__table,
@@ -845,9 +893,17 @@ body {
 
 .stats__heading,
 .stats__data {
-    padding: 5px 10px;
+    padding: 5px 15px;
 
     text-align: center;
+}
+
+.stats__heading {
+    cursor: pointer;
+}
+
+.stats__heading:hover {
+    background: #ff7b2f;
 }
 
 .table_light-theme {
@@ -857,10 +913,104 @@ body {
     color: #4a2359;
 }
 
+.stats__table-heading {
+    caption-side: top;
+    color: #4a2359;
+    text-align: center;
+}
+
+.stats__filter {
+    border: 2px solid;
+}
+
+.stats__filter-label {
+    width: 50%;
+
+    text-align: right;
+}
+
 .success {
     background: #1fc113;
 }
 
 .failure {
     background: #ff2b0a;
+}
+
+/*=============================   Настройки   ===========================*/
+
+.main-settings {
+    padding: 20px 0 40px;
+
+    background: #ffae7e;
+    color: #4a2359;
+}
+
+.main-settings__heading {
+    text-align: center;
+}
+
+@media (max-width: 576px) {
+    .main-settings__heading {
+        font-size: 2.5rem;
+        font-weight: bold;
+    }
+}
+
+.main-settings__section-opener {
+    position: relative;
+    display: block;
+    width: 25%;
+    min-width: 200px;
+    margin: 0 auto;
+    padding: 15px;
+
+    border-radius: 30px;
+}
+
+.main-settings__section-opener:not(:first-child) {
+    margin-top: 25px;
+}
+
+.main-settings__section-opener::before {
+    content: '▼';
+    position: absolute;
+    left: 20px;
+}
+
+.main-settings-section {
+    display: none;
+    flex-direction: column;
+    width: 300px;
+    margin: 10px auto 0;
+    padding: 20px 10px;
+    border: 2px solid;
+
+    border-radius: 10px;
+}
+
+@media (max-width: 350px) {
+    .main-settings-section {
+        width: 100%;
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+.main-settings__input {
+    height: 46px;
+    border: 2px solid;
+    margin-bottom: 20px;
+    padding: 0 15px;
+}
+
+.main-settings__input:focus {
+    background: #ff7b2f;
+}
+
+.main-settings__change-button {
+    height: 46px;
+
+    border-radius: 25px;
+    text-align: center;
 }

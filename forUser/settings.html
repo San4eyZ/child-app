@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <title>Настройки</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="../css/bootstrap.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <link href="https://fonts.googleapis.com/css?family=Lobster|Open+Sans" rel="stylesheet">
+</head>
+<body class="settings-body">
+<header class="header container">
+    <div class="row">
+        <div class="header__logo-wrapper col-12 col-lg-3 offset-lg-0">
+            <a href="./index.html" class="header__logo-name">Numbers!</a>
+        </div>
+        <nav class="main-navigation col-xl-8 col-lg-9 offset-xl-1 navbar navbar-expand-sm justify-content-lg-end">
+            <ul class="main-navigation__list navbar-nav">
+                <li class="main-navigation__item nav-item">
+                    <a href="./game.html" class="main-navigation__link nav-link">Играть</a>
+                </li>
+                <li class="main-navigation__item nav-item">
+                    <a href="./homework.html" class="main-navigation__link nav-link">Домашка</a>
+                </li>
+                <li class="main-navigation__item nav-item">
+                    <a href="./stats.html" class="main-navigation__link nav-link">Статистика</a>
+                </li>
+                <li class="main-navigation__item nav-item">
+                    <a href="./settings.html" class="main-navigation__link nav-link">Настройки</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
+<main class="main-settings">
+    <div class="container">
+        <h1 class="main-settings__heading display-4">Настройки</h1>
+        <button class="main-settings__section-opener button_dark-theme">Смена почты</button>
+        <div class="main-settings-section main-settings__email-change">
+            <input class="main-settings__input main-settings__email-input input_light-theme" type="email"
+                   name="newEmail" title="Введите новый email" placeholder="Введите новый email:">
+            <input class="main-settings__input main-settings__email-input input_light-theme" type="password"
+                   name="password" title="Введите пароль" placeholder="Введите пароль:">
+            <input class="main-settings__input main-settings__email-input input_light-theme" type="password"
+                   name="confirm" title="Подтвердите пароль" placeholder="Подтвердите пароль:">
+            <button class="main-settings__change-button button_dark-theme">Сменить</button>
+        </div>
+        <button class="main-settings__section-opener button_dark-theme">Смена пароля</button>
+        <div class="main-settings-section main-settings__password-change">
+            <input class="main-settings__input main-settings__password-input input_light-theme" type="password"
+                   name="newEmail" title="Введите новый пароль" placeholder="Введите новый пароль:">
+            <input class="main-settings__input main-settings__password-input input_light-theme" type="password"
+                   name="password" title="Введите текущий пароль" placeholder="Введите текущий пароль:">
+            <input class="main-settings__input main-settings__password-input input_light-theme" type="password"
+                   name="confirm" title="Подтвердите пароль" placeholder="Подтвердите пароль:">
+            <button class="main-settings__change-button button_dark-theme">Сменить</button>
+        </div>
+    </div>
+</main>
+<footer class="footer">
+    <div class="container">
+        <div class="footer__tagline">
+            Развивайтесь<br>играя
+        </div>
+    </div>
+</footer>
+<script src="../dist/scripts/polyfill.min.js"></script>
+<script src="../dist/scripts/settingsControl.js"></script>
+</body>
+</html>

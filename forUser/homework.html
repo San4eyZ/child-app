@@ -1,40 +1,45 @@
 <!doctype html>
 <html lang="ru">
 <head>
-    <title>Настройки</title>
+    <title>Домашнее задание</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="css/bootstrap.css">
-    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="../css/bootstrap.css">
+    <link rel="stylesheet" href="../css/index.css">
     <link href="https://fonts.googleapis.com/css?family=Lobster|Open+Sans" rel="stylesheet">
 </head>
-<body class="settings-body">
+<body class="homework-body">
 <header class="header container">
     <div class="row">
         <div class="header__logo-wrapper col-12 col-lg-3 offset-lg-0">
-            <a href="index.html" class="header__logo-name">Numbers!</a>
+            <a href="./index.html" class="header__logo-name">Numbers!</a>
         </div>
         <nav class="main-navigation col-xl-8 col-lg-9 offset-xl-1 navbar navbar-expand-sm justify-content-lg-end">
             <ul class="main-navigation__list navbar-nav">
                 <li class="main-navigation__item nav-item">
-                    <a href="login.html" class="main-navigation__link nav-link main-navigation__login">Вход</a>
+                    <a href="./game.html" class="main-navigation__link nav-link">Играть</a>
                 </li>
                 <li class="main-navigation__item nav-item">
-                    <a href="game.html" class="main-navigation__link nav-link">Играть</a>
+                    <a href="./homework.html" class="main-navigation__link nav-link">Домашка</a>
                 </li>
                 <li class="main-navigation__item nav-item">
-                    <a href="#" class="main-navigation__link nav-link for-registered">Домашка</a>
+                    <a href="./stats.html" class="main-navigation__link nav-link">Статистика</a>
                 </li>
                 <li class="main-navigation__item nav-item">
-                    <a href="#" class="main-navigation__link nav-link for-registered">Статистика</a>
-                </li>
-                <li class="main-navigation__item nav-item">
-                    <a href="#" class="main-navigation__link nav-link for-registered">Настройки</a>
+                    <a href="./settings.html" class="main-navigation__link nav-link">Настройки</a>
                 </li>
             </ul>
         </nav>
     </div>
 </header>
+<main class="homework">
+    <div class="container">
+        <h1 class="homework__heading display-4 text-center">Домашнее задание</h1>
+        <div class="homework__message text-center">
+            У вас нет невыполненного домашнего задания.
+        </div>
+    </div>
+</main>
 <footer class="footer">
     <div class="container">
         <div class="footer__tagline">
@@ -42,6 +47,6 @@
         </div>
     </div>
 </footer>
-<script src="dist/scripts/polyfill.min.js"></script>
+<script src="../dist/scripts/polyfill.min.js"></script>
 </body>
 </html>
