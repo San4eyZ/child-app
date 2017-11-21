@@ -10,6 +10,14 @@ body {
     background: #4a2359;
 }
 
+.ajax-waiting {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
 /*===============   Темы   ====================*/
 
 .input_dark-theme {
@@ -46,7 +54,7 @@ body {
     background: #ffae7e;
     color: #4a2359;
 
-    transition: background 0.5s, color 0.5s;
+    transition: background-color 0.5s, color 0.5s;
 }
 
 .button_light-theme:hover {
@@ -67,7 +75,7 @@ body {
     background: #4a2359;
     color: #ffae7e;
 
-    transition: background 0.5s, color 0.5s;
+    transition: background-color 0.5s, color 0.5s;
 }
 
 .button_dark-theme:hover {
@@ -322,7 +330,8 @@ body {
     width: 100%;
 }
 
-.main-navigation__login {
+.main-navigation__login,
+.main-navigation__logout {
     border-bottom: 3px solid;
 }
 
@@ -900,6 +909,8 @@ body {
 
 .stats__heading {
     cursor: pointer;
+
+    transition: background-color 0.5s;
 }
 
 .stats__heading:hover {
@@ -946,6 +957,7 @@ body {
     color: #4a2359;
 }
 
+
 .main-settings__heading {
     text-align: center;
 }
@@ -979,14 +991,14 @@ body {
 }
 
 .main-settings-section {
-    display: none;
+    display: flex;
     flex-direction: column;
     width: 300px;
-    margin: 10px auto 0;
-    padding: 20px 10px;
-    border: 2px solid;
+    margin: 20px auto;
+    max-height: 0;
+    overflow: hidden;
 
-    border-radius: 10px;
+    transition: max-height 0.8s linear;
 }
 
 @media (max-width: 350px) {
@@ -998,10 +1010,9 @@ body {
 }
 
 .main-settings__input {
-    height: 46px;
     border: 2px solid;
     margin-bottom: 20px;
-    padding: 0 15px;
+    padding: 10px 15px;
 }
 
 .main-settings__input:focus {
@@ -1010,6 +1021,7 @@ body {
 
 .main-settings__change-button {
     height: 46px;
+    margin: 10px;
 
     border-radius: 25px;
     text-align: center;
