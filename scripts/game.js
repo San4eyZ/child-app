@@ -1,12 +1,12 @@
 /*  Создание игры  */
-function CreateGame(interval, capacity, quantity, themeNumber) {
+function CreateGame(interval, capacity, quantity, theme, collection, answer) {
     this.interval = Number(interval) * 1000;
     this.quantity = Number(quantity);
     this.capacity = Number(capacity);
-    this.themeNumber = Number(themeNumber);
-    this.collection = createCollection(capacity, quantity);
+    this.theme = theme;
+    this.collection = collection || createCollection(capacity, quantity);
     this.index = 0;
-    this.answer = 0;
+    this.answer = answer || this.collection.reduce((n, sum) => n + sum, 0);
     this.createBoard();
     this.numberField = this.board.querySelector('.game__number');
 }
@@ -17,7 +17,6 @@ CreateGame.prototype = {
         let number = this.collection[this.index];
         this.numberField.innerHTML = String(number);
         this.numberField.classList.remove('hide');
-        this.answer += number;
         this.index++;
         setTimeout((function () {
             this.numberField.classList.add('hide');
@@ -42,6 +41,7 @@ CreateGame.prototype = {
                     clearInterval(that.timer);
                 }
             }
+
             /* Задаем интервал появления чисел */
             that.timer = setInterval(performInterval, that.interval);
             /* Показываем кнопку restart */
@@ -64,7 +64,7 @@ CreateGame.prototype = {
     sendResult: function (where, result) {
         let xhr = new XMLHttpRequest();
 
-        let body = 'answer=' + `${result};${this.interval};${this.quantity};${this.capacity};${this.themeNumber}`;
+        let body = 'answer=' + `${result};${this.interval};${this.quantity};${this.capacity};${this.theme}`;
 
         xhr.open("POST", where, true);
         xhr.setRequestHeader('Content-Type', 'text-plain');
@@ -88,7 +88,7 @@ CreateGame.prototype = {
         numberHolder.className = 'game__number';
         numberHolder.innerHTML = 'Вперед!';
         if (this.interval) {
-            numberHolder.style.transitionDuration = this.interval * 0.2;
+            numberHolder.style.transitionDuration = `${this.interval * 0.2}`;
         }
 
         /*прикрепляем кнопки к игре*/
@@ -100,11 +100,14 @@ CreateGame.prototype = {
             event.preventDefault();
 
             /* Показываем настрйки и убираем текущую игру */
-            settings.classList.remove('hide');
-            gameInterface.removeChild(board);
+            board.previousElementSibling.classList.remove('hide');
+            board.previousElementSibling.style.maxHeight = '';
+            board.parentElement.removeChild(board);
             clearTimeout(this.endTimer);
-            this.animAlien.classList.remove('animation_fast');
-            this.animShadow.classList.remove('animation_fast');
+            if (this.animAlien && this.animShadow) {
+                this.animAlien.classList.remove('animation_fast');
+                this.animShadow.classList.remove('animation_fast');
+            }
         }).bind(this));
 
         restartButton.addEventListener('click', (function (event) {
@@ -127,7 +130,6 @@ CreateGame.prototype = {
                 }
                 /* обновляем состояние игры */
                 that.index = 0;
-                that.answer = 0;
                 that.numberField.innerHTML = 'Вперед!';
                 /* Показываем доску */
                 board.classList.remove('hide');
@@ -180,91 +182,101 @@ CreateGame.prototype = {
 
         this.board.appendChild(answerForm);
         this.answerForm = answerForm;
-    },
-
-    animAlien: document.querySelector('.settings__animated-image'),
-    animShadow: document.querySelector('.shadow')
+    }
 };
 
-let startGame = document.querySelector('.settings__start-game');
-let settings = document.querySelector('.settings__main-window');
-let gameInterface = document.querySelector('.game-interface');
-let playground = document.querySelector('.playground');
+if (document.body.classList.contains('game-body')) {
+    CreateGame.prototype.animAlien = document.querySelector('.settings__animated-image');
+    CreateGame.prototype.animShadow = document.querySelector('.shadow');
 
-let incButtons = document.querySelectorAll('.button_inc');
-let decButtons = document.querySelectorAll('.button_dec');
-let fields = document.querySelectorAll('.settings__input');
-let fullscreenOn = document.querySelector('.game__fullscreen-on');
-let fullscreenOff = document.querySelector('.game__fullscreen-off');
+    let startGame = document.querySelector('.settings__start-game');
+    let settings = document.querySelector('.settings__main-window');
+    let gameInterface = document.querySelector('.game-interface');
+    let playground = document.querySelector('.playground');
 
-fullscreenOn.addEventListener('click', function (event) {
-    event.preventDefault();
-    playground.classList.add('game-window_fullscreen');
-    this.classList.remove('d-md-block');
-    fullscreenOff.classList.remove('d-none');
-});
+    let incButtons = document.querySelectorAll('.button_inc');
+    let decButtons = document.querySelectorAll('.button_dec');
+    let fields = document.querySelectorAll('.settings__input');
+    let fullscreenOn = document.querySelector('.game__fullscreen-on');
+    let fullscreenOff = document.querySelector('.game__fullscreen-off');
 
-fullscreenOff.addEventListener('click', function (event) {
-    event.preventDefault();
-    playground.classList.remove('game-window_fullscreen');
-    this.classList.add('d-none');
-    fullscreenOn.classList.add('d-md-block');
-});
-
-/*   Начало игры   */
-startGame.addEventListener('click', function (event) {
-    event.preventDefault();
-
-    let themeOption = document.querySelector('.settings__theme-option:checked').value;
-    let speed = document.querySelector('.settings__speed-value').value.split(' ')[0];
-    let capacity = document.querySelector('.settings__capacity-value').value;
-    let quantity = document.querySelector('.settings__quantity-value').value;
-    let game = new CreateGame(speed, capacity, quantity, themeOption);
-    /* Как только начнется демонстрация, показываем кнопку restart */
-    setTimeout(function () {
-        game.restartButton.classList.remove('d-none');
-    }, 3000);
-
-    /* Убираем окно настроек */
-    settings.classList.add('hide');
-
-    /* Таймаут для того, чтобы прошла анимация скрывания настроек */
-    setTimeout(function () {
-        /* Показываем доску */
-        gameInterface.appendChild(game.board);
-        /* Ускоряем пришельца */
-        game.animAlien.classList.add('animation_fast');
-        game.animShadow.classList.add('animation_fast');
-    }, 1000);
-    /* Начинаем показ */
-    game.gameInit();
-});
-
-/* Вешаем обработчики */
-for (let incButton of incButtons) {
-    incButton.addEventListener('click', inputControl.bind(null, incButton, 'inc'));
-}
-
-for (let decButton of decButtons) {
-    decButton.addEventListener('click', inputControl.bind(null, decButton, 'dec'));
-}
-
-for (let field of fields) {
-    field.addEventListener('keypress', restrictKeys);
-    field.addEventListener('focus', function () {
-        this.value = '';
+    fullscreenOn.addEventListener('click', function (event) {
+        event.preventDefault();
+        playground.classList.add('window_fullscreen');
+        this.classList.remove('d-md-block');
+        fullscreenOff.classList.add('d-md-block');
     });
-    field.addEventListener('blur', function () {
-        if (Number(this.value) < Number(this.min)) {
-            this.value = this.min;
-        }
-        if (Number(this.value) > Number(this.max)) {
-            this.value = this.max;
-        }
-        if (this.classList.contains('settings__speed-value')) {
-            this.value = isNaN(Number(this.value)) ? this.min + ' сек' : (Math.round(Number(this.value) * 10) / 10) + ' сек';
-        }
+
+    fullscreenOff.addEventListener('click', function (event) {
+        event.preventDefault();
+        playground.classList.remove('window_fullscreen');
+        this.classList.remove('d-md-block');
+        fullscreenOn.classList.add('d-md-block');
     });
+
+    /*   Начало игры   */
+    startGame.addEventListener('click', function (event) {
+        event.preventDefault();
+
+        this.disabled = true;
+        setTimeout(function () {
+            this.disabled = false;
+        }.bind(this), 1000);
+
+        let themeOption = document.querySelector('.settings__theme-option:checked').value;
+        let speed = document.querySelector('.settings__speed-value').value.split(' ')[0];
+        let capacity = document.querySelector('.settings__capacity-value').value;
+        let quantity = document.querySelector('.settings__quantity-value').value;
+        let game = new CreateGame(speed, capacity, quantity, themeOption);
+        /* Как только начнется демонстрация, показываем кнопку restart */
+        setTimeout(function () {
+            game.restartButton.classList.remove('d-none');
+        }, 3000);
+
+        /* Убираем окно настроек */
+        settings.classList.add('hide');
+
+        /* Таймаут для того, чтобы прошла анимация скрывания настроек */
+        setTimeout(function () {
+            gameInterface.style.maxHeight = '85vh';
+            /* Показываем доску */
+            gameInterface.appendChild(game.board);
+            /* Ускоряем пришельца */
+            if (game.animAlien && game.animShadow) {
+                game.animAlien.classList.add('animation_fast');
+                game.animShadow.classList.add('animation_fast');
+            }
+        }, 1000);
+        /* Начинаем показ */
+        game.gameInit();
+    });
+
+    /* Вешаем обработчики */
+    for (let incButton of incButtons) {
+        incButton.addEventListener('click', inputControl.bind(null, incButton, 'inc'));
+    }
+
+    for (let decButton of decButtons) {
+        decButton.addEventListener('click', inputControl.bind(null, decButton, 'dec'));
+    }
+
+    for (let field of fields) {
+        field.addEventListener('keypress', restrictKeys);
+        field.addEventListener('focus', function () {
+            this.value = '';
+        });
+        field.addEventListener('blur', function () {
+            if (Number(this.value) < Number(this.min)) {
+                this.value = this.min;
+            }
+            if (Number(this.value) > Number(this.max)) {
+                this.value = this.max;
+            }
+            if (this.classList.contains('settings__speed-value')) {
+                this.value = isNaN(Number(this.value)) ? this.min + ' сек' : (Math.round(Number(this.value) * 10) / 10) + ' сек';
+            }
+        });
+    }
 }
 
 /* Создает набор из случайных чисел заданного разряда */
@@ -312,5 +324,95 @@ function inputControl(button, role, event) {
     let newNumber = incValue(number, step);
     if (Number(newNumber) <= Number(controlledInput.max) && Number(newNumber) >= Number(controlledInput.min)) {
         controlledInput.value = rest ? newNumber + ` ${rest}` : newNumber;
+    }
+}
+
+if (document.body.classList.contains('homework-body')) {
+    let placeholder = document.querySelector('.loading-placeholder');
+    let homeworkElement = document.querySelector('.homework');
+    let homeworkWindow = document.querySelector('.homework-main');
+    let fullscreenOn = document.querySelector('.game__fullscreen-on');
+    let fullscreenOff = document.querySelector('.game__fullscreen-off');
+
+    fullscreenOn.addEventListener('click', function (event) {
+        event.preventDefault();
+        homeworkWindow.classList.add('window_fullscreen');
+        this.classList.remove('d-md-block');
+        fullscreenOff.classList.add('d-md-block');
+    });
+
+    fullscreenOff.addEventListener('click', function (event) {
+        event.preventDefault();
+        homeworkWindow.classList.remove('window_fullscreen');
+        this.classList.remove('d-md-block');
+        fullscreenOn.classList.add('d-md-block');
+    });
+
+    let xhr = new XMLHttpRequest();
+    xhr.overrideMimeType('application/json');
+    xhr.open('GET', 'http://localhost:8080/testData/homeworkConfig.json', true);
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            placeholder.parentElement.removeChild(placeholder);
+            addHomeworkList(JSON.parse(xhr.responseText).data, homeworkElement);
+        }
+    };
+    xhr.send();
+
+    function addHomeworkList(tasks, element) {
+        let taskElements = tasks.map(createHomeworkTask);
+        taskElements.forEach(task => element.appendChild(task));
+    }
+
+    function createHomeworkTask(task) {
+        CreateGame.prototype.animAlien = document.querySelector('.settings__animated-image');
+        CreateGame.prototype.animShadow = document.querySelector('.shadow');
+        let title = document.createElement('p');
+        let startButton = document.createElement('button');
+        let taskElement = document.createElement('div');
+        title.classList.add('homework__title');
+        startButton.classList.add('homework__start-button');
+        startButton.classList.add('button_dark-theme');
+        taskElement.classList.add('homework__task');
+        title.innerHTML = `Скорость: ${task.speed}, Тема: ${task.theme}`;
+        startButton.innerHTML = 'Выполнить';
+
+        startButton.addEventListener('click', function (event) {
+            event.preventDefault();
+
+            this.disabled = true;
+            setTimeout(function () {
+                this.disabled = false;
+            }.bind(this), 1000);
+
+            let game = new CreateGame(task.speed, 0, task.collection.length, task.theme, task.collection, task.answer);
+
+            setTimeout(function () {
+                game.restartButton.classList.remove('d-none');
+            }, 3000);
+
+            /* Убираем окно настроек */
+            homeworkElement.classList.add('hide');
+
+            /* Таймаут для того, чтобы прошла анимация скрывания настроек */
+            setTimeout(function () {
+                /* Показываем доску */
+                homeworkElement.style.maxHeight = '85vh';
+                homeworkElement.parentElement.appendChild(game.board);
+                /* Ускоряем пришельца */
+                if (game.animAlien && game.animShadow) {
+                    game.animAlien.classList.add('animation_fast');
+                    game.animShadow.classList.add('animation_fast');
+                }
+            }, 1000);
+            /* Начинаем показ */
+            game.gameInit();
+
+        });
+
+        taskElement.appendChild(title);
+        taskElement.appendChild(startButton);
+
+        return taskElement;
     }
 }

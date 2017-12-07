@@ -10,7 +10,7 @@ let navigationLogin = document.querySelector('.main-navigation__login');
 let windowCloseButtons = document.querySelectorAll('.window-close-button');
 let onlyForUsers = document.querySelectorAll('.for-registered');
 
-if (document.body.className === 'index-body') {
+if (document.body.classList.contains('index-body')) {
     let loginButton = document.querySelector('.main__login');
     let regButton = document.querySelector('.main__reg');
     loginButton.addEventListener('click', showWindow.bind(null, loginWindow, true));

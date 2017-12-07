@@ -47,7 +47,7 @@ function sendData(data, url, isAsync, endCallback, errorCallback) {
 
 function addButtonWaiter(element) {
     element.disabled = true;
-    element.style.backgroundImage = 'url("../images/loading.svg")';
+    element.style.backgroundImage = 'url("../images/loading-light.svg")';
     element.style.backgroundPosition = '5px 50%';
     element.style.backgroundRepeat = 'no-repeat';
     element.style.backgroundSize = '35px 35px';

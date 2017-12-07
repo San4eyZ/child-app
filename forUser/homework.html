@@ -35,11 +35,26 @@
         </nav>
     </div>
 </header>
-<main class="homework">
-    <div class="container">
-        <h1 class="homework__heading display-4 text-center">Домашнее задание</h1>
-        <div class="homework__message text-center">
-            У вас нет невыполненного домашнего задания.
+<main class="homework-main d-flex">
+    <button class="game__button game__fullscreen-on d-none d-md-block"></button>
+    <button class="game__button game__fullscreen-off d-none"></button>
+    <div class="container align-self-center">
+        <div class="row">
+            <figure class="settings__animation d-none d-md-block col-md-4 align-self-center">
+                <img src="../images/settings-creature.png" alt="Пришелец"
+                     class="settings__animated-image centered-image">
+                <div class="shadow__ratio-control-outer">
+                    <div class="shadow__ratio-control-inner">
+                        <div class="shadow"></div>
+                    </div>
+                </div>
+            </figure>
+            <div class="homework-game-interface col-md-8">
+                <div class="homework">
+                    <h1 class="homework__heading display-4 text-center">Домашнее задание</h1>
+                    <div class="loading-placeholder"></div>
+                </div>
+            </div>
         </div>
     </div>
 </main>
@@ -51,5 +66,6 @@
     </div>
 </footer>
 <script src="../dist/scripts/polyfill.min.js"></script>
+<script src="../dist/scripts/game.js"></script>
 </body>
 </html>

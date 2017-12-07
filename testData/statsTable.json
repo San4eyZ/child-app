@@ -1,0 +1,84 @@
+{
+  "data": [
+    {
+      "success": true,
+      "theme": "Просто",
+      "speed": "1",
+      "capacity": "1",
+      "quantity": "10",
+      "rating": "?"
+    },
+    {
+      "success": false,
+      "theme": "Друг",
+      "speed": "1",
+      "capacity": "1",
+      "quantity": "10",
+      "rating": "?"
+    },
+    {
+      "success": true,
+      "theme": "Просто",
+      "speed": "1",
+      "capacity": "1",
+      "quantity": "10",
+      "rating": "?"
+    },
+    {
+      "success": false,
+      "theme": "Брат",
+      "speed": "1",
+      "capacity": "1",
+      "quantity": "10",
+      "rating": "?"
+    },
+    {
+      "success": true,
+      "theme": "Просто",
+      "speed": "1",
+      "capacity": "1",
+      "quantity": "10",
+      "rating": "?"
+    },
+    {
+      "success": true,
+      "theme": "Просто",
+      "speed": "1",
+      "capacity": "1",
+      "quantity": "10",
+      "rating": "?"
+    },
+    {
+      "success": false,
+      "theme": "Друг",
+      "speed": "1",
+      "capacity": "1",
+      "quantity": "10",
+      "rating": "?"
+    },
+    {
+      "success": true,
+      "theme": "Просто",
+      "speed": "1",
+      "capacity": "1",
+      "quantity": "10",
+      "rating": "?"
+    },
+    {
+      "success": false,
+      "theme": "Брат",
+      "speed": "1",
+      "capacity": "1",
+      "quantity": "10",
+      "rating": "?"
+    },
+    {
+      "success": true,
+      "theme": "Просто",
+      "speed": "1",
+      "capacity": "1",
+      "quantity": "10",
+      "rating": "?"
+    }
+  ]
+}

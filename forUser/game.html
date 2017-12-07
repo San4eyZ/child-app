@@ -35,10 +35,10 @@
         </nav>
     </div>
 </header>
-<main class="playground">
+<main class="playground d-flex">
     <button class="game__button game__fullscreen-on d-none d-md-block"></button>
     <button class="game__button game__fullscreen-off d-none"></button>
-    <div class="container">
+    <div class="container align-self-center">
         <div class="game row">
             <figure class="settings__animation d-none d-md-block col-md-4 align-self-center">
                 <img src="../images/settings-creature.png" alt="Пришелец" class="settings__animated-image centered-image">
@@ -55,13 +55,13 @@
                         <span class="settings__label col-12">
                             Выберите тему:
                         </span>
-                        <input type="radio" name="theme" id="theme1" class="settings__theme-option" value="1" checked>
+                        <input type="radio" name="theme" id="theme1" class="settings__theme-option" value="Просто" checked>
                         <label for="theme1" class="settings__opt-name">Просто</label>
-                        <input type="radio" name="theme" id="theme2" class="settings__theme-option" value="2">
+                        <input type="radio" name="theme" id="theme2" class="settings__theme-option" value="Друг">
                         <label for="theme2" class="settings__opt-name">Друг</label>
-                        <input type="radio" name="theme" id="theme3" class="settings__theme-option" value="3">
+                        <input type="radio" name="theme" id="theme3" class="settings__theme-option" value="Брат">
                         <label for="theme3" class="settings__opt-name">Брат</label>
-                        <input type="radio" name="theme" id="theme4" class="settings__theme-option" value="4">
+                        <input type="radio" name="theme" id="theme4" class="settings__theme-option" value="Друг + Брат">
                         <label for="theme4" class="settings__opt-name">Друг + Брат</label>
                     </div>
                     <div class="settings__speed settings__item">
@@ -110,62 +110,7 @@
         </div>
     </div>
 </footer>
-<div class="overlay"></div>
-<section class="reg-window window_default">
-    <button class="reg-window__close window-close-button close-button"></button>
-    <h1 class="reg-window__heading form-heading_default display-4">Регистрация</h1>
-    <form action="" class="reg-form form_default" method="post">
-        <input type="email" name="login" class="reg-form__input input_dark-theme" title="Email" placeholder="Email">
-        <input type="password" name="pass" class="reg-form__input input_dark-theme" title="Пароль" placeholder="Пароль">
-        <input type="password" name="pass-confirm" class="reg-form__input input_dark-theme" title="Повторите пароль"
-               placeholder="Повторите пароль">
-        <button class="reg-form__button button_light-theme">Ок</button>
-        <p class="text-center">
-            Уже есть аккаунт?
-            <a href="#" class="reg-form__to-login form-link_light">Войти</a>
-        </p>
-        <span class="text-center mb-3">
-            Или
-        </span>
-        <a href="#" class="form__social-login form__vk-login">Войти через VK</a>
-    </form>
-</section>
-<section class="login-window window_default">
-    <button class="login-window__close window-close-button close-button"></button>
-    <h1 class="login-window__heading form-heading_default display-4">Вход</h1>
-    <form action="" class="login-form form_default" method="post">
-        <input type="email" name="login" class="login-form__input input_dark-theme" title="Email" placeholder="Email">
-        <input type="password" name="pass" class="login-form__input input_dark-theme" title="Пароль" placeholder="Пароль">
-        <div class="login-form__row">
-            <label class="login-form__remember-label checkbox-label_theme">
-                <input type="checkbox" name="remember" class="login-form__remember checkbox_theme" checked>
-                <span class="checkbox-replaced_dark-theme"></span>
-                Запомнить меня
-            </label>
-            <a href="#" class="login-form__forgotten-pass form-link_light">Не помню пароль</a>
-        </div>
-        <button class="login-form__button button_light-theme">Ок</button>
-        <p class="text-center">
-            У вас нет аккаунта?
-            <a href="#" class="login-form__to-reg form-link_light">Регистрация</a>
-        </p>
-        <span class="text-center mb-3">
-            Или
-        </span>
-        <a href="#" class="form__social-login form__vk-login">Войти через VK</a>
-    </form>
-</section>
-<section class="reset-window window_default">
-    <button class="reset-window__close window-close-button close-button"></button>
-    <h1 class="reset-window__heading form-heading_default display-4">Смена пароля</h1>
-    <p class="text-center">Введите email<br>На него придут дальнейшие указания</p>
-    <form action="" class="reset-form form_default" method="post">
-        <input type="email" name="email" class="reset-form__input input_dark-theme" title="email" placeholder="Email">
-        <button class="reset-form__button button_light-theme">Ок</button>
-    </form>
-</section>
 <script src="../dist/scripts/polyfill.min.js"></script>
 <script src="../dist/scripts/game.js"></script>
-<script src="../dist/scripts/form.js"></script>
 </body>
 </html>

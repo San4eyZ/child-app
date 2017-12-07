@@ -49,19 +49,20 @@
                 </div>
             </figure>
             <div class="game-interface col-md-8">
-                    <section class="settings__main-window">
+                <section class="settings__main-window">
                     <h2 class="settings__heading display-4">Настройки игры</h2>
                     <div class="settings__theme settings__item">
                         <span class="settings__label col-12">
                             Выберите тему:
                         </span>
-                        <input type="radio" name="theme" id="theme1" class="settings__theme-option" value="1" checked>
+                        <input type="radio" name="theme" id="theme1" class="settings__theme-option" value="Просто"
+                               checked>
                         <label for="theme1" class="settings__opt-name">Просто</label>
-                        <input type="radio" name="theme" id="theme2" class="settings__theme-option" value="2">
+                        <input type="radio" name="theme" id="theme2" class="settings__theme-option" value="Друг">
                         <label for="theme2" class="settings__opt-name">Друг</label>
-                        <input type="radio" name="theme" id="theme3" class="settings__theme-option" value="3">
+                        <input type="radio" name="theme" id="theme3" class="settings__theme-option" value="Брат">
                         <label for="theme3" class="settings__opt-name">Брат</label>
-                        <input type="radio" name="theme" id="theme4" class="settings__theme-option" value="4">
+                        <input type="radio" name="theme" id="theme4" class="settings__theme-option" value="Друг + Брат">
                         <label for="theme4" class="settings__opt-name">Друг + Брат</label>
                     </div>
                     <div class="settings__speed settings__item">
@@ -135,7 +136,8 @@
     <h1 class="login-window__heading form-heading_default display-4">Вход</h1>
     <form action="" class="login-form form_default" method="post">
         <input type="email" name="login" class="login-form__input input_dark-theme" title="Email" placeholder="Email">
-        <input type="password" name="pass" class="login-form__input input_dark-theme" title="Пароль" placeholder="Пароль">
+        <input type="password" name="pass" class="login-form__input input_dark-theme" title="Пароль"
+               placeholder="Пароль">
         <div class="login-form__row">
             <label class="login-form__remember-label checkbox-label_theme">
                 <input type="checkbox" name="remember" class="login-form__remember checkbox_theme" checked>

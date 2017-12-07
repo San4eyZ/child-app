@@ -1,0 +1,30 @@
+{
+  "type": "Общий рейтинг",
+  "data": [
+    {
+      "number": 1,
+      "name": "Вася",
+      "value": 4
+    },
+    {
+      "number": 2,
+      "name": "Вася",
+      "value": 3
+    },
+    {
+      "number": 3,
+      "name": "Вася",
+      "value": 2
+    },
+    {
+      "number": 4,
+      "name": "Вася",
+      "value": 1
+    },
+    {
+      "number": 5,
+      "name": "Вася",
+      "value": 0
+    }
+  ]
+}

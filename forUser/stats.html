@@ -37,61 +37,28 @@
 </header>
 <main class="stats">
     <div class="container">
-        <table class="stats__table table_light-theme">
-            <caption class="stats__table-heading display-4">Таблица результатов</caption>
-            <thead>
-            <tr class="stats__row">
-                <th class="stats__heading table_light-theme">№</th>
-                <th class="stats__heading table_light-theme">Результат</th>
-                <th class="stats__heading table_light-theme">Тема</th>
-                <th class="stats__heading table_light-theme">Скорость</th>
-                <th class="stats__heading table_light-theme">Разрядность</th>
-                <th class="stats__heading table_light-theme">Количество</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td class="stats__data table_light-theme">1</td>
-                <td class="stats__data table_light-theme success">Успех</td>
-                <td class="stats__data table_light-theme">Просто</td>
-                <td class="stats__data table_light-theme">2 сек</td>
-                <td class="stats__data table_light-theme">1</td>
-                <td class="stats__data table_light-theme">10</td>
-            </tr>
-            <tr>
-                <td class="stats__data table_light-theme">2</td>
-                <td class="stats__data table_light-theme success">Успех</td>
-                <td class="stats__data table_light-theme">Друг</td>
-                <td class="stats__data table_light-theme">6 сек</td>
-                <td class="stats__data table_light-theme">1</td>
-                <td class="stats__data table_light-theme">8</td>
-            </tr>
-            <tr>
-                <td class="stats__data table_light-theme">3</td>
-                <td class="stats__data table_light-theme failure">Неудача</td>
-                <td class="stats__data table_light-theme">Брат</td>
-                <td class="stats__data table_light-theme">5 сек</td>
-                <td class="stats__data table_light-theme">2</td>
-                <td class="stats__data table_light-theme">12</td>
-            </tr>
-            <tr>
-                <td class="stats__data table_light-theme">4</td>
-                <td class="stats__data table_light-theme success">Успех</td>
-                <td class="stats__data table_light-theme">Друг</td>
-                <td class="stats__data table_light-theme">10 сек</td>
-                <td class="stats__data table_light-theme">1</td>
-                <td class="stats__data table_light-theme">10</td>
-            </tr>
-            <tr>
-                <td class="stats__data table_light-theme">5</td>
-                <td class="stats__data table_light-theme success">Успех</td>
-                <td class="stats__data table_light-theme">Просто</td>
-                <td class="stats__data table_light-theme">1 сек</td>
-                <td class="stats__data table_light-theme">1</td>
-                <td class="stats__data table_light-theme">15</td>
-            </tr>
-            </tbody>
-        </table>
+        <div class="stats-holder">
+            <h1 class="stats__header display-4">Таблица результатов</h1>
+            <input id="switch-1" type="radio" name="switcher" class="stats__option" checked>
+            <label for="switch-1" class="stats__label">
+                Личная статистика
+            </label>
+            <input id="switch-2" type="radio" name="switcher" class="stats__option">
+            <label for="switch-2" class="stats__label">
+                Общий рейтинг
+            </label>
+            <div class="stats__personal">
+                <div class="loading-placeholder"></div>
+            </div>
+            <div class="stats__global">
+                <select name="ratingType" class="stats__global-type input_light-theme" title="Выберите тип списка рекордов">
+                    <option value="0" selected>По рейтингу</option>
+                    <option value="1">По размеру чисел</option>
+                    <option value="2">По скорости</option>
+                </select>
+                <div class="loading-placeholder"></div>
+            </div>
+        </div>
     </div>
 </main>
 <footer class="footer">
@@ -102,6 +69,6 @@
     </div>
 </footer>
 <script src="../dist/scripts/polyfill.min.js"></script>
-<script src="../dist/scripts/statsTableSorting.js"></script>
+<script src="../dist/scripts/statsControl.js"></script>
 </body>
 </html>
