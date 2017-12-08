@@ -4,7 +4,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 var xhr = new XMLHttpRequest();
 xhr.overrideMimeType('application/json');
-xhr.open('GET', 'http://localhost:8080/testData/statsTable.json', true);
+xhr.open('GET', window.location.origin + '/testData/statsTable.json', true);
 xhr.onload = function () {
     if (xhr.status === 200) {
         var tableData = JSON.parse(xhr.responseText).data;
@@ -42,9 +42,9 @@ listOfTypes.addEventListener('change', function () {
 });
 
 function loadRatingTables() {
-    var ratingPromise = makePromise('http://localhost:8080/testData/ratingTop.json');
-    var capacityPromise = makePromise('http://localhost:8080/testData/capacityTop.json');
-    var speedPromise = makePromise('http://localhost:8080/testData/speedTop.json');
+    var ratingPromise = makePromise(window.location.origin + '/testData/ratingTop.json');
+    var capacityPromise = makePromise(window.location.origin + '/testData/capacityTop.json');
+    var speedPromise = makePromise(window.location.origin + '/testData/speedTop.json');
 
     Promise.all([ratingPromise, capacityPromise, speedPromise]).then(function (resultArray) {
         resultArray = resultArray.map(function (tableObj) {

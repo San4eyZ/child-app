@@ -482,11 +482,19 @@ if (document.body.classList.contains('homework-body')) {
 
     var xhr = new XMLHttpRequest();
     xhr.overrideMimeType('application/json');
-    xhr.open('GET', 'http://localhost:8080/testData/homeworkConfig.json', true);
+    xhr.open('GET', window.location.origin + '/testData/homeworkConfig.json', true);
     xhr.onload = function () {
         if (xhr.status === 200) {
             placeholder.parentElement.removeChild(placeholder);
             addHomeworkList(JSON.parse(xhr.responseText).data, homeworkElement);
+        }
+        if (xhr.status === 404) {
+            var message = document.createElement('div');
+            message.innerHTML = 'У вас нет невыполненного домашнего задания';
+            message.style.textAlign = 'center';
+            message.style.fontSize = '1.5em';
+            message.style.color = '#43c40f';
+            homeworkElement.replaceChild(message, placeholder);
         }
     };
     xhr.send();

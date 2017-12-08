@@ -1,6 +1,6 @@
 let xhr = new XMLHttpRequest();
 xhr.overrideMimeType('application/json');
-xhr.open('GET', 'http://localhost:8080/testData/statsTable.json', true);
+xhr.open('GET', `${window.location.origin}/testData/statsTable.json`, true);
 xhr.onload = function () {
     if (xhr.status === 200) {
         let tableData = JSON.parse(xhr.responseText).data;
@@ -36,9 +36,9 @@ listOfTypes.addEventListener('change', function () {
 });
 
 function loadRatingTables() {
-    let ratingPromise = makePromise('http://localhost:8080/testData/ratingTop.json');
-    let capacityPromise = makePromise('http://localhost:8080/testData/capacityTop.json');
-    let speedPromise = makePromise('http://localhost:8080/testData/speedTop.json');
+    let ratingPromise = makePromise(`${window.location.origin}/testData/ratingTop.json`);
+    let capacityPromise = makePromise(`${window.location.origin}/testData/capacityTop.json`);
+    let speedPromise = makePromise(`${window.location.origin}/testData/speedTop.json`);
 
     Promise.all([ratingPromise, capacityPromise, speedPromise]).then(
         function(resultArray) {

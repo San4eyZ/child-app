@@ -142,6 +142,7 @@ body {
 }
 
 .window_default {
+    visibility: hidden;
     opacity: 0;
     z-index: -1;
     padding-top: 10vh;
@@ -179,6 +180,7 @@ body {
 }
 
 .overlay {
+    visibility: hidden;
     opacity: 0;
     z-index: -1;
     position: fixed;
@@ -193,6 +195,7 @@ body {
 }
 
 .show-overlay {
+    visibility: visible;
     opacity: 1;
     z-index: 5;
 }
@@ -677,6 +680,7 @@ body {
 }
 
 .show-window {
+    visibility: visible;
     opacity: 1;
     z-index: 10;
 }
@@ -1046,6 +1050,7 @@ body {
 
 .main-settings__heading {
     text-align: center;
+    font-family: 'Lobster', cursive;
 }
 
 @media (max-width: 576px) {
@@ -1110,6 +1115,16 @@ body {
     margin: 10px;
 
     border-radius: 25px;
+    text-align: center;
+}
+
+/*==============================   окно выбора группы   ==================*/
+
+.groups {
+    background: #ffae7e;
+    color: #4a2359;
+
+    font-family: 'Lobster', cursive;
     text-align: center;
 }
 
