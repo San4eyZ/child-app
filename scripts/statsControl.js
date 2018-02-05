@@ -20,6 +20,12 @@ xhr.onload = function () {
         }));
         personalStats.replaceChild(statsTable, placeholder);
     }
+    if (String(xhr.status).match(/^4/)) {
+        throw new Error(`Ошибка при загрузке статистики (${xhr.status})`);
+    }
+};
+xhr.onerror = function () {
+    throw new Error(`Ошибка при загрузке статистики (${xhr.status})`);
 };
 xhr.send();
 
@@ -48,11 +54,11 @@ function loadRatingTables() {
             currentTable = newTable;
             tables = resultArray;
         }
-    );
+    ).catch(error => alert(error.message));
 }
 
 function makePromise(url) {
-    return new Promise(function (resolve) {
+    return new Promise(function (resolve, reject) {
         let xhr = new XMLHttpRequest();
         xhr.overrideMimeType('application/json');
         xhr.open('GET', url, true);
@@ -60,9 +66,12 @@ function makePromise(url) {
             if (xhr.status === 200) {
                 resolve(JSON.parse(xhr.responseText));
             }
-            else {
-                throw new Error();
+            if (String(xhr.status).match(/^4/)) {
+                reject(new Error(`Произошла ошибка при загрузке рейтинга (${xhr.status})`));
             }
+        };
+        xhr.onerror = function () {
+            reject(new Error(`Произошла ошибка при загрузке рейтинга (${xhr.status})`));
         };
         xhr.send();
     })

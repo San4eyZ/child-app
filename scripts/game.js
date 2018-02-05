@@ -197,22 +197,6 @@ if (document.body.classList.contains('game-body')) {
     let incButtons = document.querySelectorAll('.button_inc');
     let decButtons = document.querySelectorAll('.button_dec');
     let fields = document.querySelectorAll('.settings__input');
-    let fullscreenOn = document.querySelector('.game__fullscreen-on');
-    let fullscreenOff = document.querySelector('.game__fullscreen-off');
-
-    fullscreenOn.addEventListener('click', function (event) {
-        event.preventDefault();
-        playground.classList.add('window_fullscreen');
-        this.classList.remove('d-md-block');
-        fullscreenOff.classList.add('d-md-block');
-    });
-
-    fullscreenOff.addEventListener('click', function (event) {
-        event.preventDefault();
-        playground.classList.remove('window_fullscreen');
-        this.classList.remove('d-md-block');
-        fullscreenOn.classList.add('d-md-block');
-    });
 
     /*   Начало игры   */
     startGame.addEventListener('click', function (event) {
@@ -331,22 +315,6 @@ if (document.body.classList.contains('homework-body')) {
     let placeholder = document.querySelector('.loading-placeholder');
     let homeworkElement = document.querySelector('.homework');
     let homeworkWindow = document.querySelector('.homework-main');
-    let fullscreenOn = document.querySelector('.game__fullscreen-on');
-    let fullscreenOff = document.querySelector('.game__fullscreen-off');
-
-    fullscreenOn.addEventListener('click', function (event) {
-        event.preventDefault();
-        homeworkWindow.classList.add('window_fullscreen');
-        this.classList.remove('d-md-block');
-        fullscreenOff.classList.add('d-md-block');
-    });
-
-    fullscreenOff.addEventListener('click', function (event) {
-        event.preventDefault();
-        homeworkWindow.classList.remove('window_fullscreen');
-        this.classList.remove('d-md-block');
-        fullscreenOn.classList.add('d-md-block');
-    });
 
     let xhr = new XMLHttpRequest();
     xhr.overrideMimeType('application/json');
@@ -363,7 +331,12 @@ if (document.body.classList.contains('homework-body')) {
             message.style.fontSize = '1.5em';
             message.style.color = '#43c40f';
             homeworkElement.replaceChild(message, placeholder);
+        } else {
+            throw new Error(`Ошибка получения информации о группах (${xhr.status})`);
         }
+    };
+    xhr.onerror = function () {
+        throw new Error(`Ошибка получения информации о группах (${xhr.status})`);
     };
     xhr.send();
 

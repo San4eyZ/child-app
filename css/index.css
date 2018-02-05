@@ -1,13 +1,8 @@
 body {
     font-family: 'Open Sans', 'Arial', sans-serif;
     background: #803e6d;
+    background: url("../images/main-background.png") top center no-repeat;
     color: #ffae7e;
-}
-
-.reg-body,
-.reset-body,
-.login-body {
-    background: #4a2359;
 }
 
 .loading-placeholder {
@@ -255,6 +250,24 @@ body {
 
 /*====================   Анимации   ====================*/
 
+@keyframes main-hovering-lg {
+    from {
+        top: 50px;
+    }
+    to {
+        top: 70px;
+    }
+}
+
+@keyframes main-hovering-xl {
+    from {
+        top: 70px;
+    }
+    to {
+        top: 100px;
+    }
+}
+
 @keyframes hovering {
     from {
         top: 0;
@@ -394,12 +407,52 @@ body {
     font-size: 1.3rem;
 }
 
+.main__alien {
+    position: absolute;
+
+    left: 100px;
+
+    animation: main-hovering-lg 2s infinite alternate cubic-bezier(.49,.13,.48,.92);
+}
+
+.main__alien:nth-child(2) {
+    left: 200px;
+
+    animation-delay: .3s;
+    animation-duration: 1.4s;
+}
+
+.main__alien:nth-child(3) {
+    left: 300px;
+
+    animation-delay: .1s;
+    animation-duration: 1.8s;
+}
+
+@media (min-width: 1200px) {
+    .main__alien {
+        transform: scale(1.2);
+        left: 150px;
+
+        animation-name: main-hovering-xl;
+    }
+
+    .main__alien:nth-child(2) {
+        left: 250px;
+    }
+
+    .main__alien:nth-child(3) {
+        left: 350px;
+    }
+}
+
 /*===================   Футер   ===================*/
 
 .footer {
     padding-top: 100px;
 
     background: #6a366b;
+    background: url("../images/footer-background.png") center center no-repeat;
     height: 400px;
 }
 
@@ -732,23 +785,6 @@ body {
 
     background: url('../images/close-icon.svg') left no-repeat;
     background-size: contain;
-}
-
-.game__fullscreen-on,
-.game__fullscreen-off {
-    left: 50px;
-    top: 50px;
-    border: 3px solid;
-    width: 40px;
-    height: 40px;
-
-    border-radius: 0;
-    background: url('../images/fullscreen-on.svg') center no-repeat;
-    background-size: 80%;
-}
-
-.game__fullscreen-off {
-    background-image: url('../images/fullscreen-off.svg');
 }
 
 .game__number {
@@ -1121,6 +1157,8 @@ body {
 /*==============================   окно выбора группы   ==================*/
 
 .groups {
+    padding: 30px 0 50px;
+
     background: #ffae7e;
     color: #4a2359;
 
@@ -1128,18 +1166,82 @@ body {
     text-align: center;
 }
 
-/*=============================   Rewriting stuff   =====================*/
+.groups__heading {
+    margin-bottom: 20px;
+}
 
-.window_fullscreen {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
+.group-holder {
+    margin-bottom: 5px;
+}
+
+.groups__list {
+    display: flex;
+    flex-direction: column;
+}
+
+.group {
+    max-height: 0;
+    flex-direction: column;
+
+    overflow: hidden;
+    transition: max-height 1s;
+}
+
+.group__checkbox,
+.student__radio {
+    display: none;
+}
+
+.group__name {
+    display: block;
+    font-size: 1.2em;
+}
+
+.group__name,
+.group__student {
+    border: 2px solid;
+    border-radius: 20px;
+
+    transition: 0.5s background-color;
+    cursor: pointer;
+}
+
+.group__name:hover {
+    background: #ff7b2f;
+}
+
+.group__student {
+    margin-top: 5px;
+    width: 80%;
+    align-self: center;
+
+    transition: transform 0.5s, background-color 0.5s;
+}
+
+.group__student:hover {
+    transform: scale(1.1);
+    background: #ff7b2f
+}
+
+.student__radio:checked + .group__student {
+    transform: scale(1.1);
+    background: #ff7b2f
+}
+
+.group__checkbox:checked + .group__name {
+    background: #ff7b2f;
+}
+
+.action-place {
+    padding: 20px 20px 0 20px;
+    border: 2px solid;
     overflow: auto;
 
-    background: #ffae7e;
+    background: #ff7b2f;
 }
+
+/*=============================   Rewriting stuff   =====================*/
+
 
 .hide {
     opacity: 0;

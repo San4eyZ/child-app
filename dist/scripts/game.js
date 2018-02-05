@@ -203,22 +203,6 @@ if (document.body.classList.contains('game-body')) {
     var incButtons = document.querySelectorAll('.button_inc');
     var decButtons = document.querySelectorAll('.button_dec');
     var fields = document.querySelectorAll('.settings__input');
-    var fullscreenOn = document.querySelector('.game__fullscreen-on');
-    var fullscreenOff = document.querySelector('.game__fullscreen-off');
-
-    fullscreenOn.addEventListener('click', function (event) {
-        event.preventDefault();
-        playground.classList.add('window_fullscreen');
-        this.classList.remove('d-md-block');
-        fullscreenOff.classList.add('d-md-block');
-    });
-
-    fullscreenOff.addEventListener('click', function (event) {
-        event.preventDefault();
-        playground.classList.remove('window_fullscreen');
-        this.classList.remove('d-md-block');
-        fullscreenOn.classList.add('d-md-block');
-    });
 
     /*   Начало игры   */
     startGame.addEventListener('click', function (event) {
@@ -463,22 +447,6 @@ if (document.body.classList.contains('homework-body')) {
     var placeholder = document.querySelector('.loading-placeholder');
     var homeworkElement = document.querySelector('.homework');
     var homeworkWindow = document.querySelector('.homework-main');
-    var _fullscreenOn = document.querySelector('.game__fullscreen-on');
-    var _fullscreenOff = document.querySelector('.game__fullscreen-off');
-
-    _fullscreenOn.addEventListener('click', function (event) {
-        event.preventDefault();
-        homeworkWindow.classList.add('window_fullscreen');
-        this.classList.remove('d-md-block');
-        _fullscreenOff.classList.add('d-md-block');
-    });
-
-    _fullscreenOff.addEventListener('click', function (event) {
-        event.preventDefault();
-        homeworkWindow.classList.remove('window_fullscreen');
-        this.classList.remove('d-md-block');
-        _fullscreenOn.classList.add('d-md-block');
-    });
 
     var xhr = new XMLHttpRequest();
     xhr.overrideMimeType('application/json');
@@ -495,7 +463,12 @@ if (document.body.classList.contains('homework-body')) {
             message.style.fontSize = '1.5em';
             message.style.color = '#43c40f';
             homeworkElement.replaceChild(message, placeholder);
+        } else {
+            throw new Error('\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u044F \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u0438 \u043E \u0433\u0440\u0443\u043F\u043F\u0430\u0445 (' + xhr.status + ')');
         }
+    };
+    xhr.onerror = function () {
+        throw new Error('\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u044F \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u0438 \u043E \u0433\u0440\u0443\u043F\u043F\u0430\u0445 (' + xhr.status + ')');
     };
     xhr.send();
 }

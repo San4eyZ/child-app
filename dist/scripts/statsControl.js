@@ -26,6 +26,12 @@ xhr.onload = function () {
         });
         personalStats.replaceChild(statsTable, placeholder);
     }
+    if (String(xhr.status).match(/^4/)) {
+        throw new Error('\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438 \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0435 \u0441\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043A\u0438 (' + xhr.status + ')');
+    }
+};
+xhr.onerror = function () {
+    throw new Error('\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438 \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0435 \u0441\u0442\u0430\u0442\u0438\u0441\u0442\u0438\u043A\u0438 (' + xhr.status + ')');
 };
 xhr.send();
 
@@ -54,20 +60,26 @@ function loadRatingTables() {
         currentTable.parentElement.replaceChild(newTable, currentTable);
         currentTable = newTable;
         tables = resultArray;
+    }).catch(function (error) {
+        return alert(error.message);
     });
 }
 
 function makePromise(url) {
-    return new Promise(function (resolve) {
+    return new Promise(function (resolve, reject) {
         var xhr = new XMLHttpRequest();
         xhr.overrideMimeType('application/json');
         xhr.open('GET', url, true);
         xhr.onload = function () {
             if (xhr.status === 200) {
                 resolve(JSON.parse(xhr.responseText));
-            } else {
-                throw new Error();
             }
+            if (String(xhr.status).match(/^4/)) {
+                reject(new Error('\u041F\u0440\u043E\u0438\u0437\u043E\u0448\u043B\u0430 \u043E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438 \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0435 \u0440\u0435\u0439\u0442\u0438\u043D\u0433\u0430 (' + xhr.status + ')'));
+            }
+        };
+        xhr.onerror = function () {
+            reject(new Error('\u041F\u0440\u043E\u0438\u0437\u043E\u0448\u043B\u0430 \u043E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438 \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0435 \u0440\u0435\u0439\u0442\u0438\u043D\u0433\u0430 (' + xhr.status + ')'));
         };
         xhr.send();
     });

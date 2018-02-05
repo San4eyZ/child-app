@@ -35,12 +35,14 @@
 <main class="groups">
     <div class="container">
         <h1 class="groups__heading display-4">Группы</h1>
-        <section class="groups__list col-lg-4">
-
-        </section>
-        <section class="groups__stats col-lg-8">
-
-        </section>
+        <div class="row">
+            <div class="groups__list col-12 col-lg-3">
+                <div class="loading-placeholder"></div>
+            </div>
+            <div class="action-place col-12 col-lg-9">
+                <h2 class="display-4 text-center">Здесь будет информация об учениках</h2>
+            </div>
+        </div>
     </div>
 </main>
 <footer class="footer">
@@ -50,5 +52,7 @@
         </div>
     </div>
 </footer>
+<script src="../dist/scripts/polyfill.min.js"></script>
+<script src="../dist/scripts/groupsControl.js"></script>
 </body>
 </html>

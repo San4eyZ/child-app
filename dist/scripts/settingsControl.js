@@ -3,14 +3,16 @@
 try {
     if (document.body.classList.contains('settings-body')) {
         (function () {
-            var sendData = function sendData(data, url, isAsync, endCallback, errorCallback) {
+            var sendData = function sendData(data, url, isAsync, successCallback, errorCallback) {
                 var xhr = new XMLHttpRequest();
                 xhr.open('POST', url, isAsync);
                 xhr.send(data);
                 xhr.onerror = errorCallback;
                 xhr.onloadend = function () {
                     if (xhr.status === 200) {
-                        endCallback();
+                        successCallback();
+                    } else {
+                        errorCallback();
                     }
                 };
             };
@@ -106,10 +108,20 @@ try {
             }
         })();
     }
-    if (document.body.classList.contains('groups-body')) {}
 } catch (error) {
     notify(true, '\u0427\u0442\u043E-\u0442\u043E \u043F\u043E\u0448\u043B\u043E \u043D\u0435 \u0442\u0430\u043A: ' + error.message, 'failure');
 }
+
+var bgColors = {
+    success: '#6eff95',
+    failure: '#ff0000',
+    warning: '#fcff5a'
+};
+var colors = {
+    success: '#00a919',
+    failure: '#850000',
+    warning: '#de8004'
+};
 
 /**
  * Выводит уведомление, позиционированное сверху экрана и фиксированное при необходимости, в указанный элемент
@@ -138,8 +150,8 @@ function notify(isFixed, message, type) {
     messageWindow.style.textAlign = 'center';
     messageWindow.style.border = '2px solid';
     messageWindow.style.zIndex = '20';
-    messageWindow.style.backgroundColor = type === 'success' ? '#6eff95' : type === 'failure' ? '#ff0000' : '#fcff5a';
-    messageWindow.style.color = type === 'success' ? '#00a919' : type === 'failure' ? '#850000' : '#de8004';
+    messageWindow.style.backgroundColor = bgColors[type];
+    messageWindow.style.color = colors[type];
     messageWindow.innerHTML = message;
     var delayedRemoval = setTimeout(function () {
         element.removeChild(messageWindow);
