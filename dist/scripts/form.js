@@ -7,7 +7,6 @@ var overlay = document.querySelector('.overlay');
 var regWindow = document.querySelector('.reg-window');
 var loginWindow = document.querySelector('.login-window');
 var resetWindow = document.querySelector('.reset-window');
-var navigationLogin = document.querySelector('.main-navigation__login');
 
 var windowCloseButtons = document.querySelectorAll('.window-close-button');
 var onlyForUsers = document.querySelectorAll('.for-registered');
@@ -19,7 +18,6 @@ if (document.body.classList.contains('index-body')) {
     regButton.addEventListener('click', showWindow.bind(null, regWindow, true));
 }
 
-navigationLogin.addEventListener('click', showWindow.bind(null, loginWindow, true));
 linkToReg.addEventListener('click', showWindow.bind(null, regWindow, false));
 linkToLogin.addEventListener('click', showWindow.bind(null, loginWindow, false));
 linkToReset.addEventListener('click', showWindow.bind(null, resetWindow, false));
