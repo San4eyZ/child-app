@@ -7,8 +7,10 @@ try {
             button.addEventListener('click', function (event) {
                 event.preventDefault();
                 let section = this.nextElementSibling;
+                // Вычисление высоты для раскрывающегося списка
+
                 if (!section.style.maxHeight) {
-                    section.style.maxHeight = '500px';
+                    section.style.maxHeight = String(calculateHeight(section)) + 'px';
                 } else {
                     section.style.maxHeight = '';
                 }
@@ -18,17 +20,22 @@ try {
         for (let button of changeButtons) {
             button.addEventListener('click', function (event) {
                 event.preventDefault();
-                addButtonWaiter(this);
-                let endCallback = function () {
-                    removeButtonWaiter(this);
-                    notify(true, 'Инструкция по смене данных отправлена на вашу почту.', 'success');
-                }.bind(this);
-                let errorCallback = function () {
-                    removeButtonWaiter(this);
-                    notify(true, 'При смене данных возникла ошибка. Попробуйте еще раз.', 'failure');
-                }.bind(this);
+                let inputs = [...this.parentElement.children].slice(0, this.parentElement.children.length - 1);
+                if (inputs.every(inp => inp.value)) {
+                    addButtonWaiter(this);
+                    let endCallback = function () {
+                        removeButtonWaiter(this);
+                        notify(true, 'Инструкция по смене данных отправлена на вашу почту.', 'success');
+                    }.bind(this);
+                    let errorCallback = function () {
+                        removeButtonWaiter(this);
+                        notify(true, 'При смене данных возникла ошибка. Попробуйте еще раз.', 'failure');
+                    }.bind(this);
 
-                sendData('test', 'https://www.example.com', true, endCallback, errorCallback);
+                    sendData('test', 'https://www.example.com', true, endCallback, errorCallback);
+                } else {
+                    notify(true, 'Пожалуйста, заполните все поля', 'warning');
+                }
             })
         }
 
@@ -114,4 +121,17 @@ function notify(isFixed, message, type, element = document.body) {
         clearTimeout(delayedRemoval);
     });
     element.insertBefore(messageWindow, element.firstElementChild);
+}
+
+function calculateHeight(element) {
+    return[...element.children].reduce((init, cur) => {
+        let computedStyle = window.getComputedStyle(cur);
+        return init + parseInt(computedStyle.height) +
+            parseInt(computedStyle.marginTop) +
+            parseInt(computedStyle.marginBottom) +
+            parseInt(computedStyle.borderTopWidth) +
+            parseInt(computedStyle.borderBottomWidth) +
+            parseInt(computedStyle.paddingBottom) +
+            parseInt(computedStyle.paddingTop);
+    }, 0);
 }

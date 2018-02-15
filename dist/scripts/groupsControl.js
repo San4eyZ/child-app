@@ -26,7 +26,104 @@ if (document.body.classList.contains('groups-body')) {
         var groupHolder = document.createElement('div');
         groupHolder.classList.add('group-holder');
         var group = document.createElement('div');
+        group.id = groupObj.id;
+        group.groupObj = groupObj;
         group.classList.add('group');
+        if (!groupObj.free) {
+            group.innerHTML = '<button class="button_light-theme groups__delete-btn">\u0423\u0434\u0430\u043B\u0438\u0442\u044C</button>\n                 <button class="button_light-theme groups__red-btn">\u0420\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u0442\u044C</button>';
+
+            var freeStudents = groupsListForRed[groupsListForRed.length - 1];
+
+            var deleteButton = group.querySelector('.groups__delete-btn');
+            var redButton = group.querySelector('.groups__red-btn');
+
+            // Удаление группы
+            deleteButton.addEventListener('click', function (event) {
+                event.preventDefault();
+                var toDelete = confirm('Вы действительно хотите удалить группу?');
+                if (toDelete) {
+                    var _freeStudents$student;
+
+                    var xhr = new XMLHttpRequest();
+                    xhr.overrideMimeType('application/json');
+                    xhr.open('POST', window.location.origin + '/forTeacher/groups.html', true);
+                    xhr.onload = function () {
+                        if (xhr.status === 200) {
+                            location.reload(true);
+                        } else {
+                            notify(true, '\u041F\u0440\u043E\u0438\u0437\u043E\u0448\u043B\u0430 \u043E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438 \u0443\u0434\u0430\u043B\u0435\u043D\u0438\u0438', 'failure');
+                        }
+                    };
+                    // Находим индекс удаляемой группы
+                    var indexToDelete = groupsListForRed.indexOf(groupObj);
+                    // Вырезаем удаляемую группу
+                    var groupToDelete = groupsListForRed.splice(indexToDelete, 1)[0];
+                    // Освобождаем учеников из удаленной группы
+                    (_freeStudents$student = freeStudents.students).push.apply(_freeStudents$student, _toConsumableArray(groupToDelete.students));
+                    // Отправляем данные о новой группе на сервер
+                    xhr.send(JSON.stringify(groupsListForRed));
+                }
+            });
+
+            redButton.addEventListener('click', function (event) {
+                event.preventDefault();
+                var holder = document.createElement('div');
+                holder.classList.add('groups-change-interface');
+
+                var nameChanger = document.createElement('input');
+                nameChanger.value = this.parentElement.groupObj.name;
+                nameChanger.classList.add('input_light-theme', 'groups-change-interface__name-changer');
+
+                var changeButton = document.createElement('button');
+                changeButton.classList.add('button_dark-theme', 'groups-change-interface__btn');
+
+                var list = makeListForSelect(this.parentElement.groupObj);
+                list.classList.add('groups-change-interface__list');
+
+                changeButton.innerHTML = 'Изменить группу';
+                changeButton.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    var enteredName = this.parentElement.firstElementChild.value;
+                    if (enteredName) {
+                        var xhr = new XMLHttpRequest();
+                        xhr.overrideMimeType('application/json');
+                        xhr.open('POST', window.location.origin + '/forTeacher/groups.html', true);
+                        xhr.onload = function () {
+                            if (xhr.status === 200) {
+                                location.reload(true);
+                            } else {
+                                notify(true, '\u041F\u0440\u043E\u0438\u0437\u043E\u0448\u043B\u0430 \u043E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438 \u0440\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0438', 'failure');
+                            }
+                        };
+
+                        var allStudents = [].concat(_toConsumableArray(list.children));
+                        var selectedStudents = allStudents.filter(function (opt) {
+                            return opt.selected;
+                        }).map(function (_ref3) {
+                            var studentObj = _ref3.studentObj;
+                            return studentObj;
+                        });
+                        var unseectedStudents = allStudents.filter(function (opt) {
+                            return !opt.selected;
+                        }).map(function (_ref4) {
+                            var studentObj = _ref4.studentObj;
+                            return studentObj;
+                        });
+
+                        groupObj.students = selectedStudents;
+                        groupsListForRed[groupsListForRed.length - 1].students = unseectedStudents;
+                        groupObj.name = enteredName;
+                        xhr.send(JSON.stringify(groupsListForRed));
+                    } else {
+                        notify(true, 'Пожалуйста введите имя группы', 'warning');
+                    }
+                });
+                holder.appendChild(nameChanger);
+                holder.appendChild(list);
+                holder.appendChild(changeButton);
+                placeForData.replaceChild(holder, placeForData.firstElementChild);
+            });
+        }
         groupHolder.innerHTML = '<input class="group__checkbox" type="checkbox" name="group" id="group-' + groupObj.id + '">\n             <label class="group__name" for="group-' + groupObj.id + '">' + groupObj.name + '</label>';
         groupObj.students.forEach(function (student) {
             return createStudent(student).forEach(function (el) {
@@ -63,22 +160,52 @@ if (document.body.classList.contains('groups-body')) {
         return table;
     };
 
-    var loadingPlaceholder = document.createElement('div');
-    loadingPlaceholder.innerHTML = '<div class="loading-placeholder"></div>';
-    loadingPlaceholder = loadingPlaceholder.firstElementChild;
+    var makeListForSelect = function makeListForSelect() {
+        var group = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
+        var list = document.createElement('select');
+        list.multiple = true;
+        var freeStudents = groupsListForRed[groupsListForRed.length - 1].students;
+        if (group) {
+            group.students.forEach(function (student) {
+                return makeOptions(student, true);
+            });
+        }
+        freeStudents.forEach(function (student) {
+            return makeOptions(student);
+        });
+        function makeOptions(student) {
+            var isSelected = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+            var option = document.createElement('option');
+            option.innerHTML = student.name;
+            option.studentObj = student;
+            option.value = student.id;
+            option.selected = isSelected ? true : '';
+            list.appendChild(option);
+        }
+
+        return list;
+    };
+
+    var loadingPlaceholder = document.createElement('div');
+    loadingPlaceholder.className = 'loading-placeholder';
+
+    var groupsListForRed = void 0;
+    var createButton = document.querySelector('.groups__create-btn');
+    var placeForData = document.querySelector('.action-place');
     var groupsListElement = document.querySelector('.groups__list');
 
     var promiseGroupList = getGroupsData(window.location.origin + '/testData/groupList.json');
     promiseGroupList.then(function (groupList) {
+        groupsListForRed = groupList;
         groupsListElement.removeChild(groupsListElement.firstElementChild);
         groupList.forEach(function (group) {
-            return groupsListElement.appendChild(createGroup(group));
+            return groupsListElement.insertBefore(createGroup(group), groupsListElement.lastElementChild);
         });
 
         var groups = document.querySelectorAll('.group-holder');
         var studentRadios = document.querySelectorAll('.student__radio');
-        var placeForData = document.querySelector('.action-place');
 
         [].concat(_toConsumableArray(studentRadios)).forEach(function (radio) {
             return radio.addEventListener('change', function () {
@@ -89,6 +216,7 @@ if (document.body.classList.contains('groups-body')) {
                     xhr.open('GET', window.location.origin + '/testData/statsTable.json', true);
                     xhr.onload = function () {
                         if (xhr.status === 200) {
+                            //TODO Сделать вывод имени над таблицей информации
                             var table = createPersonalTable(JSON.parse(xhr.responseText).data);
                             table.style.animationName = 'fade';
                             table.style.animationDuration = '1s';
@@ -106,12 +234,9 @@ if (document.body.classList.contains('groups-body')) {
         });
         [].concat(_toConsumableArray(groups)).forEach(function (group) {
             var groupList = group.querySelector('.group');
-            var students = groupList.querySelectorAll('.group__student');
             var showGroup = group.querySelector('.group__checkbox');
-            var height = [].concat(_toConsumableArray(students)).reduce(function (init, cur) {
-                var computedStyle = window.getComputedStyle(cur);
-                return init + parseInt(computedStyle.height) + parseInt(computedStyle.marginTop) + parseInt(computedStyle.marginBottom) + parseInt(computedStyle.borderTopWidth) + parseInt(computedStyle.borderBottomWidth);
-            }, 0);
+            var height = calculateHeight(groupList);
+
             showGroup.addEventListener('change', function () {
                 if (this.checked) {
                     groupList.style.maxHeight = String(height) + 'px';
@@ -120,6 +245,136 @@ if (document.body.classList.contains('groups-body')) {
                 }
             });
         });
+
+        createButton.disabled = '';
+
+        createButton.addEventListener('click', function (event) {
+            event.preventDefault();
+            var holder = document.createElement('div');
+            holder.classList.add('groups-change-interface');
+
+            var nameChanger = document.createElement('input');
+            nameChanger.placeholder = 'Название группы...';
+            nameChanger.classList.add('input_light-theme', 'groups-change-interface__name-changer');
+
+            var changeButton = document.createElement('button');
+            changeButton.innerHTML = 'Создать';
+            changeButton.classList.add('button_dark-theme', 'groups-change-interface__btn');
+
+            changeButton.addEventListener('click', function (evt) {
+                evt.preventDefault();
+                if (nameChanger.value) {
+                    var xhr = new XMLHttpRequest();
+                    xhr.overrideMimeType('application/json');
+                    xhr.open('POST', window.location.origin + '/forTeacher/groups.html', true);
+                    xhr.onload = function () {
+                        if (xhr.status === 200) {
+                            location.reload(true);
+                        } else {
+                            notify(true, '\u041F\u0440\u043E\u0438\u0437\u043E\u0448\u043B\u0430 \u043E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438 \u0441\u043E\u0437\u0434\u0430\u043D\u0438\u0438', 'failure');
+                        }
+                    };
+
+                    var allStudents = [].concat(_toConsumableArray(list.children));
+                    var newGroup = {
+                        name: nameChanger.value,
+                        students: allStudents.filter(function (opt) {
+                            return opt.selected;
+                        }).map(function (_ref) {
+                            var studentObj = _ref.studentObj;
+                            return studentObj;
+                        })
+                    };
+                    var freeGroup = {
+                        name: 'Не распределено',
+                        free: true,
+                        students: allStudents.filter(function (opt) {
+                            return !opt.selected;
+                        }).map(function (_ref2) {
+                            var studentObj = _ref2.studentObj;
+                            return studentObj;
+                        })
+                    };
+                    groupsListForRed.pop();
+                    // TODO Придумать что-нибудь с id или оставить так как есть
+                    newGroup.id = groupsListForRed[groupsListForRed.length - 1].id + 1;
+                    groupsListForRed.push(newGroup, freeGroup);
+                    xhr.send(JSON.stringify(groupsListForRed));
+                } else {
+                    notify(true, 'Пожалуйста введите имя шруппы', 'warning');
+                }
+            });
+
+            var list = makeListForSelect();
+            list.classList.add('groups-change-interface__list');
+
+            holder.appendChild(nameChanger);
+            holder.appendChild(list);
+            holder.appendChild(changeButton);
+            placeForData.replaceChild(holder, placeForData.firstElementChild);
+        });
+    }).catch(function (err) {
+        notify(true, '\u0427\u0442\u043E-\u0442\u043E \u043F\u043E\u0448\u043B\u043E \u043D\u0435 \u0442\u0430\u043A: ' + err.message, 'failure');
     });
+}
+
+var bgColors = {
+    success: '#6eff95',
+    failure: '#ff0000',
+    warning: '#fcff5a'
+};
+
+var colors = {
+    success: '#00a919',
+    failure: '#850000',
+    warning: '#de8004'
+};
+
+/**
+ * Выводит уведомление, позиционированное сверху экрана и фиксированное при необходимости, в указанный элемент
+ * @param {Boolean} isFixed
+ * @param {String} message
+ * @param {String} type
+ * @param {HTMLElement} element
+ */
+function notify(isFixed, message, type) {
+    var element = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : document.body;
+
+    if (type !== 'success' && type !== 'failure' && type !== 'warning') {
+        throw new TypeError('Неверное имя типа. Принимаются только "success", "warning" или "failure"');
+    }
+    var messageWindow = document.createElement('div');
+    messageWindow.title = 'Скрыть';
+    messageWindow.style.cursor = 'pointer';
+    messageWindow.style.position = 'fixed';
+    if (!isFixed) {
+        messageWindow.style.position = 'absolute';
+    }
+    messageWindow.style.left = '0';
+    messageWindow.style.right = '0';
+    messageWindow.style.top = '0';
+    messageWindow.style.padding = '10px';
+    messageWindow.style.textAlign = 'center';
+    messageWindow.style.border = '2px solid';
+    messageWindow.style.zIndex = '20';
+    messageWindow.style.backgroundColor = bgColors[type];
+    messageWindow.style.color = colors[type];
+    messageWindow.innerHTML = message;
+    var delayedRemoval = setTimeout(function () {
+        element.removeChild(messageWindow);
+    }, 5000);
+    messageWindow.addEventListener('click', function (event) {
+        event.preventDefault();
+        element.removeChild(messageWindow);
+        clearTimeout(delayedRemoval);
+    });
+    element.insertBefore(messageWindow, element.firstElementChild);
+}
+
+function calculateHeight(element) {
+    return [].concat(_toConsumableArray(element.children)).reduce(function (init, cur) {
+        var computedStyle = window.getComputedStyle(cur);
+        return init + parseInt(computedStyle.height) + parseInt(computedStyle.marginTop) + parseInt(computedStyle.marginBottom) + parseInt(computedStyle.borderTopWidth) + parseInt(computedStyle.borderBottomWidth) + parseInt(computedStyle.paddingBottom) + parseInt(computedStyle.paddingTop);
+    }, 0);
 }
 //# sourceMappingURL=groupsControl.js.map

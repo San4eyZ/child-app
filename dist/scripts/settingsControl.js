@@ -1,5 +1,7 @@
 'use strict';
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 try {
     if (document.body.classList.contains('settings-body')) {
         (function () {
@@ -47,8 +49,10 @@ try {
                     button.addEventListener('click', function (event) {
                         event.preventDefault();
                         var section = this.nextElementSibling;
+                        // Вычисление высоты для раскрывающегося списка
+
                         if (!section.style.maxHeight) {
-                            section.style.maxHeight = '500px';
+                            section.style.maxHeight = String(calculateHeight(section)) + 'px';
                         } else {
                             section.style.maxHeight = '';
                         }
@@ -79,17 +83,24 @@ try {
 
                     _button.addEventListener('click', function (event) {
                         event.preventDefault();
-                        addButtonWaiter(this);
-                        var endCallback = function () {
-                            removeButtonWaiter(this);
-                            notify(true, 'Инструкция по смене данных отправлена на вашу почту.', 'success');
-                        }.bind(this);
-                        var errorCallback = function () {
-                            removeButtonWaiter(this);
-                            notify(true, 'При смене данных возникла ошибка. Попробуйте еще раз.', 'failure');
-                        }.bind(this);
+                        var inputs = [].concat(_toConsumableArray(this.parentElement.children)).slice(0, this.parentElement.children.length - 1);
+                        if (inputs.every(function (inp) {
+                            return inp.value;
+                        })) {
+                            addButtonWaiter(this);
+                            var endCallback = function () {
+                                removeButtonWaiter(this);
+                                notify(true, 'Инструкция по смене данных отправлена на вашу почту.', 'success');
+                            }.bind(this);
+                            var errorCallback = function () {
+                                removeButtonWaiter(this);
+                                notify(true, 'При смене данных возникла ошибка. Попробуйте еще раз.', 'failure');
+                            }.bind(this);
 
-                        sendData('test', 'https://www.example.com', true, endCallback, errorCallback);
+                            sendData('test', 'https://www.example.com', true, endCallback, errorCallback);
+                        } else {
+                            notify(true, 'Пожалуйста, заполните все поля', 'warning');
+                        }
                     });
                 }
             } catch (err) {
@@ -162,5 +173,12 @@ function notify(isFixed, message, type) {
         clearTimeout(delayedRemoval);
     });
     element.insertBefore(messageWindow, element.firstElementChild);
+}
+
+function calculateHeight(element) {
+    return [].concat(_toConsumableArray(element.children)).reduce(function (init, cur) {
+        var computedStyle = window.getComputedStyle(cur);
+        return init + parseInt(computedStyle.height) + parseInt(computedStyle.marginTop) + parseInt(computedStyle.marginBottom) + parseInt(computedStyle.borderTopWidth) + parseInt(computedStyle.borderBottomWidth) + parseInt(computedStyle.paddingBottom) + parseInt(computedStyle.paddingTop);
+    }, 0);
 }
 //# sourceMappingURL=settingsControl.js.map

@@ -343,8 +343,7 @@ body {
     width: 100%;
 }
 
-.main-navigation__login,
-.main-navigation__logout {
+.current-page {
     border-bottom: 3px solid;
 }
 
@@ -1179,8 +1178,56 @@ body {
     flex-direction: column;
 }
 
+.groups__create-btn {
+    padding: 4px;
+    margin-bottom: 10px;
+    border-radius: 20px;
+}
+
+.groups__create-btn:disabled {
+    background: #888888;
+    color: #ffae7e;
+    cursor: not-allowed;
+}
+
+.groups__create-btn:disabled:hover {
+    box-shadow: none;
+}
+
+.groups__delete-btn,
+.groups__red-btn{
+    min-height: 28px;
+    width: 80%;
+    align-self: center;
+    margin: 5px 0;
+    padding: 0;
+
+    border-radius: 20px
+}
+
+.groups__delete-btn {
+    border: 2px solid #c10000;
+    color: #c10000;
+}
+
+.groups__delete-btn:hover {
+    background: #ff0000;
+    color: #721c24;
+
+    box-shadow: none;
+}
+
+.groups__red-btn {
+    border: 2px solid;
+}
+
+.groups__red-btn:hover {
+    box-shadow: none;
+}
+
 .group {
     max-height: 0;
+    display: flex;
     flex-direction: column;
 
     overflow: hidden;
@@ -1233,11 +1280,59 @@ body {
 }
 
 .action-place {
+    border-radius: 20px;
     padding: 20px 20px 0 20px;
     border: 2px solid;
     overflow: auto;
 
     background: #ff7b2f;
+}
+
+.groups-change-interface {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.groups-change-interface__name-changer {
+    width: 50%;
+    min-width: 250px;
+    margin-bottom: 20px;
+    border: 2px solid;
+
+    font-size: 2em;
+    text-align: center;
+    background: #ff7b2f;
+}
+
+.groups-change-interface__name-changer:hover {
+    cursor: pointer;
+}
+
+.groups-change-interface__name-changer:focus {
+    cursor: text;
+}
+
+.groups-change-interface__list {
+    width: 50%;
+    min-width: 250px;
+    min-height: 250px;
+    border: 1px solid;
+    margin-bottom: 20px;
+
+    text-align: center;
+    background: #ffae7e;
+    outline: none;
+    color: #4a2359;
+    font-size: 1.2em;
+}
+
+.groups-change-interface__btn {
+    padding: 5px 20px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+
+    color: #ff7b2f;
 }
 
 /*=============================   Rewriting stuff   =====================*/
