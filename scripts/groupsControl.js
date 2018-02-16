@@ -19,9 +19,11 @@ if (document.body.classList.contains('groups-body')) {
         [...studentRadios].forEach(radio => radio.addEventListener('change', function () {
             if (this.checked) {
                 placeForData.replaceChild(loadingPlaceholder, placeForData.firstElementChild);
+
                 let xhr = new XMLHttpRequest();
-                xhr.overrideMimeType('application/json');
                 xhr.open('GET', `${window.location.origin}/testData/statsTable.json`, true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+
                 xhr.onload = function () {
                     if (xhr.status === 200) {
                         //TODO Сделать вывод имени над таблицей информации
@@ -36,6 +38,7 @@ if (document.body.classList.contains('groups-body')) {
                 xhr.onerror = function () {
                     throw new Error(`Ошибка получения информации о группах (${xhr.status})`);
                 };
+
                 xhr.send();
             }
         }));
@@ -58,8 +61,6 @@ if (document.body.classList.contains('groups-body')) {
 
         createButton.addEventListener('click', function (event) {
             event.preventDefault();
-            let holder = document.createElement('div');
-            holder.classList.add('groups-change-interface');
 
             let nameChanger = document.createElement('input');
             nameChanger.placeholder = 'Название группы...';
@@ -73,8 +74,9 @@ if (document.body.classList.contains('groups-body')) {
                 evt.preventDefault();
                 if (nameChanger.value) {
                     let xhr = new XMLHttpRequest();
-                    xhr.overrideMimeType('application/json');
                     xhr.open('POST', `${window.location.origin}/forTeacher/groups.html`, true);
+                    xhr.setRequestHeader('Content-Type', 'application/json');
+
                     xhr.onload = function () {
                         if (xhr.status === 200) {
                             location.reload(true);
@@ -106,9 +108,8 @@ if (document.body.classList.contains('groups-body')) {
             let list = makeListForSelect();
             list.classList.add('groups-change-interface__list');
 
-            holder.appendChild(nameChanger);
-            holder.appendChild(list);
-            holder.appendChild(changeButton);
+            let holder = createGroupChangingInterface(nameChanger, list, changeButton);
+
             placeForData.replaceChild(holder, placeForData.firstElementChild);
         })
     }).catch(err => {
@@ -180,8 +181,6 @@ if (document.body.classList.contains('groups-body')) {
 
             redButton.addEventListener('click', function (event) {
                 event.preventDefault();
-                let holder = document.createElement('div');
-                holder.classList.add('groups-change-interface');
 
                 let nameChanger = document.createElement('input');
                 nameChanger.value = this.parentElement.groupObj.name;
@@ -223,9 +222,9 @@ if (document.body.classList.contains('groups-body')) {
 
 
                 });
-                holder.appendChild(nameChanger);
-                holder.appendChild(list);
-                holder.appendChild(changeButton);
+
+                let holder = createGroupChangingInterface(nameChanger, list, changeButton);
+
                 placeForData.replaceChild(holder, placeForData.firstElementChild);
             })
         }
@@ -296,6 +295,20 @@ if (document.body.classList.contains('groups-body')) {
         return list;
     }
 
+    function createGroupChangingInterface(nameChanger, list, button) {
+        let holder = document.createElement('div');
+        holder.classList.add('groups-change-interface');
+        holder.appendChild(nameChanger);
+        holder.appendChild(list);
+        holder.appendChild(button);
+        Object.assign(holder.style, {
+            animationName: 'fade',
+            animationDuration: '1s'
+        });
+
+        return holder;
+    }
+
 }
 
 let bgColors = {
@@ -323,29 +336,32 @@ function notify(isFixed, message, type, element = document.body) {
     }
     let messageWindow = document.createElement('div');
     messageWindow.title = 'Скрыть';
-    messageWindow.style.cursor = 'pointer';
-    messageWindow.style.position = 'fixed';
-    if (!isFixed) {
-        messageWindow.style.position = 'absolute';
-    }
-    messageWindow.style.left = '0';
-    messageWindow.style.right = '0';
-    messageWindow.style.top = '0';
-    messageWindow.style.padding = '10px';
-    messageWindow.style.textAlign = 'center';
-    messageWindow.style.border = '2px solid';
-    messageWindow.style.zIndex = '20';
-    messageWindow.style.backgroundColor = bgColors[type];
-    messageWindow.style.color = colors[type];
     messageWindow.innerHTML = message;
+
+    let notifyStyles = {
+        left: '0',
+        right: '0',
+        top: '0',
+        padding: '10px',
+        textAlign: 'center',
+        border: '2px solid',
+        zIndex: '20',
+        backgroundColor: bgColors[type],
+        color: colors[type],
+        cursor: 'pointer',
+        position: isFixed ? 'fixed' : 'absolute'
+    };
+    Object.assign(messageWindow.style, notifyStyles);
+
     let delayedRemoval = setTimeout(function () {
         element.removeChild(messageWindow);
     }, 5000);
-    messageWindow.addEventListener('click', function (event) {
-        event.preventDefault();
+
+    messageWindow.addEventListener('click', function () {
         element.removeChild(messageWindow);
         clearTimeout(delayedRemoval);
     });
+
     element.insertBefore(messageWindow, element.firstElementChild);
 }
 

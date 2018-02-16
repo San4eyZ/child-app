@@ -16,7 +16,7 @@ try {
                 }
             })
         }
-
+// TODO Сделать нормальную отправку данных
         for (let button of changeButtons) {
             button.addEventListener('click', function (event) {
                 event.preventDefault();
@@ -42,15 +42,15 @@ try {
         function sendData(data, url, isAsync, successCallback, errorCallback) {
             let xhr = new XMLHttpRequest();
             xhr.open('POST', url, isAsync);
-            xhr.send(data);
             xhr.onerror = errorCallback;
-            xhr.onloadend = function () {
+            xhr.onload = function () {
                 if (xhr.status === 200) {
                     successCallback();
                 } else {
                     errorCallback();
                 }
-            }
+            };
+            xhr.send(data);
         }
 
         function addButtonWaiter(element) {
@@ -97,29 +97,32 @@ function notify(isFixed, message, type, element = document.body) {
     }
     let messageWindow = document.createElement('div');
     messageWindow.title = 'Скрыть';
-    messageWindow.style.cursor = 'pointer';
-    messageWindow.style.position = 'fixed';
-    if (!isFixed) {
-        messageWindow.style.position = 'absolute';
-    }
-    messageWindow.style.left = '0';
-    messageWindow.style.right = '0';
-    messageWindow.style.top = '0';
-    messageWindow.style.padding = '10px';
-    messageWindow.style.textAlign = 'center';
-    messageWindow.style.border = '2px solid';
-    messageWindow.style.zIndex = '20';
-    messageWindow.style.backgroundColor = bgColors[type];
-    messageWindow.style.color = colors[type];
     messageWindow.innerHTML = message;
+
+    let notifyStyles = {
+        left: '0',
+        right: '0',
+        top: '0',
+        padding: '10px',
+        textAlign: 'center',
+        border: '2px solid',
+        zIndex: '20',
+        backgroundColor: bgColors[type],
+        color: colors[type],
+        cursor: 'pointer',
+        position: isFixed ? 'fixed' : 'absolute'
+    };
+    Object.assign(messageWindow.style, notifyStyles);
+
     let delayedRemoval = setTimeout(function () {
         element.removeChild(messageWindow);
     }, 5000);
-    messageWindow.addEventListener('click', function (event) {
-        event.preventDefault();
+
+    messageWindow.addEventListener('click', function () {
         element.removeChild(messageWindow);
         clearTimeout(delayedRemoval);
     });
+
     element.insertBefore(messageWindow, element.firstElementChild);
 }
 

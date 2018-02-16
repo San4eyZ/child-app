@@ -1,7 +1,7 @@
 body {
     font-family: 'Open Sans', 'Arial', sans-serif;
     background: #803e6d;
-    background: url("../images/main-background.png") top center no-repeat;
+    background: url("../images/main-background.png") center -300px no-repeat;
     color: #ffae7e;
 }
 
@@ -1302,7 +1302,6 @@ body {
 
     font-size: 2em;
     text-align: center;
-    background: #ff7b2f;
 }
 
 .groups-change-interface__name-changer:hover {
@@ -1317,7 +1316,7 @@ body {
     width: 50%;
     min-width: 250px;
     min-height: 250px;
-    border: 1px solid;
+    border: 2px solid;
     margin-bottom: 20px;
 
     text-align: center;
@@ -1331,8 +1330,6 @@ body {
     padding: 5px 20px;
     border-radius: 20px;
     margin-bottom: 20px;
-
-    color: #ff7b2f;
 }
 
 /*=============================   Rewriting stuff   =====================*/
