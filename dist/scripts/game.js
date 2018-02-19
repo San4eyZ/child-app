@@ -107,7 +107,7 @@ CreateGame.prototype = {
 
             /* Показываем настрйки и убираем текущую игру */
             board.previousElementSibling.classList.remove('hide');
-            board.previousElementSibling.style.maxHeight = '';
+            board.parentElement.style.maxHeight = '';
             board.parentElement.removeChild(board);
             clearTimeout(this.endTimer);
             if (this.animAlien && this.animShadow) {
