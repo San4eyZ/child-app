@@ -323,8 +323,7 @@ if (document.body.classList.contains('homework-body')) {
         if (xhr.status === 200) {
             placeholder.parentElement.removeChild(placeholder);
             addHomeworkList(JSON.parse(xhr.responseText).data, homeworkElement);
-        }
-        if (xhr.status === 404) {
+        } else if (xhr.status === 404) {
             let message = document.createElement('div');
             message.innerHTML = 'У вас нет невыполненного домашнего задания';
             message.style.textAlign = 'center';
