@@ -46,7 +46,7 @@ if (document.body.classList.contains('groups-body')) {
 
                     var xhr = new XMLHttpRequest();
                     xhr.overrideMimeType('application/json');
-                    xhr.open('POST', window.location.origin + '/forTeacher/groups.html', true);
+                    xhr.open('POST', window.location.origin + '/child-app/forTeacher/groups.html', true);
                     xhr.onload = function () {
                         if (xhr.status === 200) {
                             location.reload(true);
@@ -85,7 +85,7 @@ if (document.body.classList.contains('groups-body')) {
                     if (enteredName) {
                         var xhr = new XMLHttpRequest();
                         xhr.overrideMimeType('application/json');
-                        xhr.open('POST', window.location.origin + '/forTeacher/groups.html', true);
+                        xhr.open('POST', window.location.origin + '/child-app/forTeacher/groups.html', true);
                         xhr.onload = function () {
                             if (xhr.status === 200) {
                                 location.reload(true);
@@ -208,7 +208,7 @@ if (document.body.classList.contains('groups-body')) {
     var placeForData = document.querySelector('.action-place');
     var groupsListElement = document.querySelector('.groups__list');
 
-    var promiseGroupList = getGroupsData(window.location.origin + '/testData/groupList.json');
+    var promiseGroupList = getGroupsData(window.location.origin + '/child-app/testData/groupList.json');
     promiseGroupList.then(function (groupList) {
         groupsListForRed = groupList;
         groupsListElement.removeChild(groupsListElement.firstElementChild);
@@ -225,7 +225,7 @@ if (document.body.classList.contains('groups-body')) {
                     placeForData.replaceChild(loadingPlaceholder, placeForData.firstElementChild);
 
                     var xhr = new XMLHttpRequest();
-                    xhr.open('GET', window.location.origin + '/testData/statsTable.json', true);
+                    xhr.open('GET', window.location.origin + '/child-app/testData/statsTable.json', true);
                     xhr.setRequestHeader('Content-Type', 'application/json');
 
                     xhr.onload = function () {
@@ -278,7 +278,7 @@ if (document.body.classList.contains('groups-body')) {
                 evt.preventDefault();
                 if (nameChanger.value) {
                     var xhr = new XMLHttpRequest();
-                    xhr.open('POST', window.location.origin + '/forTeacher/groups.html', true);
+                    xhr.open('POST', window.location.origin + '/child-app/forTeacher/groups.html', true);
                     xhr.setRequestHeader('Content-Type', 'application/json');
 
                     xhr.onload = function () {

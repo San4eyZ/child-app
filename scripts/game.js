@@ -318,7 +318,7 @@ if (document.body.classList.contains('homework-body')) {
 
     let xhr = new XMLHttpRequest();
     xhr.overrideMimeType('application/json');
-    xhr.open('GET', `${window.location.origin}/testData/homeworkConfig.json`, true);
+    xhr.open('GET', `${window.location.origin}/child-app/testData/homeworkConfig.json`, true);
     xhr.onload = function () {
         if (xhr.status === 200) {
             placeholder.parentElement.removeChild(placeholder);

@@ -1,6 +1,6 @@
 if (document.body.classList.contains('stats-body')) {
     let xhr = new XMLHttpRequest();
-    xhr.open('GET', `${window.location.origin}/testData/statsTable.json`, true);
+    xhr.open('GET', `${window.location.origin}/child-app/testData/statsTable.json`, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     
     xhr.onload = function () {
@@ -45,9 +45,9 @@ if (document.body.classList.contains('stats-body')) {
     });
 
     function loadRatingTables() {
-        let ratingPromise = makePromiseToGetData(`${window.location.origin}/testData/ratingTop.json`);
-        let capacityPromise = makePromiseToGetData(`${window.location.origin}/testData/capacityTop.json`);
-        let speedPromise = makePromiseToGetData(`${window.location.origin}/testData/speedTop.json`);
+        let ratingPromise = makePromiseToGetData(`${window.location.origin}/child-app/testData/ratingTop.json`);
+        let capacityPromise = makePromiseToGetData(`${window.location.origin}/child-app/testData/capacityTop.json`);
+        let speedPromise = makePromiseToGetData(`${window.location.origin}/child-app/testData/speedTop.json`);
 
         Promise.all([ratingPromise, capacityPromise, speedPromise]).then(
             function (resultArray) {
