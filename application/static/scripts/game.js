@@ -207,7 +207,7 @@ if (document.body.classList.contains('game-body')) {
             this.disabled = false;
         }.bind(this), 1000);
 
-        let themeOption = document.querySelector('.settings__theme-option:checked').value;
+        let themeOption = document.querySelector('.settings__theme-list').value;
         let speed = document.querySelector('.settings__speed-value').value.split(' ')[0];
         let capacity = document.querySelector('.settings__capacity-value').value;
         let quantity = document.querySelector('.settings__quantity-value').value;
@@ -377,7 +377,7 @@ if (document.body.classList.contains('homework-body')) {
             /* Таймаут для того, чтобы прошла анимация скрывания настроек */
             setTimeout(function () {
                 /* Показываем доску */
-                homeworkElement.style.maxHeight = '85vh';
+                homeworkElement.parentElement.style.maxHeight = '85vh';
                 homeworkElement.parentElement.appendChild(game.board);
                 /* Ускоряем пришельца */
                 if (game.animAlien && game.animShadow) {

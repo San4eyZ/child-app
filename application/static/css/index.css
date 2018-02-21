@@ -468,6 +468,17 @@ body {
     text-align: center;
 }
 
+.footer__link {
+    color: #6a366b;
+
+    transition: color 0.5s;
+}
+
+.footer__link:hover {
+    text-decoration: none;
+    color: #4a254a;
+}
+
 @media (max-width: 576px) {
     .footer__tagline {
         background: #f9907a;
@@ -613,6 +624,20 @@ body {
 
 .settings__theme > * {
     font-size: 1.25rem;
+}
+
+.settings__theme-list {
+    border: 2px solid;
+    padding: 5px;
+    min-width: 35%;
+
+    transition: background-color 0.5s;
+}
+
+.settings__theme-list:hover {
+    cursor: pointer;
+
+    background: #ff7b2f;
 }
 
 .settings__main-window {

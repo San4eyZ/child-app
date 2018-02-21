@@ -18,6 +18,11 @@ if (document.body.classList.contains('index-body')) {
     regButton.addEventListener('click', showWindow.bind(null, regWindow, true));
 }
 
+var gameWindowLogin = document.querySelector('.main-navigation__game-login');
+if (gameWindowLogin) {
+    gameWindowLogin.addEventListener('click', showWindow.bind(null, loginWindow, true));
+}
+
 linkToReg.addEventListener('click', showWindow.bind(null, regWindow, false));
 linkToLogin.addEventListener('click', showWindow.bind(null, loginWindow, false));
 linkToReset.addEventListener('click', showWindow.bind(null, resetWindow, false));

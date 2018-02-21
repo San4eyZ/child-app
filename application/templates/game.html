@@ -4,8 +4,8 @@
     <title>Игровая зона</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="static/css/bootstrap.css">
-    <link rel="stylesheet" href="static/css/index.css">
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
+    <link rel="stylesheet" href="../static/css/index.css">
     <link href="https://fonts.googleapis.com/css?family=Lobster|Open+Sans" rel="stylesheet">
 </head>
 <body class="game-body">
@@ -17,7 +17,7 @@
         <nav class="main-navigation col-xl-8 col-lg-9 offset-xl-1 navbar navbar-expand-sm justify-content-lg-end">
             <ul class="main-navigation__list navbar-nav">
                 <li class="main-navigation__item nav-item">
-                    <a href="login.html" class="main-navigation__link nav-link">Вход</a>
+                    <a href="login.html" class="main-navigation__link nav-link main-navigation__game-login">Вход</a>
                 </li>
                 <li class="main-navigation__item nav-item">
                     <a href="#" class="main-navigation__link nav-link current-page">Играть</a>
@@ -53,15 +53,17 @@
                         <span class="settings__label col-12">
                             Выберите тему:
                         </span>
-                        <input type="radio" name="theme" id="theme1" class="settings__theme-option" value="Просто"
-                               checked>
-                        <label for="theme1" class="settings__opt-name">Просто</label>
-                        <input type="radio" name="theme" id="theme2" class="settings__theme-option" value="Друг">
-                        <label for="theme2" class="settings__opt-name">Друг</label>
-                        <input type="radio" name="theme" id="theme3" class="settings__theme-option" value="Брат">
-                        <label for="theme3" class="settings__opt-name">Брат</label>
-                        <input type="radio" name="theme" id="theme4" class="settings__theme-option" value="Друг + Брат">
-                        <label for="theme4" class="settings__opt-name">Друг + Брат</label>
+                        <!--<input type="radio" name="theme" id="theme1" class="settings__theme-option" value="Просто" checked>-->
+                        <!--<label for="theme1" class="settings__opt-name">Просто</label>-->
+                        <!--<input type="radio" name="theme" id="theme2" class="settings__theme-option" value="Друг">-->
+                        <!--<label for="theme2" class="settings__opt-name">Друг</label>-->
+                        <!--<input type="radio" name="theme" id="theme3" class="settings__theme-option" value="Брат">-->
+                        <!--<label for="theme3" class="settings__opt-name">Брат</label>-->
+                        <!--<input type="radio" name="theme" id="theme4" class="settings__theme-option" value="Друг + Брат">-->
+                        <!--<label for="theme4" class="settings__opt-name">Друг + Брат</label>-->
+                        <select class="settings__theme-list input_light-theme" name="theme" title="Выберите тему">
+                            <option value="theme-1">Друг</option>
+                        </select>
                     </div>
                     <div class="settings__speed settings__item">
                         <span class="settings__label">
@@ -105,7 +107,7 @@
 <footer class="footer">
     <div class="container">
         <div class="footer__tagline">
-            Развивайтесь<br>играя
+            <a href="./game.html" class="footer__link">Развивайтесь<br>играя</a>
         </div>
     </div>
 </footer>
