@@ -4,8 +4,8 @@
     <title>Игровая зона</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="../css/bootstrap.css">
-    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
+    <link rel="stylesheet" href="../static/css/index.css">
     <link href="https://fonts.googleapis.com/css?family=Lobster|Open+Sans" rel="stylesheet">
 </head>
 <body class="game-body">
@@ -20,26 +20,23 @@
                     <a href="./game.html" class="main-navigation__link nav-link current-page">Играть</a>
                 </li>
                 <li class="main-navigation__item nav-item">
-                    <a href="./homework.html" class="main-navigation__link nav-link">Домашка</a>
-                </li>
-                <li class="main-navigation__item nav-item">
-                    <a href="./stats.html" class="main-navigation__link nav-link">Статистика</a>
+                    <a href="./groups.html" class="main-navigation__link nav-link">Группы</a>
                 </li>
                 <li class="main-navigation__item nav-item">
                     <a href="./settings.html" class="main-navigation__link nav-link">Настройки</a>
                 </li>
                 <li class="main-navigation__item nav-item">
-                    <a href="../index.html" class="main-navigation__link nav-link main-navigation__logout">Выйти</a>
+                    <a href="#" class="main-navigation__link nav-link main-navigation__logout">Выйти</a>
                 </li>
             </ul>
         </nav>
     </div>
 </header>
-<main class="playground d-flex">
-    <div class="container align-self-center">
+<main class="playground">
+    <div class="container">
         <div class="game row">
             <figure class="settings__animation d-none d-md-block col-md-4 align-self-center">
-                <img src="../images/settings-creature.png" alt="Пришелец" class="settings__animated-image centered-image">
+                <img src="../static/images/settings-creature.png" alt="Пришелец" class="settings__animated-image centered-image">
                 <div class="shadow__ratio-control-outer">
                     <div class="shadow__ratio-control-inner">
                         <div class="shadow"></div>
@@ -108,7 +105,61 @@
         </div>
     </div>
 </footer>
-<script src="../dist/scripts/polyfill.min.js"></script>
-<script src="../dist/scripts/game.js"></script>
+<div class="overlay"></div>
+<section class="reg-window window_default">
+    <button class="reg-window__close window-close-button close-button"></button>
+    <h1 class="reg-window__heading form-heading_default display-4">Регистрация</h1>
+    <form action="" class="reg-form form_default" method="post">
+        <input type="email" name="login" class="reg-form__input input_dark-theme" title="Email" placeholder="Email">
+        <input type="password" name="pass" class="reg-form__input input_dark-theme" title="Пароль" placeholder="Пароль">
+        <input type="password" name="pass-confirm" class="reg-form__input input_dark-theme" title="Повторите пароль"
+               placeholder="Повторите пароль">
+        <button class="reg-form__button button_light-theme">Ок</button>
+        <p class="text-center">
+            Уже есть аккаунт?
+            <a href="#" class="reg-form__to-login form-link_light">Войти</a>
+        </p>
+        <span class="text-center mb-3">
+            Или
+        </span>
+        <a href="#" class="form__social-login form__vk-login">Войти через VK</a>
+    </form>
+</section>
+<section class="login-window window_default">
+    <button class="login-window__close window-close-button close-button"></button>
+    <h1 class="login-window__heading form-heading_default display-4">Вход</h1>
+    <form action="" class="login-form form_default" method="post">
+        <input type="email" name="login" class="login-form__input input_dark-theme" title="Email" placeholder="Email">
+        <input type="password" name="pass" class="login-form__input input_dark-theme" title="Пароль" placeholder="Пароль">
+        <div class="login-form__row">
+            <label class="login-form__remember-label checkbox-label_theme">
+                <input type="checkbox" name="remember" class="login-form__remember checkbox_theme" checked>
+                <span class="checkbox-replaced_dark-theme"></span>
+                Запомнить меня
+            </label>
+            <a href="#" class="login-form__forgotten-pass form-link_light">Не помню пароль</a>
+        </div>
+        <button class="login-form__button button_light-theme">Ок</button>
+        <p class="text-center">
+            У вас нет аккаунта?
+            <a href="#" class="login-form__to-reg form-link_light">Регистрация</a>
+        </p>
+        <span class="text-center mb-3">
+            Или
+        </span>
+        <a href="#" class="form__social-login form__vk-login">Войти через VK</a>
+    </form>
+</section>
+<section class="reset-window window_default">
+    <button class="reset-window__close window-close-button close-button"></button>
+    <h1 class="reset-window__heading form-heading_default display-4">Смена пароля</h1>
+    <p class="text-center">Введите email<br>На него придут дальнейшие указания</p>
+    <form action="" class="reset-form form_default" method="post">
+        <input type="email" name="email" class="reset-form__input input_dark-theme" title="email" placeholder="Email">
+        <button class="reset-form__button button_light-theme">Ок</button>
+    </form>
+</section>
+<script src="../static/dist/scripts/polyfill.min.js"></script>
+<script src="../static/dist/scripts/game.js"></script>
 </body>
 </html>

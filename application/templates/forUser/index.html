@@ -1,14 +1,14 @@
 <!doctype html>
 <html lang="ru">
 <head>
-    <title>Статистика</title>
+    <title>Numbers!</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="../css/bootstrap.css">
-    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
+    <link rel="stylesheet" href="../static/css/index.css">
     <link href="https://fonts.googleapis.com/css?family=Lobster|Open+Sans" rel="stylesheet">
 </head>
-<body class="stats-body">
+<body class="index-body">
 <header class="header container">
     <div class="row">
         <div class="header__logo-wrapper col-12 col-lg-3 offset-lg-0">
@@ -23,7 +23,7 @@
                     <a href="./homework.html" class="main-navigation__link nav-link">Домашка</a>
                 </li>
                 <li class="main-navigation__item nav-item">
-                    <a href="./stats.html" class="main-navigation__link nav-link current-page">Статистика</a>
+                    <a href="./stats.html" class="main-navigation__link nav-link">Статистика</a>
                 </li>
                 <li class="main-navigation__item nav-item">
                     <a href="./settings.html" class="main-navigation__link nav-link">Настройки</a>
@@ -35,29 +35,23 @@
         </nav>
     </div>
 </header>
-<main class="stats">
-    <div class="container">
-        <div class="stats-holder">
-            <h1 class="stats__header display-4">Таблица результатов</h1>
-            <input id="switch-1" type="radio" name="switcher" class="stats__option" checked>
-            <label for="switch-1" class="stats__label">
-                Личная статистика
-            </label>
-            <input id="switch-2" type="radio" name="switcher" class="stats__option">
-            <label for="switch-2" class="stats__label">
-                Общий рейтинг
-            </label>
-            <div class="stats__personal">
-                <div class="loading-placeholder"></div>
-            </div>
-            <div class="stats__global">
-                <select name="ratingType" class="stats__global-type input_light-theme" title="Выберите тип списка рекордов">
-                    <option value="0" selected>По рейтингу</option>
-                    <option value="1">По размеру чисел</option>
-                    <option value="2">По скорости</option>
-                </select>
-                <div class="loading-placeholder"></div>
-            </div>
+<main class="main container">
+    <div class="row">
+        <section class="main-info col-12 col-lg-5 align-self-center">
+            <h1 class="main-info__main-heading">Numbers!</h1>
+            <h4 class="main-info__side-heading">Новая игра-тренажер</h4>
+            <p class="main-info__description">
+                Разнообразный и богатый опыт дальнейшее развитие различных форм деятельности
+                в значительной степени обуславливает создание существенных финансовых и
+                административных условий.
+            </p>
+            <a href="./game.html" class="main__play button_light-theme">Играть!</a>
+        </section>
+        <div class="main__image-wrapper d-none d-lg-block col-lg-7 justify-content-center">
+            <img src="../static/images/alien-1.png" class="main__alien" width="64" height="106">
+            <img src="../static/images/alien-2.png" class="main__alien" width="65" height="104">
+            <img src="../static/images/alien-3.png" class="main__alien" width="64" height="98">
+            <img src="../static/images/pc-template.png" alt="Изображение компьютера" class="main__computer-image img-fluid">
         </div>
     </div>
 </main>
@@ -68,7 +62,5 @@
         </div>
     </div>
 </footer>
-<script src="../dist/scripts/polyfill.min.js"></script>
-<script src="../dist/scripts/statsControl.js"></script>
 </body>
 </html>
