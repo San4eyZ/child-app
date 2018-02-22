@@ -192,144 +192,175 @@ CreateGame.prototype = {
 };
 
 if (document.body.classList.contains('game-body')) {
-    CreateGame.prototype.animAlien = document.querySelector('.settings__animated-image');
-    CreateGame.prototype.animShadow = document.querySelector('.shadow');
+    (function () {
+        CreateGame.prototype.animAlien = document.querySelector('.settings__animated-image');
+        CreateGame.prototype.animShadow = document.querySelector('.shadow');
 
-    var startGame = document.querySelector('.settings__start-game');
-    var settings = document.querySelector('.settings__main-window');
-    var gameInterface = document.querySelector('.game-interface');
-    var playground = document.querySelector('.playground');
+        var startGame = document.querySelector('.settings__start-game');
+        var settings = document.querySelector('.settings__main-window');
+        var gameInterface = document.querySelector('.game-interface');
+        var playground = document.querySelector('.playground');
 
-    var incButtons = document.querySelectorAll('.button_inc');
-    var decButtons = document.querySelectorAll('.button_dec');
-    var fields = document.querySelectorAll('.settings__input');
+        var incButtons = document.querySelectorAll('.button_inc');
+        var decButtons = document.querySelectorAll('.button_dec');
+        var fields = document.querySelectorAll('.settings__input');
 
-    /*   Начало игры   */
-    startGame.addEventListener('click', function (event) {
-        event.preventDefault();
+        /*   Начало игры   */
+        startGame.addEventListener('click', function (event) {
+            event.preventDefault();
 
-        this.disabled = true;
-        setTimeout(function () {
-            this.disabled = false;
-        }.bind(this), 1000);
+            this.classList.add('btn-loading');
+            this.disabled = true;
 
-        var themeOption = document.querySelector('.settings__theme-list').value;
-        var speed = document.querySelector('.settings__speed-value').value.split(' ')[0];
-        var capacity = document.querySelector('.settings__capacity-value').value;
-        var quantity = document.querySelector('.settings__quantity-value').value;
-        var game = new CreateGame(speed, capacity, quantity, themeOption);
-        /* Как только начнется демонстрация, показываем кнопку restart */
-        setTimeout(function () {
-            game.restartButton.classList.remove('d-none');
-        }, 3000);
+            var themeOption = document.querySelector('.settings__theme-list').value;
+            var speed = document.querySelector('.settings__speed-value').value.split(' ')[0];
+            var capacity = document.querySelector('.settings__capacity-value').value;
+            var quantity = document.querySelector('.settings__quantity-value').value;
 
-        /* Убираем окно настроек */
-        settings.classList.add('hide');
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', window.location.href, true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    setTimeout(function () {
+                        this.disabled = false;
+                    }.bind(this), 1000);
 
-        /* Таймаут для того, чтобы прошла анимация скрывания настроек */
-        setTimeout(function () {
-            gameInterface.style.maxHeight = '85vh';
-            /* Показываем доску */
-            gameInterface.appendChild(game.board);
-            /* Ускоряем пришельца */
-            if (game.animAlien && game.animShadow) {
-                game.animAlien.classList.add('animation_fast');
-                game.animShadow.classList.add('animation_fast');
-            }
-        }, 1000);
-        /* Начинаем показ */
-        game.gameInit();
-    });
+                    var game = new CreateGame(speed, capacity, quantity, themeOption, JSON.parse(xhr.responseText));
+                    /* Как только начнется демонстрация, показываем кнопку restart */
+                    setTimeout(function () {
+                        game.restartButton.classList.remove('d-none');
+                    }, 3000);
 
-    /* Вешаем обработчики */
-    var _iteratorNormalCompletion = true;
-    var _didIteratorError = false;
-    var _iteratorError = undefined;
+                    /* Убираем окно настроек */
+                    settings.classList.add('hide');
 
-    try {
-        for (var _iterator = incButtons[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var incButton = _step.value;
-
-            incButton.addEventListener('click', inputControl.bind(null, incButton, 'inc'));
-        }
-    } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-    } finally {
-        try {
-            if (!_iteratorNormalCompletion && _iterator.return) {
-                _iterator.return();
-            }
-        } finally {
-            if (_didIteratorError) {
-                throw _iteratorError;
-            }
-        }
-    }
-
-    var _iteratorNormalCompletion2 = true;
-    var _didIteratorError2 = false;
-    var _iteratorError2 = undefined;
-
-    try {
-        for (var _iterator2 = decButtons[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-            var decButton = _step2.value;
-
-            decButton.addEventListener('click', inputControl.bind(null, decButton, 'dec'));
-        }
-    } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
-    } finally {
-        try {
-            if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                _iterator2.return();
-            }
-        } finally {
-            if (_didIteratorError2) {
-                throw _iteratorError2;
-            }
-        }
-    }
-
-    var _iteratorNormalCompletion3 = true;
-    var _didIteratorError3 = false;
-    var _iteratorError3 = undefined;
-
-    try {
-        for (var _iterator3 = fields[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-            var field = _step3.value;
-
-            field.addEventListener('keypress', restrictKeys);
-            field.addEventListener('focus', function () {
-                this.value = '';
-            });
-            field.addEventListener('blur', function () {
-                if (Number(this.value) < Number(this.min)) {
-                    this.value = this.min;
+                    /* Таймаут для того, чтобы прошла анимация скрывания настроек */
+                    setTimeout(function () {
+                        gameInterface.style.maxHeight = '85vh';
+                        /* Показываем доску */
+                        gameInterface.appendChild(game.board);
+                        /* Ускоряем пришельца */
+                        if (game.animAlien && game.animShadow) {
+                            game.animAlien.classList.add('animation_fast');
+                            game.animShadow.classList.add('animation_fast');
+                        }
+                    }, 1000);
+                    /* Начинаем показ */
+                    game.gameInit();
+                } else {
+                    this.disabled = false;
+                    this.classList.remove('btn-loading');
+                    notify(true, '\u0427\u0442\u043E-\u0442\u043E \u043F\u043E\u0448\u043B\u043E \u043D\u0435 \u0442\u0430\u043A: (' + xhr.status + ')', 'failure');
                 }
-                if (Number(this.value) > Number(this.max)) {
-                    this.value = this.max;
-                }
-                if (this.classList.contains('settings__speed-value')) {
-                    this.value = isNaN(Number(this.value)) ? this.min + ' сек' : Math.round(Number(this.value) * 10) / 10 + ' сек';
-                }
-            });
-        }
-    } catch (err) {
-        _didIteratorError3 = true;
-        _iteratorError3 = err;
-    } finally {
+            }.bind(this);
+
+            xhr.onerror = function () {
+                this.disabled = false;
+                this.classList.remove('btn-loading');
+                notify(true, '\u0427\u0442\u043E-\u0442\u043E \u043F\u043E\u0448\u043B\u043E \u043D\u0435 \u0442\u0430\u043A: (' + xhr.status + ')', 'failure');
+            }.bind(this);
+
+            xhr.send(JSON.stringify({ speed: speed, capacity: capacity, quantity: quantity, themeOption: themeOption }));
+        });
+
+        /* Вешаем обработчики */
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
         try {
-            if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                _iterator3.return();
+            for (var _iterator = incButtons[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                var incButton = _step.value;
+
+                incButton.addEventListener('click', inputControl.bind(null, incButton, 'inc'));
             }
+        } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
         } finally {
-            if (_didIteratorError3) {
-                throw _iteratorError3;
+            try {
+                if (!_iteratorNormalCompletion && _iterator.return) {
+                    _iterator.return();
+                }
+            } finally {
+                if (_didIteratorError) {
+                    throw _iteratorError;
+                }
             }
         }
-    }
+
+        var _iteratorNormalCompletion2 = true;
+        var _didIteratorError2 = false;
+        var _iteratorError2 = undefined;
+
+        try {
+            for (var _iterator2 = decButtons[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                var decButton = _step2.value;
+
+                decButton.addEventListener('click', inputControl.bind(null, decButton, 'dec'));
+            }
+        } catch (err) {
+            _didIteratorError2 = true;
+            _iteratorError2 = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                    _iterator2.return();
+                }
+            } finally {
+                if (_didIteratorError2) {
+                    throw _iteratorError2;
+                }
+            }
+        }
+
+        var initialValue = void 0;
+        var _iteratorNormalCompletion3 = true;
+        var _didIteratorError3 = false;
+        var _iteratorError3 = undefined;
+
+        try {
+            for (var _iterator3 = fields[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                var field = _step3.value;
+
+                field.addEventListener('keypress', restrictKeys);
+                field.addEventListener('focus', function () {
+                    initialValue = this.value;
+                    this.value = '';
+                });
+                field.addEventListener('blur', function () {
+                    if (this.value === '') {
+                        this.value = initialValue;
+
+                        return;
+                    }
+                    if (Number(this.value) < Number(this.min)) {
+                        this.value = this.min;
+                    }
+                    if (Number(this.value) > Number(this.max)) {
+                        this.value = this.max;
+                    }
+                    if (this.classList.contains('settings__speed-value')) {
+                        this.value = isNaN(Number(this.value)) ? this.min + ' сек' : Math.round(Number(this.value) * 10) / 10 + ' сек';
+                    }
+                });
+            }
+        } catch (err) {
+            _didIteratorError3 = true;
+            _iteratorError3 = err;
+        } finally {
+            try {
+                if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                    _iterator3.return();
+                }
+            } finally {
+                if (_didIteratorError3) {
+                    throw _iteratorError3;
+                }
+            }
+        }
+    })();
 }
 
 /* Создает набор из случайных чисел заданного разряда */
@@ -470,5 +501,63 @@ if (document.body.classList.contains('homework-body')) {
         throw new Error('\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u044F \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u0438 \u043E \u0433\u0440\u0443\u043F\u043F\u0430\u0445 (' + xhr.status + ')');
     };
     xhr.send();
+}
+
+var bgColors = {
+    success: '#6eff95',
+    failure: '#ff0000',
+    warning: '#fcff5a'
+};
+var colors = {
+    success: '#00a919',
+    failure: '#850000',
+    warning: '#de8004'
+};
+var currentZindex = 20;
+
+/**
+ * Выводит уведомление, позиционированное сверху экрана и фиксированное при необходимости, в указанный элемент
+ * @param {Boolean} isFixed
+ * @param {String} message
+ * @param {String} type
+ * @param {HTMLElement} element
+ */
+function notify(isFixed, message, type) {
+    var element = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : document.body;
+
+    if (type !== 'success' && type !== 'failure' && type !== 'warning') {
+        throw new TypeError('Неверное имя типа. Принимаются только "success", "warning" или "failure"');
+    }
+    var messageWindow = document.createElement('div');
+    messageWindow.title = 'Скрыть';
+    messageWindow.innerHTML = message;
+
+    var notifyStyles = {
+        left: '0',
+        right: '0',
+        top: '0',
+        padding: '10px',
+        textAlign: 'center',
+        border: '2px solid',
+        zIndex: String(currentZindex),
+        backgroundColor: bgColors[type],
+        color: colors[type],
+        cursor: 'pointer',
+        position: isFixed ? 'fixed' : 'absolute'
+    };
+    currentZindex++;
+
+    Object.assign(messageWindow.style, notifyStyles);
+
+    var delayedRemoval = setTimeout(function () {
+        element.removeChild(messageWindow);
+    }, 5000);
+
+    messageWindow.addEventListener('click', function () {
+        element.removeChild(messageWindow);
+        clearTimeout(delayedRemoval);
+    });
+
+    element.insertBefore(messageWindow, element.firstElementChild);
 }
 //# sourceMappingURL=game.js.map

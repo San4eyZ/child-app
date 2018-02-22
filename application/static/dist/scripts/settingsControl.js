@@ -21,18 +21,12 @@ try {
 
             var addButtonWaiter = function addButtonWaiter(element) {
                 element.disabled = true;
-                element.style.backgroundImage = 'url("../images/loading-light.svg")';
-                element.style.backgroundPosition = '5px 50%';
-                element.style.backgroundRepeat = 'no-repeat';
-                element.style.backgroundSize = '35px 35px';
+                element.classList.add('btn-loading');
             };
 
             var removeButtonWaiter = function removeButtonWaiter(element) {
                 element.disabled = undefined;
-                element.style.backgroundImage = '';
-                element.style.backgroundPosition = '';
-                element.style.backgroundRepeat = '';
-                element.style.backgroundSize = '';
+                element.classList.remove('btn-loading');
             };
 
             var openButtons = document.querySelectorAll('.main-settings__section-opener');
@@ -85,8 +79,26 @@ try {
                     _button.addEventListener('click', function (event) {
                         event.preventDefault();
                         var inputs = [].concat(_toConsumableArray(this.parentElement.children)).slice(0, this.parentElement.children.length - 1);
-                        if (inputs.every(function (inp) {
-                            return inp.value;
+
+                        var values = inputs.map(function (_ref) {
+                            var value = _ref.value;
+                            return value;
+                        });
+
+                        if (values[1] && values[2] && values[1] !== values[2]) {
+                            notify(true, 'Введенные пароли не совпадают.', 'warning');
+
+                            return;
+                        }
+
+                        if (inputs[0] && inputs[0].type === 'email' && !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(inputs[0].value)) {
+                            notify(true, 'Введен некорректный email.', 'warning');
+
+                            return;
+                        }
+
+                        if (values.every(function (value) {
+                            return value;
                         })) {
                             addButtonWaiter(this);
                             var endCallback = function () {
@@ -134,6 +146,7 @@ var colors = {
     failure: '#850000',
     warning: '#de8004'
 };
+var currentZindex = 20;
 
 /**
  * Выводит уведомление, позиционированное сверху экрана и фиксированное при необходимости, в указанный элемент
@@ -159,12 +172,14 @@ function notify(isFixed, message, type) {
         padding: '10px',
         textAlign: 'center',
         border: '2px solid',
-        zIndex: '20',
+        zIndex: String(currentZindex),
         backgroundColor: bgColors[type],
         color: colors[type],
         cursor: 'pointer',
         position: isFixed ? 'fixed' : 'absolute'
     };
+    currentZindex++;
+
     Object.assign(messageWindow.style, notifyStyles);
 
     var delayedRemoval = setTimeout(function () {

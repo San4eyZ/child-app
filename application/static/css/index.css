@@ -1178,6 +1178,13 @@ body {
     text-align: center;
 }
 
+.btn-loading {
+    background-image: url("../images/loading-light.svg") !important;
+    background-position: 5px 50% !important;
+    background-repeat: no-repeat !important;
+    background-size: 35px 35px !important;
+}
+
 /*==============================   окно выбора группы   ==================*/
 
 .groups {

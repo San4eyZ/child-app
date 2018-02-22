@@ -16,12 +16,27 @@ try {
                 }
             })
         }
-// TODO Сделать нормальную отправку данных
+
         for (let button of changeButtons) {
             button.addEventListener('click', function (event) {
                 event.preventDefault();
                 let inputs = [...this.parentElement.children].slice(0, this.parentElement.children.length - 1);
-                if (inputs.every(inp => inp.value)) {
+
+                let values = inputs.map(({ value }) => value);
+
+                if (values[1] && values[2] && values[1] !== values[2]) {
+                    notify(true, 'Введенные пароли не совпадают.', 'warning');
+
+                    return;
+                }
+
+                if (inputs[0] && inputs[0].type === 'email' && !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(inputs[0].value)) {
+                    notify(true, 'Введен некорректный email.', 'warning');
+
+                    return;
+                }
+
+                if (values.every(value => value)) {
                     addButtonWaiter(this);
                     let endCallback = function () {
                         removeButtonWaiter(this);
@@ -55,18 +70,12 @@ try {
 
         function addButtonWaiter(element) {
             element.disabled = true;
-            element.style.backgroundImage = 'url("../images/loading-light.svg")';
-            element.style.backgroundPosition = '5px 50%';
-            element.style.backgroundRepeat = 'no-repeat';
-            element.style.backgroundSize = '35px 35px';
+            element.classList.add('btn-loading');
         }
 
         function removeButtonWaiter(element) {
             element.disabled = undefined;
-            element.style.backgroundImage = '';
-            element.style.backgroundPosition = '';
-            element.style.backgroundRepeat = '';
-            element.style.backgroundSize = '';
+            element.classList.remove('btn-loading');
         }
     }
 } catch (error) {
@@ -83,6 +92,7 @@ let colors = {
     failure: '#850000',
     warning: '#de8004'
 };
+let currentZindex = 20;
 
 /**
  * Выводит уведомление, позиционированное сверху экрана и фиксированное при необходимости, в указанный элемент
@@ -106,12 +116,14 @@ function notify(isFixed, message, type, element = document.body) {
         padding: '10px',
         textAlign: 'center',
         border: '2px solid',
-        zIndex: '20',
+        zIndex: String(currentZindex),
         backgroundColor: bgColors[type],
         color: colors[type],
         cursor: 'pointer',
         position: isFixed ? 'fixed' : 'absolute'
     };
+    currentZindex++;
+
     Object.assign(messageWindow.style, notifyStyles);
 
     let delayedRemoval = setTimeout(function () {

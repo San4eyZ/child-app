@@ -36,7 +36,7 @@
     <div class="container">
         <h1 class="main-settings__heading display-4">Настройки</h1>
         <button class="main-settings__section-opener button_dark-theme">Смена почты</button>
-        <div class="main-settings-section main-settings__email-change">
+        <form method="post" class="main-settings-section main-settings__email-change">
             <input class="main-settings__input main-settings__email-input input_light-theme" type="email"
                    name="newEmail" title="Введите новый email" placeholder="Введите новый email:">
             <input class="main-settings__input main-settings__password-input input_light-theme" type="password"
@@ -44,17 +44,17 @@
             <input class="main-settings__input main-settings__password-input input_light-theme" type="password"
                    name="confirm" title="Подтвердите пароль" placeholder="Подтвердите пароль:">
             <button class="main-settings__change-button button_dark-theme">Сменить</button>
-        </div>
+        </form>
         <button class="main-settings__section-opener button_dark-theme">Смена пароля</button>
-        <div class="main-settings-section main-settings__password-change">
-            <input class="main-settings__input main-settings__email-input input_light-theme" type="email"
-                   name="newEmail" title="Введите новый пароль" placeholder="Введите новый пароль:">
+        <form method="post" class="main-settings-section main-settings__password-change">
+            <input class="main-settings__input main-settings__password-input input_light-theme" type="password"
+                   name="newPassword" title="Введите новый пароль" placeholder="Введите новый пароль:">
             <input class="main-settings__input main-settings__password-input input_light-theme" type="password"
                    name="password" title="Введите текущий пароль" placeholder="Введите текущий пароль:">
             <input class="main-settings__input main-settings__password-input input_light-theme" type="password"
                    name="confirm" title="Подтвердите пароль" placeholder="Подтвердите пароль:">
             <button class="main-settings__change-button button_dark-theme">Сменить</button>
-        </div>
+        </form>
     </div>
 </main>
 <footer class="footer">

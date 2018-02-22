@@ -336,12 +336,12 @@ var bgColors = {
     failure: '#ff0000',
     warning: '#fcff5a'
 };
-
 var colors = {
     success: '#00a919',
     failure: '#850000',
     warning: '#de8004'
 };
+var currentZindex = 20;
 
 /**
  * Выводит уведомление, позиционированное сверху экрана и фиксированное при необходимости, в указанный элемент
@@ -367,12 +367,14 @@ function notify(isFixed, message, type) {
         padding: '10px',
         textAlign: 'center',
         border: '2px solid',
-        zIndex: '20',
+        zIndex: String(currentZindex),
         backgroundColor: bgColors[type],
         color: colors[type],
         cursor: 'pointer',
         position: isFixed ? 'fixed' : 'absolute'
     };
+    currentZindex++;
+
     Object.assign(messageWindow.style, notifyStyles);
 
     var delayedRemoval = setTimeout(function () {
@@ -385,12 +387,5 @@ function notify(isFixed, message, type) {
     });
 
     element.insertBefore(messageWindow, element.firstElementChild);
-}
-
-function calculateHeight(element) {
-    return [].concat(_toConsumableArray(element.children)).reduce(function (init, cur) {
-        var computedStyle = window.getComputedStyle(cur);
-        return init + parseInt(computedStyle.height) + parseInt(computedStyle.marginTop) + parseInt(computedStyle.marginBottom) + parseInt(computedStyle.borderTopWidth) + parseInt(computedStyle.borderBottomWidth) + parseInt(computedStyle.paddingBottom) + parseInt(computedStyle.paddingTop);
-    }, 0);
 }
 //# sourceMappingURL=groupsControl.js.map

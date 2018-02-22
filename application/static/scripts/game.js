@@ -202,37 +202,59 @@ if (document.body.classList.contains('game-body')) {
     startGame.addEventListener('click', function (event) {
         event.preventDefault();
 
+        this.classList.add('btn-loading');
         this.disabled = true;
-        setTimeout(function () {
-            this.disabled = false;
-        }.bind(this), 1000);
 
         let themeOption = document.querySelector('.settings__theme-list').value;
         let speed = document.querySelector('.settings__speed-value').value.split(' ')[0];
         let capacity = document.querySelector('.settings__capacity-value').value;
         let quantity = document.querySelector('.settings__quantity-value').value;
-        let game = new CreateGame(speed, capacity, quantity, themeOption);
-        /* Как только начнется демонстрация, показываем кнопку restart */
-        setTimeout(function () {
-            game.restartButton.classList.remove('d-none');
-        }, 3000);
 
-        /* Убираем окно настроек */
-        settings.classList.add('hide');
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', window.location.href, true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                setTimeout(function () {
+                    this.disabled = false;
+                }.bind(this), 1000);
 
-        /* Таймаут для того, чтобы прошла анимация скрывания настроек */
-        setTimeout(function () {
-            gameInterface.style.maxHeight = '85vh';
-            /* Показываем доску */
-            gameInterface.appendChild(game.board);
-            /* Ускоряем пришельца */
-            if (game.animAlien && game.animShadow) {
-                game.animAlien.classList.add('animation_fast');
-                game.animShadow.classList.add('animation_fast');
+                let game = new CreateGame(speed, capacity, quantity, themeOption, JSON.parse(xhr.responseText));
+                /* Как только начнется демонстрация, показываем кнопку restart */
+                setTimeout(function () {
+                    game.restartButton.classList.remove('d-none');
+                }, 3000);
+
+                /* Убираем окно настроек */
+                settings.classList.add('hide');
+
+                /* Таймаут для того, чтобы прошла анимация скрывания настроек */
+                setTimeout(function () {
+                    gameInterface.style.maxHeight = '85vh';
+                    /* Показываем доску */
+                    gameInterface.appendChild(game.board);
+                    /* Ускоряем пришельца */
+                    if (game.animAlien && game.animShadow) {
+                        game.animAlien.classList.add('animation_fast');
+                        game.animShadow.classList.add('animation_fast');
+                    }
+                }, 1000);
+                /* Начинаем показ */
+                game.gameInit();
+            } else {
+                this.disabled = false;
+                this.classList.remove('btn-loading');
+                notify(true, `Что-то пошло не так: (${xhr.status})`, 'failure');
             }
-        }, 1000);
-        /* Начинаем показ */
-        game.gameInit();
+        }.bind(this);
+        
+        xhr.onerror = function () {
+            this.disabled = false;
+            this.classList.remove('btn-loading');
+            notify(true, `Что-то пошло не так: (${xhr.status})`, 'failure');
+        }.bind(this);
+
+        xhr.send(JSON.stringify({speed, capacity, quantity, themeOption}));
     });
 
     /* Вешаем обработчики */
@@ -244,12 +266,19 @@ if (document.body.classList.contains('game-body')) {
         decButton.addEventListener('click', inputControl.bind(null, decButton, 'dec'));
     }
 
+    let initialValue;
     for (let field of fields) {
         field.addEventListener('keypress', restrictKeys);
         field.addEventListener('focus', function () {
+            initialValue =  this.value;
             this.value = '';
         });
         field.addEventListener('blur', function () {
+            if (this.value === '') {
+                this.value = initialValue;
+
+                return;
+            }
             if (Number(this.value) < Number(this.min)) {
                 this.value = this.min;
             }
@@ -395,4 +424,60 @@ if (document.body.classList.contains('homework-body')) {
 
         return taskElement;
     }
+}
+
+let bgColors = {
+    success: '#6eff95',
+    failure: '#ff0000',
+    warning: '#fcff5a'
+};
+let colors = {
+    success: '#00a919',
+    failure: '#850000',
+    warning: '#de8004'
+};
+let currentZindex = 20;
+
+/**
+ * Выводит уведомление, позиционированное сверху экрана и фиксированное при необходимости, в указанный элемент
+ * @param {Boolean} isFixed
+ * @param {String} message
+ * @param {String} type
+ * @param {HTMLElement} element
+ */
+function notify(isFixed, message, type, element = document.body) {
+    if (type !== 'success' && type !== 'failure' && type !== 'warning') {
+        throw new TypeError('Неверное имя типа. Принимаются только "success", "warning" или "failure"');
+    }
+    let messageWindow = document.createElement('div');
+    messageWindow.title = 'Скрыть';
+    messageWindow.innerHTML = message;
+
+    let notifyStyles = {
+        left: '0',
+        right: '0',
+        top: '0',
+        padding: '10px',
+        textAlign: 'center',
+        border: '2px solid',
+        zIndex: String(currentZindex),
+        backgroundColor: bgColors[type],
+        color: colors[type],
+        cursor: 'pointer',
+        position: isFixed ? 'fixed' : 'absolute'
+    };
+    currentZindex++;
+
+    Object.assign(messageWindow.style, notifyStyles);
+
+    let delayedRemoval = setTimeout(function () {
+        element.removeChild(messageWindow);
+    }, 5000);
+
+    messageWindow.addEventListener('click', function () {
+        element.removeChild(messageWindow);
+        clearTimeout(delayedRemoval);
+    });
+
+    element.insertBefore(messageWindow, element.firstElementChild);
 }

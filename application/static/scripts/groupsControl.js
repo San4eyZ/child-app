@@ -316,12 +316,12 @@ let bgColors = {
     failure: '#ff0000',
     warning: '#fcff5a'
 };
-
 let colors = {
     success: '#00a919',
     failure: '#850000',
     warning: '#de8004'
 };
+let currentZindex = 20;
 
 /**
  * Выводит уведомление, позиционированное сверху экрана и фиксированное при необходимости, в указанный элемент
@@ -345,12 +345,14 @@ function notify(isFixed, message, type, element = document.body) {
         padding: '10px',
         textAlign: 'center',
         border: '2px solid',
-        zIndex: '20',
+        zIndex: String(currentZindex),
         backgroundColor: bgColors[type],
         color: colors[type],
         cursor: 'pointer',
         position: isFixed ? 'fixed' : 'absolute'
     };
+    currentZindex++;
+
     Object.assign(messageWindow.style, notifyStyles);
 
     let delayedRemoval = setTimeout(function () {
@@ -363,17 +365,4 @@ function notify(isFixed, message, type, element = document.body) {
     });
 
     element.insertBefore(messageWindow, element.firstElementChild);
-}
-
-function calculateHeight(element) {
-    return[...element.children].reduce((init, cur) => {
-        let computedStyle = window.getComputedStyle(cur);
-        return init + parseInt(computedStyle.height) +
-            parseInt(computedStyle.marginTop) +
-            parseInt(computedStyle.marginBottom) +
-            parseInt(computedStyle.borderTopWidth) +
-            parseInt(computedStyle.borderBottomWidth) +
-            parseInt(computedStyle.paddingBottom) +
-            parseInt(computedStyle.paddingTop);
-    }, 0);
 }

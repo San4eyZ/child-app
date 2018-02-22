@@ -188,6 +188,7 @@ let colors = {
     failure: '#850000',
     warning: '#de8004'
 };
+let currentZindex = 20;
 
 /**
  * Выводит уведомление, позиционированное сверху экрана и фиксированное при необходимости, в указанный элемент
@@ -211,20 +212,21 @@ function notify(isFixed, message, type, element = document.body) {
         padding: '10px',
         textAlign: 'center',
         border: '2px solid',
-        zIndex: '20',
+        zIndex: String(currentZindex),
         backgroundColor: bgColors[type],
         color: colors[type],
         cursor: 'pointer',
         position: isFixed ? 'fixed' : 'absolute'
     };
+    currentZindex++;
+
     Object.assign(messageWindow.style, notifyStyles);
 
     let delayedRemoval = setTimeout(function () {
         element.removeChild(messageWindow);
     }, 5000);
 
-    messageWindow.addEventListener('click', function (event) {
-        event.preventDefault();
+    messageWindow.addEventListener('click', function () {
         element.removeChild(messageWindow);
         clearTimeout(delayedRemoval);
     });
