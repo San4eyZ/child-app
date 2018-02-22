@@ -1,85 +1,81 @@
-try {
-    if (document.body.classList.contains('settings-body')) {
-        let openButtons = document.querySelectorAll('.main-settings__section-opener');
-        let changeButtons = document.querySelectorAll('.main-settings__change-button');
+if (document.body.classList.contains('settings-body')) {
+    let openButtons = document.querySelectorAll('.main-settings__section-opener');
+    let changeButtons = document.querySelectorAll('.main-settings__change-button');
 
-        for (let button of openButtons) {
-            button.addEventListener('click', function (event) {
-                event.preventDefault();
-                let section = this.nextElementSibling;
-                // Вычисление высоты для раскрывающегося списка
+    for (let button of openButtons) {
+        button.addEventListener('click', function (event) {
+            event.preventDefault();
+            let section = this.nextElementSibling;
+            // Вычисление высоты для раскрывающегося списка
 
-                if (!section.style.maxHeight) {
-                    section.style.maxHeight = String(calculateHeight(section)) + 'px';
-                } else {
-                    section.style.maxHeight = '';
-                }
-            })
-        }
-
-        for (let button of changeButtons) {
-            button.addEventListener('click', function (event) {
-                event.preventDefault();
-                let inputs = [...this.parentElement.children].slice(0, this.parentElement.children.length - 1);
-
-                let values = inputs.map(({ value }) => value);
-
-                if (values[1] && values[2] && values[1] !== values[2]) {
-                    notify(true, 'Введенные пароли не совпадают.', 'warning');
-
-                    return;
-                }
-
-                if (inputs[0] && inputs[0].type === 'email' && !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(inputs[0].value)) {
-                    notify(true, 'Введен некорректный email.', 'warning');
-
-                    return;
-                }
-
-                if (values.every(value => value)) {
-                    addButtonWaiter(this);
-                    let endCallback = function () {
-                        removeButtonWaiter(this);
-                        notify(true, 'Инструкция по смене данных отправлена на вашу почту.', 'success');
-                    }.bind(this);
-                    let errorCallback = function () {
-                        removeButtonWaiter(this);
-                        notify(true, 'При смене данных возникла ошибка. Попробуйте еще раз.', 'failure');
-                    }.bind(this);
-
-                    sendData('test', 'https://www.example.com', true, endCallback, errorCallback);
-                } else {
-                    notify(true, 'Пожалуйста, заполните все поля', 'warning');
-                }
-            })
-        }
-
-        function sendData(data, url, isAsync, successCallback, errorCallback) {
-            let xhr = new XMLHttpRequest();
-            xhr.open('POST', url, isAsync);
-            xhr.onerror = errorCallback;
-            xhr.onload = function () {
-                if (xhr.status === 200) {
-                    successCallback();
-                } else {
-                    errorCallback();
-                }
-            };
-            xhr.send(data);
-        }
-
-        function addButtonWaiter(element) {
-            element.disabled = true;
-            element.classList.add('btn-loading');
-        }
-
-        function removeButtonWaiter(element) {
-            element.disabled = undefined;
-            element.classList.remove('btn-loading');
-        }
+            if (!section.style.maxHeight) {
+                section.style.maxHeight = String(calculateHeight(section)) + 'px';
+            } else {
+                section.style.maxHeight = '';
+            }
+        })
     }
-} catch (error) {
-    notify(true, `Что-то пошло не так: ${error.message}`, 'failure');
+
+    for (let button of changeButtons) {
+        button.addEventListener('click', function (event) {
+            event.preventDefault();
+            let inputs = [...this.parentElement.children].slice(0, this.parentElement.children.length - 1);
+
+            let values = inputs.map(({value}) => value);
+
+            if (values[1] && values[2] && values[1] !== values[2]) {
+                notify(true, 'Введенные пароли не совпадают.', 'warning');
+
+                return;
+            }
+
+            if (inputs[0] && inputs[0].type === 'email' && !/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,5})+$/.test(inputs[0].value)) {
+                notify(true, 'Введен некорректный email.', 'warning');
+
+                return;
+            }
+
+            if (values.every(value => value)) {
+                addButtonWaiter(this);
+                let endCallback = function () {
+                    removeButtonWaiter(this);
+                    notify(true, 'Инструкция по смене данных отправлена на вашу почту.', 'success');
+                }.bind(this);
+                let errorCallback = function () {
+                    removeButtonWaiter(this);
+                    notify(true, 'При смене данных возникла ошибка. Попробуйте еще раз.', 'failure');
+                }.bind(this);
+
+                sendData('test', 'https://www.example.com', true, endCallback, errorCallback);
+            } else {
+                notify(true, 'Пожалуйста, заполните все поля.', 'warning');
+            }
+        })
+    }
+
+    function sendData(data, url, isAsync, successCallback, errorCallback) {
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', url, isAsync);
+        xhr.onerror = errorCallback;
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                successCallback();
+            } else {
+                errorCallback();
+            }
+        };
+        xhr.send(data);
+    }
+
+    function addButtonWaiter(element) {
+        element.disabled = true;
+        element.classList.add('btn-loading');
+    }
+
+    function removeButtonWaiter(element) {
+        element.disabled = undefined;
+        element.classList.remove('btn-loading');
+    }
 }
 
 let bgColors = {
@@ -139,7 +135,7 @@ function notify(isFixed, message, type, element = document.body) {
 }
 
 function calculateHeight(element) {
-    return[...element.children].reduce((init, cur) => {
+    return [...element.children].reduce((init, cur) => {
         let computedStyle = window.getComputedStyle(cur);
         return init + parseInt(computedStyle.height) +
             parseInt(computedStyle.marginTop) +

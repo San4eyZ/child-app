@@ -218,14 +218,14 @@ if (document.body.classList.contains('game-body')) {
             var quantity = document.querySelector('.settings__quantity-value').value;
 
             var xhr = new XMLHttpRequest();
-            xhr.open('POST', window.location.href, true);
+            xhr.open('POST', window.location.origin + '/generator', true);
             xhr.setRequestHeader('Content-Type', 'application/json');
             xhr.onload = function () {
                 if (xhr.status === 200) {
                     setTimeout(function () {
                         this.disabled = false;
                     }.bind(this), 1000);
-
+                    console.log(xhr.responseText);
                     var game = new CreateGame(speed, capacity, quantity, themeOption, JSON.parse(xhr.responseText));
                     /* Как только начнется демонстрация, показываем кнопку restart */
                     setTimeout(function () {
