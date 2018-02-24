@@ -2,8 +2,10 @@
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 /*  Создание игры  */
-function CreateGame(interval, capacity, quantity, theme, collection, answer) {
+function CreateGame(interval, capacity, quantity, theme, collection, answer, homeworkId) {
     this.interval = Number(interval) * 1000;
     this.quantity = Number(quantity);
     this.capacity = Number(capacity);
@@ -13,6 +15,7 @@ function CreateGame(interval, capacity, quantity, theme, collection, answer) {
     this.answer = answer || this.collection.reduce(function (n, sum) {
         return n + sum;
     }, 0);
+    this.homeworkId = homeworkId;
     this.createBoard();
     this.numberField = this.board.querySelector('.game__number');
 }
@@ -69,13 +72,30 @@ CreateGame.prototype = {
     /* Записываем результат в переданное место */
     sendResult: function sendResult(where, result) {
         var xhr = new XMLHttpRequest();
-
-        var body = 'answer=' + (result + ';' + this.interval + ';' + this.quantity + ';' + this.capacity + ';' + this.theme);
+        var body = {
+            result: result,
+            interval: this.interval,
+            quantity: this.quantity,
+            capacity: this.capacity,
+            theme: this.theme
+        };
+        if (this.homeworkId) {
+            body.homeworkId = this.homeworkId;
+        }
 
         xhr.open("POST", where, true);
-        xhr.setRequestHeader('Content-Type', 'text-plain');
+        xhr.setRequestHeader('Content-Type', 'application/json');
 
-        xhr.send(body);
+        xhr.onload = function () {
+            if (xhr.status !== 201 && xhr.status !== 200) {
+                notify(true, 'Произошла ошибка при отправке результата', 'failure');
+            }
+        };
+        xhr.onerror = function () {
+            notify(true, 'Произошла ошибка при отправке результата', 'failure');
+        };
+
+        xhr.send(JSON.stringify(body));
     },
     /* Создаем поле для игры */
     createBoard: function createBoard() {
@@ -176,11 +196,11 @@ CreateGame.prototype = {
             if (Number(answerField.value) === this.answer) {
                 answerField.style.backgroundColor = '#1fc113';
                 answerField.value = 'Правильно!';
-                this.sendResult('https://your.site', 'success');
+                this.sendResult(window.location.origin + (this.homeworkId ? '/homeworkResult' : '/gameResult'), 'success');
             } else {
                 answerField.style.backgroundColor = '#ff2b0a';
                 answerField.value = 'Ошибка, попробуйте снова';
-                this.sendResult('https://your.site', 'failure');
+                this.sendResult(window.location.origin + (this.homeworkId ? '/homeworkResult' : '/gameResult'), 'failure');
             }
             answerField.disabled = true;
             submitAnswer.disabled = true;
@@ -204,18 +224,40 @@ if (document.body.classList.contains('game-body')) {
         var incButtons = document.querySelectorAll('.button_inc');
         var decButtons = document.querySelectorAll('.button_dec');
         var fields = document.querySelectorAll('.settings__input');
+        var themeCheckers = [].concat(_toConsumableArray(gameInterface.querySelectorAll('.settings__theme-option')));
+
+        themeCheckers.forEach(function (checker) {
+            return checker.addEventListener('change', function (event) {
+                var _this = this;
+
+                var neighbourCheckers = [].concat(_toConsumableArray(this.parentElement.getElementsByTagName('input')));
+                var prevCheckers = neighbourCheckers.slice(0, neighbourCheckers.indexOf(this));
+
+                prevCheckers.forEach(function (checker) {
+                    checker.checked = _this.checked;
+                });
+            });
+        });
 
         /*   Начало игры   */
         startGame.addEventListener('click', function (event) {
             event.preventDefault();
 
+            var themeOptions = [].concat(_toConsumableArray(gameInterface.querySelectorAll('.settings__theme-option:checked'))).map(function (_ref) {
+                var value = _ref.value;
+                return value.split('_');
+            });
+            var speed = gameInterface.querySelector('.settings__speed-value').value.split(' ')[0];
+            var capacity = gameInterface.querySelector('.settings__capacity-value').value;
+            var quantity = gameInterface.querySelector('.settings__quantity-value').value;
+            if (!themeOptions.length) {
+                notify(true, 'Пожайлуйста, выберите темы', 'warning');
+
+                return;
+            }
+
             this.classList.add('btn-loading');
             this.disabled = true;
-
-            var themeOption = document.querySelector('.settings__theme-list').value;
-            var speed = document.querySelector('.settings__speed-value').value.split(' ')[0];
-            var capacity = document.querySelector('.settings__capacity-value').value;
-            var quantity = document.querySelector('.settings__quantity-value').value;
 
             var xhr = new XMLHttpRequest();
             xhr.open('POST', window.location.origin + '/generator', true);
@@ -225,8 +267,7 @@ if (document.body.classList.contains('game-body')) {
                     setTimeout(function () {
                         this.disabled = false;
                     }.bind(this), 1000);
-                    console.log(xhr.responseText);
-                    var game = new CreateGame(speed, capacity, quantity, themeOption, JSON.parse(xhr.responseText));
+                    var game = new CreateGame(speed, capacity, quantity, themeOptions, JSON.parse(xhr.responseText));
                     /* Как только начнется демонстрация, показываем кнопку restart */
                     setTimeout(function () {
                         game.restartButton.classList.remove('d-none');
@@ -261,7 +302,7 @@ if (document.body.classList.contains('game-body')) {
                 notify(true, '\u0427\u0442\u043E-\u0442\u043E \u043F\u043E\u0448\u043B\u043E \u043D\u0435 \u0442\u0430\u043A: (' + xhr.status + ')', 'failure');
             }.bind(this);
 
-            xhr.send(JSON.stringify({ speed: speed, capacity: capacity, quantity: quantity, themeOption: themeOption }));
+            xhr.send(JSON.stringify({ speed: speed, capacity: capacity, quantity: quantity, themeOptions: themeOptions }));
         });
 
         /* Вешаем обработчики */
@@ -445,7 +486,7 @@ if (document.body.classList.contains('homework-body')) {
                 this.disabled = false;
             }.bind(this), 1000);
 
-            var game = new CreateGame(task.speed, 0, task.collection.length, task.theme, task.collection, task.answer);
+            var game = new CreateGame(task.speed, 0, task.collection.length, task.theme, task.collection, task.answer, task.id);
 
             setTimeout(function () {
                 game.restartButton.classList.remove('d-none');
@@ -480,8 +521,8 @@ if (document.body.classList.contains('homework-body')) {
     var homeworkWindow = document.querySelector('.homework-main');
 
     var xhr = new XMLHttpRequest();
-    xhr.overrideMimeType('application/json');
-    xhr.open('GET', window.location.origin + '/child-app/testData/homeworkConfig.json', true);
+    xhr.open('GET', window.location.origin + '/homework', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onload = function () {
         if (xhr.status === 200) {
             placeholder.parentElement.removeChild(placeholder);
@@ -494,11 +535,11 @@ if (document.body.classList.contains('homework-body')) {
             message.style.color = '#43c40f';
             homeworkElement.replaceChild(message, placeholder);
         } else {
-            throw new Error('\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u044F \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u0438 \u043E \u0433\u0440\u0443\u043F\u043F\u0430\u0445 (' + xhr.status + ')');
+            notify(true, '\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u044F \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u0438 \u043E \u0433\u0440\u0443\u043F\u043F\u0430\u0445 (' + xhr.status + ')', 'failure');
         }
     };
     xhr.onerror = function () {
-        throw new Error('\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u044F \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u0438 \u043E \u0433\u0440\u0443\u043F\u043F\u0430\u0445 (' + xhr.status + ')');
+        notify(true, '\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u044F \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u0438 \u043E \u0433\u0440\u0443\u043F\u043F\u0430\u0445 (' + xhr.status + ')', 'failure');
     };
     xhr.send();
 }

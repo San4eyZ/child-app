@@ -21,12 +21,11 @@ if (document.body.classList.contains('groups-body')) {
                 placeForData.replaceChild(loadingPlaceholder, placeForData.firstElementChild);
 
                 let xhr = new XMLHttpRequest();
-                xhr.open('GET', `${window.location.origin}/child-app/testData/statsTable.json`, true);
+                xhr.open('GET', `${window.location.origin}/statsTable`, true);
                 xhr.setRequestHeader('Content-Type', 'application/json');
 
                 xhr.onload = function () {
                     if (xhr.status === 200) {
-                        //TODO Сделать вывод имени над таблицей информации
                         let table = createPersonalTable(JSON.parse(xhr.responseText).data);
                         table.style.animationName = 'fade';
                         table.style.animationDuration = '1s';

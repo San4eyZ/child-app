@@ -46,7 +46,18 @@ if (document.body.classList.contains('settings-body')) {
                     notify(true, 'При смене данных возникла ошибка. Попробуйте еще раз.', 'failure');
                 }.bind(this);
 
-                sendData('test', 'https://www.example.com', true, endCallback, errorCallback);
+                let data = inputs[0].type === 'email' ? {
+                    newEmail: values[0],
+                    password: values[1],
+                    confirm: values[2]
+                } : {
+                    newPassword: values[0],
+                    password: values[1],
+                    confirm: values[2]
+                };
+
+                let link =  window.location.origin + (inputs[0].type === 'email' ? 'changeEmail' : 'changePass');
+                sendData(JSON.stringify(data), link, true, endCallback, errorCallback);
             } else {
                 notify(true, 'Пожалуйста, заполните все поля.', 'warning');
             }
@@ -56,6 +67,7 @@ if (document.body.classList.contains('settings-body')) {
     function sendData(data, url, isAsync, successCallback, errorCallback) {
         let xhr = new XMLHttpRequest();
         xhr.open('POST', url, isAsync);
+        xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.onerror = errorCallback;
         xhr.onload = function () {
             if (xhr.status === 200) {

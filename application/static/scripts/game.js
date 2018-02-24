@@ -1,5 +1,5 @@
 /*  Создание игры  */
-function CreateGame(interval, capacity, quantity, theme, collection, answer) {
+function CreateGame(interval, capacity, quantity, theme, collection, answer, homeworkId) {
     this.interval = Number(interval) * 1000;
     this.quantity = Number(quantity);
     this.capacity = Number(capacity);
@@ -7,6 +7,7 @@ function CreateGame(interval, capacity, quantity, theme, collection, answer) {
     this.collection = collection || createCollection(capacity, quantity);
     this.index = 0;
     this.answer = answer || this.collection.reduce((n, sum) => n + sum, 0);
+    this.homeworkId = homeworkId;
     this.createBoard();
     this.numberField = this.board.querySelector('.game__number');
 }
@@ -63,13 +64,30 @@ CreateGame.prototype = {
     /* Записываем результат в переданное место */
     sendResult: function (where, result) {
         let xhr = new XMLHttpRequest();
-
-        let body = 'answer=' + `${result};${this.interval};${this.quantity};${this.capacity};${this.theme}`;
+        let body = {
+            result,
+            interval: this.interval,
+            quantity: this.quantity,
+            capacity: this.capacity,
+            theme: this.theme
+        };
+        if (this.homeworkId) {
+            body.homeworkId = this.homeworkId;
+        }
 
         xhr.open("POST", where, true);
-        xhr.setRequestHeader('Content-Type', 'text-plain');
+        xhr.setRequestHeader('Content-Type', 'application/json');
 
-        xhr.send(body);
+        xhr.onload = function () {
+            if (xhr.status !== 201 && xhr.status !== 200) {
+                notify(true, 'Произошла ошибка при отправке результата', 'failure');
+            }
+        };
+        xhr.onerror = function () {
+            notify(true, 'Произошла ошибка при отправке результата', 'failure');
+        };
+
+        xhr.send(JSON.stringify(body));
     },
     /* Создаем поле для игры */
     createBoard: function () {
@@ -170,11 +188,11 @@ CreateGame.prototype = {
             if (Number(answerField.value) === this.answer) {
                 answerField.style.backgroundColor = '#1fc113';
                 answerField.value = 'Правильно!';
-                this.sendResult('https://your.site', 'success')
+                this.sendResult(window.location.origin + (this.homeworkId ? '/homeworkResult' : '/gameResult'), 'success')
             } else {
                 answerField.style.backgroundColor = '#ff2b0a';
                 answerField.value = 'Ошибка, попробуйте снова';
-                this.sendResult('https://your.site', 'failure')
+                this.sendResult(window.location.origin + (this.homeworkId ? '/homeworkResult' : '/gameResult'), 'failure')
             }
             answerField.disabled = true;
             submitAnswer.disabled = true;
@@ -197,18 +215,33 @@ if (document.body.classList.contains('game-body')) {
     let incButtons = document.querySelectorAll('.button_inc');
     let decButtons = document.querySelectorAll('.button_dec');
     let fields = document.querySelectorAll('.settings__input');
+    let themeCheckers = [...gameInterface.querySelectorAll('.settings__theme-option')];
+
+    themeCheckers.forEach(checker => checker.addEventListener('change', function (event) {
+        let neighbourCheckers = [...this.parentElement.getElementsByTagName('input')];
+        let prevCheckers = neighbourCheckers.slice(0, neighbourCheckers.indexOf(this));
+
+        prevCheckers.forEach(checker => {
+            checker.checked = this.checked;
+        })
+    }));
 
     /*   Начало игры   */
     startGame.addEventListener('click', function (event) {
         event.preventDefault();
 
+        let themeOptions = [...gameInterface.querySelectorAll('.settings__theme-option:checked')].map(({value}) => value.split('_'));
+        let speed = gameInterface.querySelector('.settings__speed-value').value.split(' ')[0];
+        let capacity = gameInterface.querySelector('.settings__capacity-value').value;
+        let quantity = gameInterface.querySelector('.settings__quantity-value').value;
+        if (!themeOptions.length) {
+            notify(true, 'Пожайлуйста, выберите темы', 'warning');
+
+            return;
+        }
+
         this.classList.add('btn-loading');
         this.disabled = true;
-
-        let themeOption = document.querySelector('.settings__theme-list').value;
-        let speed = document.querySelector('.settings__speed-value').value.split(' ')[0];
-        let capacity = document.querySelector('.settings__capacity-value').value;
-        let quantity = document.querySelector('.settings__quantity-value').value;
 
         let xhr = new XMLHttpRequest();
         xhr.open('POST', window.location.origin + '/generator', true);
@@ -218,7 +251,7 @@ if (document.body.classList.contains('game-body')) {
                 setTimeout(function () {
                     this.disabled = false;
                 }.bind(this), 1000);
-                let game = new CreateGame(speed, capacity, quantity, themeOption, JSON.parse(xhr.responseText));
+                let game = new CreateGame(speed, capacity, quantity, themeOptions, JSON.parse(xhr.responseText));
                 /* Как только начнется демонстрация, показываем кнопку restart */
                 setTimeout(function () {
                     game.restartButton.classList.remove('d-none');
@@ -253,7 +286,7 @@ if (document.body.classList.contains('game-body')) {
             notify(true, `Что-то пошло не так: (${xhr.status})`, 'failure');
         }.bind(this);
 
-        xhr.send(JSON.stringify({speed, capacity, quantity, themeOption}));
+        xhr.send(JSON.stringify({speed, capacity, quantity, themeOptions}));
     });
 
     /* Вешаем обработчики */
@@ -345,8 +378,8 @@ if (document.body.classList.contains('homework-body')) {
     let homeworkWindow = document.querySelector('.homework-main');
 
     let xhr = new XMLHttpRequest();
-    xhr.overrideMimeType('application/json');
-    xhr.open('GET', `${window.location.origin}/child-app/testData/homeworkConfig.json`, true);
+    xhr.open('GET', `${window.location.origin}/homework`, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onload = function () {
         if (xhr.status === 200) {
             placeholder.parentElement.removeChild(placeholder);
@@ -359,11 +392,11 @@ if (document.body.classList.contains('homework-body')) {
             message.style.color = '#43c40f';
             homeworkElement.replaceChild(message, placeholder);
         } else {
-            throw new Error(`Ошибка получения информации о группах (${xhr.status})`);
+            notify(true, `Ошибка получения информации о группах (${xhr.status})`, 'failure');
         }
     };
     xhr.onerror = function () {
-        throw new Error(`Ошибка получения информации о группах (${xhr.status})`);
+        notify(true, `Ошибка получения информации о группах (${xhr.status})`, 'failure');
     };
     xhr.send();
 
@@ -393,7 +426,7 @@ if (document.body.classList.contains('homework-body')) {
                 this.disabled = false;
             }.bind(this), 1000);
 
-            let game = new CreateGame(task.speed, 0, task.collection.length, task.theme, task.collection, task.answer);
+            let game = new CreateGame(task.speed, 0, task.collection.length, task.theme, task.collection, task.answer, task.id);
 
             setTimeout(function () {
                 game.restartButton.classList.remove('d-none');

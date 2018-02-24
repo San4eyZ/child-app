@@ -326,8 +326,7 @@ body {
     font-size: 1.3em;
     text-align: center;
 
-    transition:
-        color 0.5s ease;
+    transition: color 0.5s ease;
 }
 
 .header__logo-name {
@@ -412,7 +411,7 @@ body {
 
     left: 100px;
 
-    animation: main-hovering-lg 2s infinite alternate cubic-bezier(.49,.13,.48,.92);
+    animation: main-hovering-lg 2s infinite alternate cubic-bezier(.49, .13, .48, .92);
 }
 
 .main__alien:nth-child(2) {
@@ -572,7 +571,6 @@ body {
 
 /*=========================   Интерфейс игры   =========================*/
 
-
 /*=========================   Анимированная картинка и тень   =================*/
 
 .centered-image {
@@ -581,7 +579,7 @@ body {
     width: 80%;
     margin: 0 auto 100px;
 
-    animation: hovering 1.5s alternate both infinite cubic-bezier(.42,.01,.58,.99);
+    animation: hovering 1.5s alternate both infinite cubic-bezier(.42, .01, .58, .99);
 }
 
 .shadow__ratio-control-outer {
@@ -594,6 +592,7 @@ body {
     position: relative;
     padding-top: 15%;
 }
+
 .shadow {
     position: absolute;
     top: 0;
@@ -603,7 +602,7 @@ body {
 
     border-radius: 300px/50px;
     background: rgba(0, 0, 0, 0.1);
-    animation: expansion 1.5s alternate both infinite cubic-bezier(.42,.01,.58,.99)
+    animation: expansion 1.5s alternate both infinite cubic-bezier(.42, .01, .58, .99)
 }
 
 /*============================   Элементы настроек   ==========================*/
@@ -622,6 +621,9 @@ body {
 
 .settings__theme {
     font-size: 0;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
 }
 
 .settings__theme > * {
@@ -653,6 +655,75 @@ body {
 
 .settings__theme-option {
     display: none;
+}
+
+.settings__theme-label {
+    width: 32px;
+    height: 32px;
+    border: 2px solid;
+
+    border-radius: 20px;
+
+    cursor: pointer;
+}
+
+.settings__theme-option:checked + label {
+    background: #ff7b2f;
+}
+
+.settings__theme-holder {
+    display: grid;
+    grid-template-columns: 100px repeat(9, 32px);
+    grid-column-gap: 2px;
+}
+
+.settings__theme-holder:nth-of-type(4) .settings__theme-placeholder {
+    grid-column: 2 / 7;
+}
+
+.settings__theme-name {
+    text-align: left;
+}
+
+@media (max-width: 576px) {
+    .settings__theme-label {
+        width: 38px;
+        height: 38px;
+
+        font-size: 1.45rem;
+    }
+
+    .settings__theme-holder {
+        grid-template-columns: repeat(9, 40px);
+    }
+
+    .settings__theme-name {
+        text-align: center;
+        grid-column: 1 / 10;
+    }
+
+    .settings__theme-holder:nth-of-type(4) .settings__theme-placeholder {
+        grid-column: 1 / 6  ;
+    }
+}
+
+@media (max-width: 380px) {
+    .settings__theme-label {
+        width: 30px;
+        height: 30px;
+
+        font-size: 1rem;
+    }
+
+    .settings__theme-holder {
+        grid-template-columns: repeat(9, 32px);
+    }
+
+    .settings__theme-name {
+        text-align: center;
+        font-size: 1rem;
+        grid-column: 1 / 10;
+    }
 }
 
 .settings__opt-name {
@@ -752,7 +823,7 @@ body {
     transition: opacity 1s;
 }
 
-@media (max-width: 576px){
+@media (max-width: 576px) {
     .game-interface {
         height: auto;
     }
@@ -858,7 +929,6 @@ body {
 }
 
 /* ====================   Форма ответа   ======================*/
-
 
 .game__answer-form {
     position: absolute;
@@ -1070,11 +1140,11 @@ body {
     overflow: auto;
 }
 
-.stats__option:nth-of-type(1):checked ~ .stats__personal{
+.stats__option:nth-of-type(1):checked ~ .stats__personal {
     display: block;
 }
 
-.stats__option:nth-of-type(2):checked ~ .stats__global{
+.stats__option:nth-of-type(2):checked ~ .stats__global {
     display: block;
 }
 
@@ -1108,7 +1178,6 @@ body {
     background: #ffae7e;
     color: #4a2359;
 }
-
 
 .main-settings__heading {
     text-align: center;
@@ -1229,7 +1298,7 @@ body {
 }
 
 .groups__delete-btn,
-.groups__red-btn{
+.groups__red-btn {
     min-height: 28px;
     width: 80%;
     align-self: center;
@@ -1367,7 +1436,6 @@ body {
 }
 
 /*=============================   Rewriting stuff   =====================*/
-
 
 .hide {
     opacity: 0;
