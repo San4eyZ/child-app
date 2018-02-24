@@ -1,6 +1,7 @@
-from flask import render_template
+from flask import render_template, request, jsonify
 
 from application import app
+from application.number_generator import generate
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -22,3 +23,13 @@ def login():
 @app.route('/reset.html', methods=['GET', 'POST'])
 def reset():
     return render_template('reset.html')
+
+
+@app.route('/generator', methods=['POST'])
+def gen():
+    form_data = request.data
+    themes, levels, capacity, quantity = form_data['themes'], \
+                                         form_data['levels'], \
+                                         form_data['capacity'], \
+                                         form_data['quantity']
+    return jsonify(generate(themes, levels, capacity, quantity))
