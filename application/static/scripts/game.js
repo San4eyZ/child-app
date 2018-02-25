@@ -279,7 +279,7 @@ if (document.body.classList.contains('game-body')) {
                 notify(true, `Что-то пошло не так: (${xhr.status})`, 'failure');
             }
         }.bind(this);
-        
+
         xhr.onerror = function () {
             this.disabled = false;
             this.classList.remove('btn-loading');
@@ -486,9 +486,9 @@ function notify(isFixed, message, type, element = document.body) {
     messageWindow.innerHTML = message;
 
     let notifyStyles = {
-        left: '0',
-        right: '0',
-        top: '0',
+        left: '50%',
+        top: '50%',
+        transform: 'translate(-50%, -50%)',
         padding: '10px',
         textAlign: 'center',
         border: '2px solid',
