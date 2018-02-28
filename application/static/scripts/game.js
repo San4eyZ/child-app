@@ -235,7 +235,7 @@ if (document.body.classList.contains('game-body')) {
         let capacity = gameInterface.querySelector('.settings__capacity-value').value;
         let quantity = gameInterface.querySelector('.settings__quantity-value').value;
         if (!themeOptions.length) {
-            notify(true, 'Пожайлуйста, выберите темы', 'warning');
+            notify(true, 'Пожалуйста, выберите темы', 'warning');
 
             return;
         }
@@ -276,14 +276,14 @@ if (document.body.classList.contains('game-body')) {
             } else {
                 this.disabled = false;
                 this.classList.remove('btn-loading');
-                notify(true, `Что-то пошло не так: (${xhr.status})`, 'failure');
+                notify(true, `Что-то пошло не так: (Код ошибки - ${xhr.status})`, 'failure');
             }
         }.bind(this);
 
         xhr.onerror = function () {
             this.disabled = false;
             this.classList.remove('btn-loading');
-            notify(true, `Что-то пошло не так: (${xhr.status})`, 'failure');
+            notify(true, `Что-то пошло не так: (Код ошибки - ${xhr.status})`, 'failure');
         }.bind(this);
 
         xhr.send(JSON.stringify({speed, capacity, quantity, themeOptions}));
@@ -392,11 +392,11 @@ if (document.body.classList.contains('homework-body')) {
             message.style.color = '#43c40f';
             homeworkElement.replaceChild(message, placeholder);
         } else {
-            notify(true, `Ошибка получения информации о группах (${xhr.status})`, 'failure');
+            notify(true, `Ошибка получения информации о группах (Код ошибки - ${xhr.status})`, 'failure');
         }
     };
     xhr.onerror = function () {
-        notify(true, `Ошибка получения информации о группах (${xhr.status})`, 'failure');
+        notify(true, `Ошибка получения информации о группах (Код ошибки - ${xhr.status})`, 'failure');
     };
     xhr.send();
 
@@ -456,60 +456,4 @@ if (document.body.classList.contains('homework-body')) {
 
         return taskElement;
     }
-}
-
-let bgColors = {
-    success: '#6eff95',
-    failure: '#ff0000',
-    warning: '#fcff5a'
-};
-let colors = {
-    success: '#00a919',
-    failure: '#850000',
-    warning: '#de8004'
-};
-let currentZindex = 20;
-
-/**
- * Выводит уведомление, позиционированное сверху экрана и фиксированное при необходимости, в указанный элемент
- * @param {Boolean} isFixed
- * @param {String} message
- * @param {String} type
- * @param {HTMLElement} element
- */
-function notify(isFixed, message, type, element = document.body) {
-    if (type !== 'success' && type !== 'failure' && type !== 'warning') {
-        throw new TypeError('Неверное имя типа. Принимаются только "success", "warning" или "failure"');
-    }
-    let messageWindow = document.createElement('div');
-    messageWindow.title = 'Скрыть';
-    messageWindow.innerHTML = message;
-
-    let notifyStyles = {
-        left: '50%',
-        top: '50%',
-        transform: 'translate(-50%, -50%)',
-        padding: '10px',
-        textAlign: 'center',
-        border: '2px solid',
-        zIndex: String(currentZindex),
-        backgroundColor: bgColors[type],
-        color: colors[type],
-        cursor: 'pointer',
-        position: isFixed ? 'fixed' : 'absolute'
-    };
-    currentZindex++;
-
-    Object.assign(messageWindow.style, notifyStyles);
-
-    let delayedRemoval = setTimeout(function () {
-        element.removeChild(messageWindow);
-    }, 5000);
-
-    messageWindow.addEventListener('click', function () {
-        element.removeChild(messageWindow);
-        clearTimeout(delayedRemoval);
-    });
-
-    element.insertBefore(messageWindow, element.firstElementChild);
 }

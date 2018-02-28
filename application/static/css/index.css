@@ -47,14 +47,14 @@ body {
     background: #ffae7e;
     color: #4a2359;
 
-    transition: background-color 0.5s, color 0.5s;
+    transition: background-color 0.5s, color 0.5s, box-shadow 0.5s;
 }
 
 .button_light-theme:hover {
     text-decoration: none;
     color: #8b256e;
     background: #ff7b2f;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
     cursor: pointer;
 }
 
@@ -74,8 +74,8 @@ body {
 .button_dark-theme:hover {
     text-decoration: none;
     color: #ff7b2f;
-    background: #8b256e;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    background: #6c3382;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
     cursor: pointer;
 }
 
@@ -462,7 +462,7 @@ body {
 
     font-family: 'Lobster', cursive;
     color: #4a2359;
-    background: url("../images/footer-image.png") center no-repeat;
+    background: 45% url("../images/footer-image.png") no-repeat;
     background-size: contain;
     font-size: 2.3em;
     line-height: 1em;
@@ -480,7 +480,7 @@ body {
     color: #4a254a;
 }
 
-@media (max-width: 576px) {
+@media (max-width: 768px) {
     .footer__tagline {
         background: #f9907a;
         border-radius: 100px;
@@ -1433,6 +1433,120 @@ body {
     padding: 5px 20px;
     border-radius: 20px;
     margin-bottom: 20px;
+}
+
+/*=============================   Notifications  ==================================*/
+
+.message-window {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    left: 50%;
+    top: 20%;
+    padding: 30px 50px 20px;
+    border: 2px solid;
+    min-width: 300px;
+    z-index: 20;
+
+    text-align: center;
+    font-size: 1.5rem;
+    border-radius: 10px;
+
+    transform: translate(-50%, -20%);
+}
+
+@media (max-width: 576px) {
+    .message-window {
+        padding: 20px 10px;
+    }
+}
+
+.message-overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 15;
+
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.message-button {
+    font-size: 1rem;
+    box-sizing: border-box;
+    min-width: 100px;
+    height: 30px;
+
+    border-radius: 20px;
+}
+
+.message-button:focus {
+    outline: none;
+}
+
+.message-text {
+    flex-basis: 100%;
+    margin-bottom: 20px;
+}
+
+.button_failure-theme {
+    background: #d6010e;
+    color: #ffbaba;
+}
+
+.button_success-theme {
+    background: #4f8a10;
+    color: #dff2bf;
+}
+
+/*.button_warning-theme {*/
+    /*background: #9f6000;*/
+    /*color: #feefb3;*/
+/*}*/
+
+.button_warning-theme {
+    background: #00529b;
+    color: #bde5f8;
+}
+
+.button_confirm-theme {
+    color: #ffae7e;
+    background-color: #4a2359;
+}
+
+.button_neg-confirm-theme {
+    color: #4a2359;
+    background-color: #ffae7e;
+    border: 2px solid #4a2359;
+
+    cursor: pointer;
+
+    transition: background-color 0.5s, color 0.5s, box-shadow 0.5s;
+}
+
+.button_failure-theme,
+.button_success-theme,
+.button_warning-theme,
+.button_confirm-theme {
+    border: none;
+
+    cursor: pointer;
+
+    transition: background-color 0.5s, color 0.5s, box-shadow 0.5s;
+}
+
+.button_failure-theme:hover,
+.button_success-theme:hover,
+.button_warning-theme:hover,
+.button_confirm-theme:hover {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.button_neg-confirm-theme:hover {
+    color: #ffae7e;
+    background-color: #4a2359;
 }
 
 /*=============================   Rewriting stuff   =====================*/

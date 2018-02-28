@@ -251,7 +251,7 @@ if (document.body.classList.contains('game-body')) {
             var capacity = gameInterface.querySelector('.settings__capacity-value').value;
             var quantity = gameInterface.querySelector('.settings__quantity-value').value;
             if (!themeOptions.length) {
-                notify(true, 'Пожайлуйста, выберите темы', 'warning');
+                notify(true, 'Пожалуйста, выберите темы', 'warning');
 
                 return;
             }
@@ -292,14 +292,14 @@ if (document.body.classList.contains('game-body')) {
                 } else {
                     this.disabled = false;
                     this.classList.remove('btn-loading');
-                    notify(true, '\u0427\u0442\u043E-\u0442\u043E \u043F\u043E\u0448\u043B\u043E \u043D\u0435 \u0442\u0430\u043A: (' + xhr.status + ')', 'failure');
+                    notify(true, '\u0427\u0442\u043E-\u0442\u043E \u043F\u043E\u0448\u043B\u043E \u043D\u0435 \u0442\u0430\u043A: (\u041A\u043E\u0434 \u043E\u0448\u0438\u0431\u043A\u0438 - ' + xhr.status + ')', 'failure');
                 }
             }.bind(this);
 
             xhr.onerror = function () {
                 this.disabled = false;
                 this.classList.remove('btn-loading');
-                notify(true, '\u0427\u0442\u043E-\u0442\u043E \u043F\u043E\u0448\u043B\u043E \u043D\u0435 \u0442\u0430\u043A: (' + xhr.status + ')', 'failure');
+                notify(true, '\u0427\u0442\u043E-\u0442\u043E \u043F\u043E\u0448\u043B\u043E \u043D\u0435 \u0442\u0430\u043A: (\u041A\u043E\u0434 \u043E\u0448\u0438\u0431\u043A\u0438 - ' + xhr.status + ')', 'failure');
             }.bind(this);
 
             xhr.send(JSON.stringify({ speed: speed, capacity: capacity, quantity: quantity, themeOptions: themeOptions }));
@@ -535,70 +535,12 @@ if (document.body.classList.contains('homework-body')) {
             message.style.color = '#43c40f';
             homeworkElement.replaceChild(message, placeholder);
         } else {
-            notify(true, '\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u044F \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u0438 \u043E \u0433\u0440\u0443\u043F\u043F\u0430\u0445 (' + xhr.status + ')', 'failure');
+            notify(true, '\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u044F \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u0438 \u043E \u0433\u0440\u0443\u043F\u043F\u0430\u0445 (\u041A\u043E\u0434 \u043E\u0448\u0438\u0431\u043A\u0438 - ' + xhr.status + ')', 'failure');
         }
     };
     xhr.onerror = function () {
-        notify(true, '\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u044F \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u0438 \u043E \u0433\u0440\u0443\u043F\u043F\u0430\u0445 (' + xhr.status + ')', 'failure');
+        notify(true, '\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u044F \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u0438 \u043E \u0433\u0440\u0443\u043F\u043F\u0430\u0445 (\u041A\u043E\u0434 \u043E\u0448\u0438\u0431\u043A\u0438 - ' + xhr.status + ')', 'failure');
     };
     xhr.send();
-}
-
-var bgColors = {
-    success: '#6eff95',
-    failure: '#ff0000',
-    warning: '#fcff5a'
-};
-var colors = {
-    success: '#00a919',
-    failure: '#850000',
-    warning: '#de8004'
-};
-var currentZindex = 20;
-
-/**
- * Выводит уведомление, позиционированное сверху экрана и фиксированное при необходимости, в указанный элемент
- * @param {Boolean} isFixed
- * @param {String} message
- * @param {String} type
- * @param {HTMLElement} element
- */
-function notify(isFixed, message, type) {
-    var element = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : document.body;
-
-    if (type !== 'success' && type !== 'failure' && type !== 'warning') {
-        throw new TypeError('Неверное имя типа. Принимаются только "success", "warning" или "failure"');
-    }
-    var messageWindow = document.createElement('div');
-    messageWindow.title = 'Скрыть';
-    messageWindow.innerHTML = message;
-
-    var notifyStyles = {
-        left: '50%',
-        top: '50%',
-        transform: 'translate(-50%, -50%)',
-        padding: '10px',
-        textAlign: 'center',
-        border: '2px solid',
-        zIndex: String(currentZindex),
-        backgroundColor: bgColors[type],
-        color: colors[type],
-        cursor: 'pointer',
-        position: isFixed ? 'fixed' : 'absolute'
-    };
-    currentZindex++;
-
-    Object.assign(messageWindow.style, notifyStyles);
-
-    var delayedRemoval = setTimeout(function () {
-        element.removeChild(messageWindow);
-    }, 5000);
-
-    messageWindow.addEventListener('click', function () {
-        element.removeChild(messageWindow);
-        clearTimeout(delayedRemoval);
-    });
-
-    element.insertBefore(messageWindow, element.firstElementChild);
 }
 //# sourceMappingURL=game.js.map

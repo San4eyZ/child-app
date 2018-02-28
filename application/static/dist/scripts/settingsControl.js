@@ -6,6 +6,7 @@ if (document.body.classList.contains('settings-body')) {
     (function () {
         var sendData = function sendData(data, url, isAsync, successCallback, errorCallback) {
             var xhr = new XMLHttpRequest();
+            console.log(url);
             xhr.open('POST', url, isAsync);
             xhr.setRequestHeader('Content-Type', 'application/json');
             xhr.onerror = errorCallback;
@@ -119,7 +120,7 @@ if (document.body.classList.contains('settings-body')) {
                             confirm: values[2]
                         };
 
-                        var link = window.location.origin + (inputs[0].type === 'email' ? 'changeEmail' : 'changePass');
+                        var link = window.location.origin + (inputs[0].type === 'email' ? '/changeEmail' : '/changePass');
                         sendData(JSON.stringify(data), link, true, endCallback, errorCallback);
                     } else {
                         notify(true, 'Пожалуйста, заполните все поля.', 'warning');
