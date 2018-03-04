@@ -40,29 +40,31 @@ if (document.body.classList.contains('groups-body')) {
             // Удаление группы
             deleteButton.addEventListener('click', function (event) {
                 event.preventDefault();
-                var toDelete = confirm('Вы действительно хотите удалить группу?');
-                if (toDelete) {
+                notify('true', 'Вы действительно хотите удалить группу?', 'confirm', function () {
                     var _freeStudents$student;
 
                     var xhr = new XMLHttpRequest();
                     xhr.overrideMimeType('application/json');
-                    xhr.open('POST', window.location.origin + '/child-app/forTeacher/groups.html', true);
+                    xhr.open('POST', window.location.origin + '/groups/delete', true);
                     xhr.onload = function () {
                         if (xhr.status === 200) {
                             location.reload(true);
                         } else {
-                            notify(true, '\u041F\u0440\u043E\u0438\u0437\u043E\u0448\u043B\u0430 \u043E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438 \u0443\u0434\u0430\u043B\u0435\u043D\u0438\u0438', 'failure');
+                            notify(true, '\u041F\u0440\u043E\u0438\u0437\u043E\u0448\u043B\u0430 \u043E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438 \u0443\u0434\u0430\u043B\u0435\u043D\u0438\u0438 (' + xhr.status + ')', 'failure');
+                            freeStudents.students = currentFreeStudents;
                         }
                     };
-                    // Находим индекс удаляемой группы
-                    var indexToDelete = groupsListForRed.indexOf(groupObj);
-                    // Вырезаем удаляемую группу
-                    var groupToDelete = groupsListForRed.splice(indexToDelete, 1)[0];
+                    // Спасаем текущее состояние
+                    var currentFreeStudents = freeStudents.students.slice();
+                    // Создаем новую группу для отправки
+                    var newGroupList = groupsListForRed.filter(function (obj) {
+                        return obj !== groupObj;
+                    });
                     // Освобождаем учеников из удаленной группы
-                    (_freeStudents$student = freeStudents.students).push.apply(_freeStudents$student, _toConsumableArray(groupToDelete.students));
+                    (_freeStudents$student = freeStudents.students).push.apply(_freeStudents$student, _toConsumableArray(groupObj.students));
                     // Отправляем данные о новой группе на сервер
-                    xhr.send(JSON.stringify(groupsListForRed));
-                }
+                    xhr.send(JSON.stringify(newGroupList));
+                });
             });
 
             redButton.addEventListener('click', function (event) {
@@ -75,7 +77,7 @@ if (document.body.classList.contains('groups-body')) {
                 var changeButton = document.createElement('button');
                 changeButton.classList.add('button_dark-theme', 'groups-change-interface__btn');
 
-                var list = makeListForSelect(this.parentElement.groupObj);
+                var list = makeListForSelect(groupObj);
                 list.classList.add('groups-change-interface__list');
 
                 changeButton.innerHTML = 'Изменить группу';
@@ -85,12 +87,15 @@ if (document.body.classList.contains('groups-body')) {
                     if (enteredName) {
                         var xhr = new XMLHttpRequest();
                         xhr.overrideMimeType('application/json');
-                        xhr.open('POST', window.location.origin + '/child-app/forTeacher/groups.html', true);
+                        xhr.open('POST', window.location.origin + '/groups/red', true);
                         xhr.onload = function () {
                             if (xhr.status === 200) {
                                 location.reload(true);
                             } else {
-                                notify(true, '\u041F\u0440\u043E\u0438\u0437\u043E\u0448\u043B\u0430 \u043E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438 \u0440\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0438', 'failure');
+                                notify(true, '\u041F\u0440\u043E\u0438\u0437\u043E\u0448\u043B\u0430 \u043E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438 \u0440\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0438 (' + xhr.status + ')', 'failure');
+                                groupObj.students = _currentStudents;
+                                freeStudents.students = _currentFreeStudents2;
+                                console.log(groupsListForRed);
                             }
                         };
 
@@ -108,8 +113,11 @@ if (document.body.classList.contains('groups-body')) {
                             return studentObj;
                         });
 
+                        var _currentStudents = groupObj.students.slice();
+                        var _currentFreeStudents2 = freeStudents.students.slice();
+
                         groupObj.students = selectedStudents;
-                        groupsListForRed[groupsListForRed.length - 1].students = unseectedStudents;
+                        freeStudents.students = unseectedStudents;
                         groupObj.name = enteredName;
                         xhr.send(JSON.stringify(groupsListForRed));
                     } else {
@@ -172,6 +180,7 @@ if (document.body.classList.contains('groups-body')) {
         freeStudents.forEach(function (student) {
             return makeOptions(student);
         });
+
         function makeOptions(student) {
             var isSelected = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
@@ -207,8 +216,8 @@ if (document.body.classList.contains('groups-body')) {
     var createButton = document.querySelector('.groups__create-btn');
     var placeForData = document.querySelector('.action-place');
     var groupsListElement = document.querySelector('.groups__list');
-
-    var promiseGroupList = getGroupsData(window.location.origin + '/child-app/testData/groupList.json');
+    // TODO Изменить запрос
+    var promiseGroupList = getGroupsData(window.location.origin + '/testData/groupList.json');
     promiseGroupList.then(function (groupList) {
         groupsListForRed = groupList;
         groupsListElement.removeChild(groupsListElement.firstElementChild);
@@ -235,11 +244,11 @@ if (document.body.classList.contains('groups-body')) {
                             table.style.animationDuration = '1s';
                             placeForData.replaceChild(table, placeForData.firstElementChild);
                         } else {
-                            throw new Error('\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u044F \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u0438 \u043E \u0433\u0440\u0443\u043F\u043F\u0430\u0445 (' + xhr.status + ')');
+                            notify(true, '\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u044F \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u0438 \u043E\u0431 \u0443\u0447\u0435\u043D\u0438\u043A\u0435 (' + xhr.status + ')', 'failure');
                         }
                     };
                     xhr.onerror = function () {
-                        throw new Error('\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u044F \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u0438 \u043E \u0433\u0440\u0443\u043F\u043F\u0430\u0445 (' + xhr.status + ')');
+                        notify(true, '\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u044F \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u0438 \u043E\u0431 \u0443\u0447\u0435\u043D\u0438\u043A\u0435 (' + xhr.status + ')', 'failure');
                     };
 
                     xhr.send();
@@ -277,16 +286,20 @@ if (document.body.classList.contains('groups-body')) {
                 evt.preventDefault();
                 if (nameChanger.value) {
                     var xhr = new XMLHttpRequest();
-                    xhr.open('POST', window.location.origin + '/child-app/forTeacher/groups.html', true);
+                    xhr.open('POST', window.location.origin + '/groups/add', true);
                     xhr.setRequestHeader('Content-Type', 'application/json');
 
                     xhr.onload = function () {
                         if (xhr.status === 200) {
                             location.reload(true);
                         } else {
-                            notify(true, '\u041F\u0440\u043E\u0438\u0437\u043E\u0448\u043B\u0430 \u043E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438 \u0441\u043E\u0437\u0434\u0430\u043D\u0438\u0438', 'failure');
+                            notify(true, '\u041F\u0440\u043E\u0438\u0437\u043E\u0448\u043B\u0430 \u043E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438 \u0441\u043E\u0437\u0434\u0430\u043D\u0438\u0438 (' + xhr.status + ')', 'failure');
+                            groupsListForRed[groupsListForRed.length - 1].students = _currentFreeStudents;
+                            console.log(groupsListForRed);
                         }
                     };
+
+                    var _currentFreeStudents = groupsListForRed[groupsListForRed.length - 1].students.slice();
 
                     var allStudents = [].concat(_toConsumableArray(list.children));
                     var newGroup = {
@@ -299,7 +312,7 @@ if (document.body.classList.contains('groups-body')) {
                         })
                     };
                     var freeGroup = {
-                        name: 'Не распределено',
+                        name: 'Не распределенные',
                         free: true,
                         students: allStudents.filter(function (opt) {
                             return !opt.selected;
@@ -308,11 +321,16 @@ if (document.body.classList.contains('groups-body')) {
                             return studentObj;
                         })
                     };
-                    groupsListForRed.pop();
+                    var newGroupList = groupsListForRed.slice();
+                    newGroupList.pop();
                     // TODO Придумать что-нибудь с id или оставить так как есть
-                    newGroup.id = groupsListForRed[groupsListForRed.length - 1].id + 1;
-                    groupsListForRed.push(newGroup, freeGroup);
-                    xhr.send(JSON.stringify(groupsListForRed));
+                    if (newGroupList.length) {
+                        newGroup.id = newGroupList[newGroupList.length - 1].id + 1;
+                    } else {
+                        newGroup.id = 1;
+                    }
+                    newGroupList.push(newGroup, freeGroup);
+                    xhr.send(JSON.stringify(newGroupList));
                 } else {
                     notify(true, 'Пожалуйста введите имя шруппы', 'warning');
                 }
@@ -328,5 +346,12 @@ if (document.body.classList.contains('groups-body')) {
     }).catch(function (err) {
         notify(true, '\u0427\u0442\u043E-\u0442\u043E \u043F\u043E\u0448\u043B\u043E \u043D\u0435 \u0442\u0430\u043A: ' + err.message, 'failure');
     });
+}
+
+function calculateHeight(element) {
+    return [].concat(_toConsumableArray(element.children)).reduce(function (init, cur) {
+        var computedStyle = window.getComputedStyle(cur);
+        return init + parseInt(computedStyle.height) + parseInt(computedStyle.marginTop) + parseInt(computedStyle.marginBottom) + parseInt(computedStyle.borderTopWidth) + parseInt(computedStyle.borderBottomWidth) + parseInt(computedStyle.paddingBottom) + parseInt(computedStyle.paddingTop);
+    }, 0);
 }
 //# sourceMappingURL=groupsControl.js.map

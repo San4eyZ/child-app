@@ -6,8 +6,8 @@ if (document.body.classList.contains('groups-body')) {
     let createButton = document.querySelector('.groups__create-btn');
     let placeForData = document.querySelector('.action-place');
     let groupsListElement = document.querySelector('.groups__list');
-
-    let promiseGroupList = getGroupsData(`${window.location.origin}/child-app/testData/groupList.json`);
+// TODO Изменить запрос
+    let promiseGroupList = getGroupsData(`${window.location.origin}/testData/groupList.json`);
     promiseGroupList.then(groupList => {
         groupsListForRed = groupList;
         groupsListElement.removeChild(groupsListElement.firstElementChild);
@@ -31,11 +31,11 @@ if (document.body.classList.contains('groups-body')) {
                         table.style.animationDuration = '1s';
                         placeForData.replaceChild(table, placeForData.firstElementChild);
                     } else {
-                        throw new Error(`Ошибка получения информации о группах (${xhr.status})`);
+                        notify(true, `Ошибка получения информации об ученике (${xhr.status})`, 'failure');
                     }
                 };
                 xhr.onerror = function () {
-                    throw new Error(`Ошибка получения информации о группах (${xhr.status})`);
+                    notify(true, `Ошибка получения информации об ученике (${xhr.status})`, 'failure');
                 };
 
                 xhr.send();
@@ -73,16 +73,20 @@ if (document.body.classList.contains('groups-body')) {
                 evt.preventDefault();
                 if (nameChanger.value) {
                     let xhr = new XMLHttpRequest();
-                    xhr.open('POST', `${window.location.origin}/child-app/forTeacher/groups.html`, true);
+                    xhr.open('POST', `${window.location.origin}/groups/add`, true);
                     xhr.setRequestHeader('Content-Type', 'application/json');
 
                     xhr.onload = function () {
                         if (xhr.status === 200) {
                             location.reload(true);
                         } else {
-                            notify(true, `Произошла ошибка при создании`, 'failure')
+                            notify(true, `Произошла ошибка при создании (${xhr.status})`, 'failure')
+                            groupsListForRed[groupsListForRed.length - 1].students = currentFreeStudents;
+                            console.log(groupsListForRed);
                         }
                     };
+
+                    let currentFreeStudents = groupsListForRed[groupsListForRed.length - 1].students.slice();
 
                     let allStudents = [...list.children];
                     let newGroup = {
@@ -90,15 +94,20 @@ if (document.body.classList.contains('groups-body')) {
                         students: allStudents.filter(opt => opt.selected).map(({studentObj}) => studentObj)
                     };
                     let freeGroup = {
-                        name: 'Не распределено',
+                        name: 'Не распределенные',
                         free: true,
                         students: allStudents.filter(opt => !opt.selected).map(({studentObj}) => studentObj)
                     };
-                    groupsListForRed.pop();
+                    let newGroupList = groupsListForRed.slice();
+                    newGroupList.pop();
                     // TODO Придумать что-нибудь с id или оставить так как есть
-                    newGroup.id = groupsListForRed[groupsListForRed.length - 1].id + 1;
-                    groupsListForRed.push(newGroup, freeGroup);
-                    xhr.send(JSON.stringify(groupsListForRed));
+                    if (newGroupList.length) {
+                        newGroup.id = newGroupList[newGroupList.length - 1].id + 1;
+                    } else {
+                        newGroup.id = 1
+                    }
+                    newGroupList.push(newGroup, freeGroup);
+                    xhr.send(JSON.stringify(newGroupList));
                 } else {
                     notify(true, 'Пожалуйста введите имя шруппы', 'warning');
                 }
@@ -155,27 +164,27 @@ if (document.body.classList.contains('groups-body')) {
             // Удаление группы
             deleteButton.addEventListener('click', function (event) {
                 event.preventDefault();
-                let toDelete = confirm('Вы действительно хотите удалить группу?');
-                if (toDelete) {
+                notify('true', 'Вы действительно хотите удалить группу?', 'confirm', function () {
                     let xhr = new XMLHttpRequest();
                     xhr.overrideMimeType('application/json');
-                    xhr.open('POST', `${window.location.origin}/child-app/forTeacher/groups.html`, true);
-                    xhr.onload = function() {
+                    xhr.open('POST', `${window.location.origin}/groups/delete`, true);
+                    xhr.onload = function () {
                         if (xhr.status === 200) {
                             location.reload(true);
                         } else {
-                            notify(true, `Произошла ошибка при удалении`, 'failure')
+                            notify(true, `Произошла ошибка при удалении (${xhr.status})`, 'failure')
+                            freeStudents.students = currentFreeStudents;
                         }
                     };
-                    // Находим индекс удаляемой группы
-                    let indexToDelete = groupsListForRed.indexOf(groupObj);
-                    // Вырезаем удаляемую группу
-                    let groupToDelete = groupsListForRed.splice(indexToDelete, 1)[0];
+                    // Спасаем текущее состояние
+                    let currentFreeStudents = freeStudents.students.slice();
+                    // Создаем новую группу для отправки
+                    let newGroupList = groupsListForRed.filter(obj => obj !== groupObj);
                     // Освобождаем учеников из удаленной группы
-                    freeStudents.students.push(...groupToDelete.students);
+                    freeStudents.students.push(...groupObj.students);
                     // Отправляем данные о новой группе на сервер
-                    xhr.send(JSON.stringify(groupsListForRed));
-                }
+                    xhr.send(JSON.stringify(newGroupList));
+                });
             });
 
             redButton.addEventListener('click', function (event) {
@@ -188,7 +197,7 @@ if (document.body.classList.contains('groups-body')) {
                 let changeButton = document.createElement('button');
                 changeButton.classList.add('button_dark-theme', 'groups-change-interface__btn');
 
-                let list = makeListForSelect(this.parentElement.groupObj);
+                let list = makeListForSelect(groupObj);
                 list.classList.add('groups-change-interface__list');
 
                 changeButton.innerHTML = 'Изменить группу';
@@ -198,12 +207,15 @@ if (document.body.classList.contains('groups-body')) {
                     if (enteredName) {
                         let xhr = new XMLHttpRequest();
                         xhr.overrideMimeType('application/json');
-                        xhr.open('POST', `${window.location.origin}/child-app/forTeacher/groups.html`, true);
+                        xhr.open('POST', `${window.location.origin}/groups/red`, true);
                         xhr.onload = function () {
                             if (xhr.status === 200) {
                                 location.reload(true);
                             } else {
-                                notify(true, `Произошла ошибка при редактировании`, 'failure')
+                                notify(true, `Произошла ошибка при редактировании (${xhr.status})`, 'failure');
+                                groupObj.students = currentStudents;
+                                freeStudents.students = currentFreeStudents;
+                                console.log(groupsListForRed);
                             }
                         };
 
@@ -211,8 +223,11 @@ if (document.body.classList.contains('groups-body')) {
                         let selectedStudents = allStudents.filter(opt => opt.selected).map(({studentObj}) => studentObj);
                         let unseectedStudents = allStudents.filter(opt => !opt.selected).map(({studentObj}) => studentObj);
 
+                        let currentStudents = groupObj.students.slice();
+                        let currentFreeStudents = freeStudents.students.slice();
+
                         groupObj.students = selectedStudents;
-                        groupsListForRed[groupsListForRed.length -1].students = unseectedStudents;
+                        freeStudents.students = unseectedStudents;
                         groupObj.name = enteredName;
                         xhr.send(JSON.stringify(groupsListForRed));
                     } else {
@@ -235,7 +250,7 @@ if (document.body.classList.contains('groups-body')) {
 
         return groupHolder;
     }
-    
+
     function createStudent(studentObj) {
         let studentRadioContainer = document.createElement('div');
         let studentLabelContainer = document.createElement('div');
@@ -244,7 +259,7 @@ if (document.body.classList.contains('groups-body')) {
 
         return [studentRadioContainer.firstElementChild, studentLabelContainer.firstElementChild];
     }
-    
+
     function createPersonalTable(tableData) {
         let thead = document.createElement('thead');
         let tbody = document.createElement('tbody');
@@ -282,7 +297,8 @@ if (document.body.classList.contains('groups-body')) {
             group.students.forEach(student => makeOptions(student, true));
         }
         freeStudents.forEach(student => makeOptions(student));
-        function makeOptions(student, isSelected=false) {
+
+        function makeOptions(student, isSelected = false) {
             let option = document.createElement('option');
             option.innerHTML = student.name;
             option.studentObj = student;
@@ -308,4 +324,17 @@ if (document.body.classList.contains('groups-body')) {
         return holder;
     }
 
+}
+
+function calculateHeight(element) {
+    return [...element.children].reduce((init, cur) => {
+        let computedStyle = window.getComputedStyle(cur);
+        return init + parseInt(computedStyle.height) +
+            parseInt(computedStyle.marginTop) +
+            parseInt(computedStyle.marginBottom) +
+            parseInt(computedStyle.borderTopWidth) +
+            parseInt(computedStyle.borderBottomWidth) +
+            parseInt(computedStyle.paddingBottom) +
+            parseInt(computedStyle.paddingTop);
+    }, 0);
 }

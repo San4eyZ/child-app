@@ -23,6 +23,9 @@ function notify(isFixed, message, type, cb, element = document.body) {
     if (!types[type]) {
         throw new TypeError(`Неверное имя типа Уведомления. Принято ${type}`);
     }
+    if (type === 'confirm' && typeof cb !== 'function') {
+        throw new Error('Не задана функция обратного вызова для confirm');
+    }
     let messageWindow = document.createElement('div');
     messageWindow.classList.add('message-window');
     let messageText = document.createElement('p');
@@ -51,12 +54,11 @@ function notify(isFixed, message, type, cb, element = document.body) {
         cancelButton.innerHTML = 'Отмена';
         messageWindow.appendChild(cancelButton);
 
-        overlay.removeEventListener('click', removeMessage);
         okButton.removeEventListener('click', removeMessage);
         cancelButton.addEventListener('click', removeMessage);
         okButton.addEventListener('click', function (event) {
             event.preventDefault();
-            removeMessage();
+            removeMessage(event);
             cb();
         })
     }
