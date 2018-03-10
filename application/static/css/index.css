@@ -667,8 +667,14 @@ body {
     cursor: pointer;
 }
 
-.settings__theme-option:checked + label {
+.settings__theme-option:checked + .settings__theme-label {
     background: #ff7b2f;
+}
+
+.groups-body .settings__theme-option:checked + .settings__theme-label {
+    background: #4a2359;
+    border-color: #4a2359;
+    color: #ff7b2f;
 }
 
 .settings__theme-holder {
@@ -726,33 +732,6 @@ body {
     }
 }
 
-.settings__opt-name {
-    display: inline-block;
-    margin-right: 1%;
-    min-width: 24%;
-    padding: 5px;
-    border: 5px solid;
-    color: #777;
-
-    cursor: pointer;
-    border-radius: 25px;
-
-    transition: color 0.5s;
-}
-
-.settings__opt-name:hover {
-    color: #4a2359;
-}
-
-.settings__theme-option:checked + .settings__opt-name {
-    border: 5px solid;
-
-    background: #ff7b2f;
-    color: #4a2359;
-
-    pointer-events: none;
-}
-
 .settings__capacity-value,
 .settings__quantity-value,
 .settings__speed-value {
@@ -796,11 +775,15 @@ body {
 .settings__label {
     display: block;
     margin-bottom: 10px;
+
+    font-size: 1.25rem;
 }
 
 .settings__item {
     margin-bottom: 10px;
 }
+
+
 
 .settings__item:last-of-type {
     margin-bottom: 44px;
@@ -1298,7 +1281,8 @@ body {
 }
 
 .groups__delete-btn,
-.groups__red-btn {
+.groups__red-btn,
+.groups__homework-btn {
     min-height: 28px;
     width: 80%;
     align-self: center;
@@ -1320,12 +1304,23 @@ body {
     box-shadow: none;
 }
 
-.groups__red-btn {
+.groups__red-btn,
+.groups__homework-btn {
     border: 2px solid;
 }
 
-.groups__red-btn:hover {
+.groups__homework-btn {
+    color: #1961b8;
+}
+
+.groups__red-btn:hover,
+.groups__homework-btn:hover {
     box-shadow: none;
+}
+
+.groups__homework-btn:hover {
+    color: #134788;
+    background: #1e9ed8;
 }
 
 .group {
