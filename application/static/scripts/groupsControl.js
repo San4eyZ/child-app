@@ -72,6 +72,8 @@ if (document.body.classList.contains('groups-body')) {
             changeButton.addEventListener('click', function (evt) {
                 evt.preventDefault();
                 if (nameChanger.value) {
+                    let currentFreeStudents = groupsListForRed[groupsListForRed.length - 1].students.slice();
+
                     let xhr = new XMLHttpRequest();
                     xhr.open('POST', `${window.location.origin}/groups/add`, true);
                     xhr.setRequestHeader('Content-Type', 'application/json');
@@ -80,13 +82,11 @@ if (document.body.classList.contains('groups-body')) {
                         if (xhr.status === 200) {
                             location.reload(true);
                         } else {
-                            notify(true, `Произошла ошибка при создании (${xhr.status})`, 'failure')
+                            notify(true, `Произошла ошибка при создании (${xhr.status})`, 'failure');
                             groupsListForRed[groupsListForRed.length - 1].students = currentFreeStudents;
                             console.log(groupsListForRed);
                         }
                     };
-
-                    let currentFreeStudents = groupsListForRed[groupsListForRed.length - 1].students.slice();
 
                     let allStudents = [...list.children];
                     let newGroup = {
@@ -205,6 +205,9 @@ if (document.body.classList.contains('groups-body')) {
                     event.preventDefault();
                     let enteredName = this.parentElement.firstElementChild.value;
                     if (enteredName) {
+                        let currentStudents = groupObj.students.slice();
+                        let currentFreeStudents = freeStudents.students.slice();
+
                         let xhr = new XMLHttpRequest();
                         xhr.overrideMimeType('application/json');
                         xhr.open('POST', `${window.location.origin}/groups/red`, true);
@@ -222,9 +225,6 @@ if (document.body.classList.contains('groups-body')) {
                         let allStudents = [...list.children];
                         let selectedStudents = allStudents.filter(opt => opt.selected).map(({studentObj}) => studentObj);
                         let unseectedStudents = allStudents.filter(opt => !opt.selected).map(({studentObj}) => studentObj);
-
-                        let currentStudents = groupObj.students.slice();
-                        let currentFreeStudents = freeStudents.students.slice();
 
                         groupObj.students = selectedStudents;
                         freeStudents.students = unseectedStudents;

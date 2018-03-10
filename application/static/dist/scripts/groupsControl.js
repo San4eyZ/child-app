@@ -85,6 +85,9 @@ if (document.body.classList.contains('groups-body')) {
                     event.preventDefault();
                     var enteredName = this.parentElement.firstElementChild.value;
                     if (enteredName) {
+                        var currentStudents = groupObj.students.slice();
+                        var _currentFreeStudents2 = freeStudents.students.slice();
+
                         var xhr = new XMLHttpRequest();
                         xhr.overrideMimeType('application/json');
                         xhr.open('POST', window.location.origin + '/groups/red', true);
@@ -93,7 +96,7 @@ if (document.body.classList.contains('groups-body')) {
                                 location.reload(true);
                             } else {
                                 notify(true, '\u041F\u0440\u043E\u0438\u0437\u043E\u0448\u043B\u0430 \u043E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438 \u0440\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0438 (' + xhr.status + ')', 'failure');
-                                groupObj.students = _currentStudents;
+                                groupObj.students = currentStudents;
                                 freeStudents.students = _currentFreeStudents2;
                                 console.log(groupsListForRed);
                             }
@@ -112,9 +115,6 @@ if (document.body.classList.contains('groups-body')) {
                             var studentObj = _ref4.studentObj;
                             return studentObj;
                         });
-
-                        var _currentStudents = groupObj.students.slice();
-                        var _currentFreeStudents2 = freeStudents.students.slice();
 
                         groupObj.students = selectedStudents;
                         freeStudents.students = unseectedStudents;
@@ -285,6 +285,8 @@ if (document.body.classList.contains('groups-body')) {
             changeButton.addEventListener('click', function (evt) {
                 evt.preventDefault();
                 if (nameChanger.value) {
+                    var _currentFreeStudents = groupsListForRed[groupsListForRed.length - 1].students.slice();
+
                     var xhr = new XMLHttpRequest();
                     xhr.open('POST', window.location.origin + '/groups/add', true);
                     xhr.setRequestHeader('Content-Type', 'application/json');
@@ -298,8 +300,6 @@ if (document.body.classList.contains('groups-body')) {
                             console.log(groupsListForRed);
                         }
                     };
-
-                    var _currentFreeStudents = groupsListForRed[groupsListForRed.length - 1].students.slice();
 
                     var allStudents = [].concat(_toConsumableArray(list.children));
                     var newGroup = {
