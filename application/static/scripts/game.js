@@ -216,6 +216,7 @@ if (document.body.classList.contains('game-body')) {
     let decButtons = document.querySelectorAll('.button_dec');
     let fields = document.querySelectorAll('.settings__input');
     let themeCheckers = [...gameInterface.querySelectorAll('.settings__theme-option')];
+    console.log(themeCheckers);
 
     themeCheckers.forEach(checker => checker.addEventListener('change', function (event) {
         let neighbourCheckers = [...this.parentElement.getElementsByTagName('input')];
@@ -262,7 +263,7 @@ if (document.body.classList.contains('game-body')) {
 
                 /* Таймаут для того, чтобы прошла анимация скрывания настроек */
                 setTimeout(function () {
-                    gameInterface.style.maxHeight = '85vh';
+                    gameInterface.style.maxHeight = '100vh';
                     /* Показываем доску */
                     gameInterface.appendChild(game.board);
                     /* Ускоряем пришельца */
@@ -302,7 +303,7 @@ if (document.body.classList.contains('game-body')) {
     for (let field of fields) {
         field.addEventListener('keypress', restrictKeys);
         field.addEventListener('focus', function () {
-            initialValue =  this.value;
+            initialValue = this.value;
             this.value = '';
         });
         field.addEventListener('blur', function () {
@@ -375,15 +376,35 @@ function inputControl(button, role, event) {
 if (document.body.classList.contains('homework-body')) {
     let placeholder = document.querySelector('.loading-placeholder');
     let homeworkElement = document.querySelector('.homework');
-    let homeworkWindow = document.querySelector('.homework-main');
 
     let xhr = new XMLHttpRequest();
-    xhr.open('GET', `${window.location.origin}/homework`, true);
+    // TODO изсменить запрос
+    xhr.open('GET', `${window.location.origin}/testData/homeworkConfig.json`, true);
+
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onload = function () {
         if (xhr.status === 200) {
             placeholder.parentElement.removeChild(placeholder);
-            addHomeworkList(JSON.parse(xhr.responseText).data, homeworkElement);
+
+            let homeworks = JSON.parse(xhr.responseText);
+            let paginator = makePaginator(homeworks);
+            homeworkElement.parentNode.appendChild(paginator);
+            addHomeworkList(homeworks.slice(0, 4), homeworkElement);
+            // Устанавливаем высоту, чтобы не скакала при переключении страниц
+            let headerHeight = parseInt(getComputedStyle(homeworkElement.firstElementChild).height);
+            let headerMargin = parseInt(getComputedStyle(homeworkElement.firstElementChild).marginBottom);
+            let tasksHeight = parseInt(getComputedStyle(homeworkElement.children[1]).height) * 4;
+            let tasksMargin = parseInt(getComputedStyle(homeworkElement.children[1]).marginBottom) * 4;
+            homeworkElement.style.height = (headerHeight + tasksHeight + headerMargin + tasksMargin) + 'px';
+            // Добавляем изменение размеров на ресайз окна
+            window.addEventListener('resize', function () {
+                let headerHeight = parseInt(getComputedStyle(homeworkElement.firstElementChild).height);
+                let headerMargin = parseInt(getComputedStyle(homeworkElement.firstElementChild).marginBottom);
+                let tasksHeight = parseInt(getComputedStyle(homeworkElement.children[1]).height) * 4;
+                let tasksMargin = parseInt(getComputedStyle(homeworkElement.children[1]).marginBottom) * 4;
+                console.log(headerHeight, tasksHeight);
+                homeworkElement.style.height = (headerHeight + tasksHeight + headerMargin + tasksMargin) + 'px';
+            })
         } else if (xhr.status === 404) {
             let message = document.createElement('div');
             message.innerHTML = 'У вас нет невыполненного домашнего задания';
@@ -403,6 +424,44 @@ if (document.body.classList.contains('homework-body')) {
     function addHomeworkList(tasks, element) {
         let taskElements = tasks.map(createHomeworkTask);
         taskElements.forEach(task => element.appendChild(task));
+    }
+
+    function makePaginator(homeworks) {
+        let limit = 4;
+        let paginator = document.createElement('div');
+        paginator.classList.add('paginator');
+        let pageCount = Math.ceil(homeworks.length / 4);
+        for (let i = 0; i < pageCount; i++) {
+            let offset = i * limit;
+
+            let pageRadio = document.createElement('input');
+            pageRadio.setAttribute('type', 'radio');
+            pageRadio.setAttribute('id', `page-${i + 1}`);
+            pageRadio.setAttribute('name', 'pagination');
+            pageRadio.classList.add('paginator__radio');
+            if (i === 0) {
+                pageRadio.setAttribute('checked', 'checked');
+            }
+
+            let pageLabel = document.createElement('label');
+            pageLabel.setAttribute('for', `page-${i + 1}`);
+            pageLabel.classList.add('paginator__label', 'input_light-theme');
+            pageLabel.innerHTML = `${i + 1}`;
+
+            pageLabel.addEventListener('click', function () {
+                let listForPage = homeworks.slice(offset, offset + limit);
+                [...homeworkElement.querySelectorAll('.homework__task')].forEach(function (element) {
+                    element.parentNode.removeChild(element);
+                });
+
+                addHomeworkList(listForPage, homeworkElement);
+            });
+
+            paginator.appendChild(pageRadio);
+            paginator.appendChild(pageLabel);
+        }
+
+        return paginator;
     }
 
     function createHomeworkTask(task) {
@@ -432,14 +491,15 @@ if (document.body.classList.contains('homework-body')) {
                 game.restartButton.classList.remove('d-none');
             }, 3000);
 
+            let paginationWrapper = document.querySelector('.pagination-wrapper');
             /* Убираем окно настроек */
-            homeworkElement.classList.add('hide');
+            paginationWrapper.classList.add('hide');
 
             /* Таймаут для того, чтобы прошла анимация скрывания настроек */
             setTimeout(function () {
                 /* Показываем доску */
-                homeworkElement.parentElement.style.maxHeight = '85vh';
-                homeworkElement.parentElement.appendChild(game.board);
+                paginationWrapper.parentElement.style.maxHeight = '100vh';
+                paginationWrapper.parentElement.appendChild(game.board);
                 /* Ускоряем пришельца */
                 if (game.animAlien && game.animShadow) {
                     game.animAlien.classList.add('animation_fast');

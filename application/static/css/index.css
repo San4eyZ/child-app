@@ -975,6 +975,11 @@ body {
 }
 
 .homework {
+    display: flex;
+    flex-direction: column;
+}
+
+.pagination-wrapper {
     transition: opacity 1s;
 }
 
@@ -992,6 +997,38 @@ body {
     padding: 10px 30px;
 
     border-radius: 30px;
+}
+
+.paginator {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    overflow: auto;
+}
+
+.paginator__radio {
+    display: none;
+}
+
+.paginator__label {
+    width: 30px;
+    height: 30px;
+    margin-right: 5px;
+    border: 2px solid;
+
+    text-align: center;
+    cursor: pointer;
+
+    transition: bacground 0.5s;
+}
+
+.paginator__radio:checked + .paginator__label {
+    background: #ff7b2f;
+}
+
+.paginator__label:hover {
+    background: #ff7b2f;
 }
 
 /*==========================   ОКНО СТАТИСТИКИ   =========================*/
