@@ -99,6 +99,8 @@ CreateGame.prototype = {
     },
     /* Создаем поле для игры */
     createBoard: function createBoard() {
+        var _this = this;
+
         var board = document.createElement('div');
         var heading = document.createElement('h2');
         var closeButton = document.createElement('button');
@@ -129,18 +131,18 @@ CreateGame.prototype = {
             board.previousElementSibling.classList.remove('hide');
             board.parentElement.style.maxHeight = '';
             board.parentElement.removeChild(board);
-            clearTimeout(this.endTimer);
-            if (this.animAlien && this.animShadow) {
-                this.animAlien.classList.remove('animation_fast');
-                this.animShadow.classList.remove('animation_fast');
+            clearTimeout(_this.endTimer);
+            if (_this.animAlien && _this.animShadow) {
+                _this.animAlien.classList.remove('animation_fast');
+                _this.animShadow.classList.remove('animation_fast');
             }
-        }.bind(this));
+        });
 
         restartButton.addEventListener('click', function (event) {
             event.preventDefault();
-            var that = this;
-            clearInterval(that.timer);
-            clearTimeout(that.endTimer);
+
+            clearInterval(_this.timer);
+            clearTimeout(_this.endTimer);
             /* Прячем кнопку restart, чтобы ничего не сломали, пока не пройдут анимации */
             restartButton.classList.add('d-none');
 
@@ -148,21 +150,21 @@ CreateGame.prototype = {
             board.classList.add('hide');
             setTimeout(function () {
                 /* Если поле для чисел было скрыто, показываем его */
-                that.numberField.classList.remove('hide');
+                _this.numberField.classList.remove('hide');
                 /* Убираем форму ответа, если дошли до конца и она создалась */
-                if (that.answerForm) {
-                    that.board.removeChild(that.answerForm);
-                    that.answerForm = undefined;
+                if (_this.answerForm) {
+                    _this.board.removeChild(_this.answerForm);
+                    _this.answerForm = undefined;
                 }
                 /* обновляем состояние игры */
-                that.index = 0;
-                that.numberField.innerHTML = 'Вперед!';
+                _this.index = 0;
+                _this.numberField.innerHTML = 'Вперед!';
                 /* Показываем доску */
                 board.classList.remove('hide');
                 /* Начинаем сначала */
-                that.gameInit();
+                _this.gameInit();
             }, 1000);
-        }.bind(this));
+        });
 
         board.appendChild(heading);
         board.appendChild(numberHolder);
@@ -229,13 +231,13 @@ if (document.body.classList.contains('game-body')) {
 
         themeCheckers.forEach(function (checker) {
             return checker.addEventListener('change', function (event) {
-                var _this = this;
+                var _this2 = this;
 
                 var neighbourCheckers = [].concat(_toConsumableArray(this.parentElement.getElementsByTagName('input')));
                 var prevCheckers = neighbourCheckers.slice(0, neighbourCheckers.indexOf(this));
 
                 prevCheckers.forEach(function (checker) {
-                    checker.checked = _this.checked;
+                    checker.checked = _this2.checked;
                 });
             });
         });
@@ -257,7 +259,7 @@ if (document.body.classList.contains('game-body')) {
                 return;
             }
 
-            this.classList.add('btn-loading');
+            this.classList.add('btn-loading_light');
             this.disabled = true;
 
             var xhr = new XMLHttpRequest();
@@ -292,14 +294,14 @@ if (document.body.classList.contains('game-body')) {
                     game.gameInit();
                 } else {
                     this.disabled = false;
-                    this.classList.remove('btn-loading');
+                    this.classList.remove('btn-loading_light');
                     notify(true, '\u0427\u0442\u043E-\u0442\u043E \u043F\u043E\u0448\u043B\u043E \u043D\u0435 \u0442\u0430\u043A: (\u041A\u043E\u0434 \u043E\u0448\u0438\u0431\u043A\u0438 - ' + xhr.status + ')', 'failure');
                 }
             }.bind(this);
 
             xhr.onerror = function () {
                 this.disabled = false;
-                this.classList.remove('btn-loading');
+                this.classList.remove('btn-loading_light');
                 notify(true, '\u0427\u0442\u043E-\u0442\u043E \u043F\u043E\u0448\u043B\u043E \u043D\u0435 \u0442\u0430\u043A: (\u041A\u043E\u0434 \u043E\u0448\u0438\u0431\u043A\u0438 - ' + xhr.status + ')', 'failure');
             }.bind(this);
 

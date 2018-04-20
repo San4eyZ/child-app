@@ -1269,11 +1269,19 @@ body {
     text-align: center;
 }
 
-.btn-loading {
-    background-image: url("../images/loading-light.svg") !important;
+.btn-loading_dark,
+.btn-loading_light {
     background-position: 5px 50% !important;
     background-repeat: no-repeat !important;
-    background-size: 35px 35px !important;
+    background-size: contain !important;
+}
+
+.btn-loading_light {
+    background-image: url("../images/loading-light.svg") !important;
+}
+
+.btn-loading_dark {
+    background-image: url("../images/loading-dark.svg") !important;
 }
 
 /*==============================   окно выбора группы   ==================*/

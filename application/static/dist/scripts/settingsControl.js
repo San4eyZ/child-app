@@ -9,12 +9,12 @@ if (document.body.classList.contains('settings-body')) {
             console.log(url);
             xhr.open('POST', url, isAsync);
             xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.onerror = errorCallback;
+            xhr.onerror = errorCallback.bind(null, xhr);
             xhr.onload = function () {
                 if (xhr.status === 200) {
-                    successCallback();
+                    successCallback(xhr);
                 } else {
-                    errorCallback();
+                    errorCallback(xhr);
                 }
             };
             xhr.send(data);
@@ -22,12 +22,12 @@ if (document.body.classList.contains('settings-body')) {
 
         var addButtonWaiter = function addButtonWaiter(element) {
             element.disabled = true;
-            element.classList.add('btn-loading');
+            element.classList.add('btn-loading_dark');
         };
 
         var removeButtonWaiter = function removeButtonWaiter(element) {
             element.disabled = undefined;
-            element.classList.remove('btn-loading');
+            element.classList.remove('btn-loading_dark');
         };
 
         var openButtons = document.querySelectorAll('.main-settings__section-opener');
@@ -101,13 +101,13 @@ if (document.body.classList.contains('settings-body')) {
                         return value;
                     })) {
                         addButtonWaiter(this);
-                        var endCallback = function () {
+                        var endCallback = function (xhr) {
                             removeButtonWaiter(this);
                             notify(true, 'Инструкция по смене данных отправлена на вашу почту.', 'success');
                         }.bind(this);
-                        var errorCallback = function () {
+                        var errorCallback = function (xhr) {
                             removeButtonWaiter(this);
-                            notify(true, 'При смене данных возникла ошибка. Попробуйте еще раз.', 'failure');
+                            notify(true, '\u041F\u0440\u0438 \u0441\u043C\u0435\u043D\u0435 \u0434\u0430\u043D\u043D\u044B\u0445 \u0432\u043E\u0437\u043D\u0438\u043A\u043B\u0430 \u043E\u0448\u0438\u0431\u043A\u0430: (' + xhr.status + '). \u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0435\u0449\u0435 \u0440\u0430\u0437.', 'failure');
                         }.bind(this);
 
                         var data = inputs[0].type === 'email' ? {

@@ -114,7 +114,7 @@ CreateGame.prototype = {
         this.closeButton = closeButton;
 
         /*И вешаем на них обработчики*/
-        closeButton.addEventListener('click', (function (event) {
+        closeButton.addEventListener('click', event => {
             event.preventDefault();
 
             /* Показываем настрйки и убираем текущую игру */
@@ -126,35 +126,35 @@ CreateGame.prototype = {
                 this.animAlien.classList.remove('animation_fast');
                 this.animShadow.classList.remove('animation_fast');
             }
-        }).bind(this));
+        });
 
-        restartButton.addEventListener('click', (function (event) {
+        restartButton.addEventListener('click', event => {
             event.preventDefault();
-            let that = this;
-            clearInterval(that.timer);
-            clearTimeout(that.endTimer);
+
+            clearInterval(this.timer);
+            clearTimeout(this.endTimer);
             /* Прячем кнопку restart, чтобы ничего не сломали, пока не пройдут анимации */
             restartButton.classList.add('d-none');
 
             /* Прячем доску */
             board.classList.add('hide');
-            setTimeout(function () {
+            setTimeout(() => {
                 /* Если поле для чисел было скрыто, показываем его */
-                that.numberField.classList.remove('hide');
+                this.numberField.classList.remove('hide');
                 /* Убираем форму ответа, если дошли до конца и она создалась */
-                if (that.answerForm) {
-                    that.board.removeChild(that.answerForm);
-                    that.answerForm = undefined;
+                if (this.answerForm) {
+                    this.board.removeChild(this.answerForm);
+                    this.answerForm = undefined;
                 }
                 /* обновляем состояние игры */
-                that.index = 0;
-                that.numberField.innerHTML = 'Вперед!';
+                this.index = 0;
+                this.numberField.innerHTML = 'Вперед!';
                 /* Показываем доску */
                 board.classList.remove('hide');
                 /* Начинаем сначала */
-                that.gameInit();
+                this.gameInit();
             }, 1000)
-        }).bind(this));
+        });
 
         board.appendChild(heading);
         board.appendChild(numberHolder);
@@ -241,7 +241,7 @@ if (document.body.classList.contains('game-body')) {
             return;
         }
 
-        this.classList.add('btn-loading');
+        this.classList.add('btn-loading_light');
         this.disabled = true;
 
         let xhr = new XMLHttpRequest();
@@ -276,14 +276,14 @@ if (document.body.classList.contains('game-body')) {
                 game.gameInit();
             } else {
                 this.disabled = false;
-                this.classList.remove('btn-loading');
+                this.classList.remove('btn-loading_light');
                 notify(true, `Что-то пошло не так: (Код ошибки - ${xhr.status})`, 'failure');
             }
         }.bind(this);
 
         xhr.onerror = function () {
             this.disabled = false;
-            this.classList.remove('btn-loading');
+            this.classList.remove('btn-loading_light');
             notify(true, `Что-то пошло не так: (Код ошибки - ${xhr.status})`, 'failure');
         }.bind(this);
 

@@ -61,6 +61,11 @@ if (document.body.classList.contains('groups-body')) {
         createButton.addEventListener('click', function (event) {
             event.preventDefault();
 
+            let checkedStudent = groupsListElement.querySelector('.student__radio:checked');
+            if (checkedStudent) {
+                checkedStudent.checked = false;
+            }
+
             let nameChanger = document.createElement('input');
             nameChanger.placeholder = 'Название группы...';
             nameChanger.classList.add('input_light-theme', 'groups-change-interface__name-changer');
@@ -118,7 +123,7 @@ if (document.body.classList.contains('groups-body')) {
                 }
             });
 
-            let list = makeListForSelect();
+            let list = makeListForSelect(true);
             list.classList.add('groups-change-interface__list');
 
             let holder = createGroupChangingInterface(nameChanger, list, changeButton);
@@ -171,11 +176,16 @@ if (document.body.classList.contains('groups-body')) {
             homeworkButton.addEventListener('click', function (event) {
                 event.preventDefault();
 
+                let checkedStudent = groupsListElement.querySelector('.student__radio:checked');
+                if (checkedStudent) {
+                    checkedStudent.checked = false;
+                }
+
                 let title = document.createElement('span');
                 title.classList.add('settings__label');
                 title.innerHTML = 'Выберите учеников:';
 
-                let list = makeListForSelect(groupObj);
+                let list = makeListForSelect(false, groupObj);
                 list.classList.add('groups-change-interface__list');
 
                 let options = document.createElement('section');
@@ -321,6 +331,11 @@ if (document.body.classList.contains('groups-body')) {
             redButton.addEventListener('click', function (event) {
                 event.preventDefault();
 
+                let checkedStudent = groupsListElement.querySelector('.student__radio:checked');
+                if (checkedStudent) {
+                    checkedStudent.checked = false;
+                }
+
                 let nameChanger = document.createElement('input');
                 nameChanger.value = this.parentElement.groupObj.name;
                 nameChanger.classList.add('input_light-theme', 'groups-change-interface__name-changer');
@@ -328,7 +343,7 @@ if (document.body.classList.contains('groups-body')) {
                 let changeButton = document.createElement('button');
                 changeButton.classList.add('button_dark-theme', 'groups-change-interface__btn');
 
-                let list = makeListForSelect(groupObj);
+                let list = makeListForSelect(true, groupObj);
                 list.classList.add('groups-change-interface__list');
 
                 changeButton.innerHTML = 'Изменить группу';
@@ -425,7 +440,10 @@ if (document.body.classList.contains('groups-body')) {
         return table;
     }
 
-    function makeListForSelect(group = null) {
+    function makeListForSelect(isWithFree, group = null) {
+        if (!isWithFree && !group) {
+            throw new Error(`Список не может быть пустым: свободные - ${isWithFree}, группа - ${group}`);
+        }
         let list = document.createElement('select');
         list.multiple = true;
         let freeStudents = groupsListForRed[groupsListForRed.length - 1].students;
@@ -435,10 +453,12 @@ if (document.body.classList.contains('groups-body')) {
             group.students.forEach(student => makeOptions(student, og, true));
             list.appendChild(og);
         }
-        let freeOg = document.createElement('optgroup');
-        freeOg.label = groupsListForRed[groupsListForRed.length - 1].name;
-        freeStudents.forEach(student => makeOptions(student, freeOg));
-        list.appendChild(freeOg);
+        if (isWithFree) {
+            let freeOg = document.createElement('optgroup');
+            freeOg.label = groupsListForRed[groupsListForRed.length - 1].name;
+            freeStudents.forEach(student => makeOptions(student, freeOg));
+            list.appendChild(freeOg);
+        }
 
         function makeOptions(student, optgroup, isSelected = false) {
             let option = document.createElement('option');
@@ -605,7 +625,7 @@ let optionsForHomeworkTemplate = '<div class="settings__theme settings__item">\n
     '                        <div class="settings__buttons-wrapper">\n' +
     '                            <button class="settings__dec-quantity button_dec button_dark-theme">-</button>\n' +
     '                            <input type="text" class="settings__quantity-value input_light-theme settings__input"\n' +
-    '                                   title="Настройте количество чисел" step="1" value="3" min="1" max="Infinity">\n' +
+    '                                   title="Настройте количество чисел" step="1" value="3" min="1" max="1000">\n' +
     '                            <button class="settings__inc-quantity button_inc button_dark-theme">+</button>\n' +
     '                        </div>\n' +
     '                    </div>\n';

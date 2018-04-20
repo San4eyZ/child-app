@@ -37,13 +37,13 @@ if (document.body.classList.contains('settings-body')) {
 
             if (values.every(value => value)) {
                 addButtonWaiter(this);
-                let endCallback = function () {
+                let endCallback = function (xhr) {
                     removeButtonWaiter(this);
                     notify(true, 'Инструкция по смене данных отправлена на вашу почту.', 'success');
                 }.bind(this);
-                let errorCallback = function () {
+                let errorCallback = function (xhr) {
                     removeButtonWaiter(this);
-                    notify(true, 'При смене данных возникла ошибка. Попробуйте еще раз.', 'failure');
+                    notify(true, `При смене данных возникла ошибка: (${xhr.status}). Попробуйте еще раз.`, 'failure');
                 }.bind(this);
 
                 let data = inputs[0].type === 'email' ? {
@@ -69,12 +69,12 @@ if (document.body.classList.contains('settings-body')) {
         console.log(url);
         xhr.open('POST', url, isAsync);
         xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.onerror = errorCallback;
+        xhr.onerror = errorCallback.bind(null, xhr);
         xhr.onload = function () {
             if (xhr.status === 200) {
-                successCallback();
+                successCallback(xhr);
             } else {
-                errorCallback();
+                errorCallback(xhr);
             }
         };
         xhr.send(data);
@@ -82,12 +82,12 @@ if (document.body.classList.contains('settings-body')) {
 
     function addButtonWaiter(element) {
         element.disabled = true;
-        element.classList.add('btn-loading');
+        element.classList.add('btn-loading_dark');
     }
 
     function removeButtonWaiter(element) {
         element.disabled = undefined;
-        element.classList.remove('btn-loading');
+        element.classList.remove('btn-loading_dark');
     }
 }
 
