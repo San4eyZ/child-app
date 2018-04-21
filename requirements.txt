@@ -1,2 +1,6 @@
+netaddr
+py
+trafaret
+trafaret_config
 MySQLdb
 flask

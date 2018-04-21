@@ -1,5 +1,4 @@
 from enum import Enum
-from time import time
 import random
 
 
@@ -238,9 +237,9 @@ class Generator:
         return 0
 
 
-def generate(themes, levels, capacity, quantity):
+def generate(theme_options, speed, capacity, quantity):
     difficulties = []
-    for theme, level in themes, levels:
-        difficulties.append(TypeAndNumber(theme, level))
+    for theme, level in theme_options:
+        difficulties.append(TypeAndNumber(int(theme), int(level)))
     g = Generator(capacity, difficulties, quantity)
     return g.get_list_of_numbers()
