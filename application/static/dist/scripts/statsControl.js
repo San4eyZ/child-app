@@ -4,9 +4,9 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 if (document.body.classList.contains('stats-body')) {
     var loadRatingTables = function loadRatingTables() {
-        var ratingPromise = makePromiseToGetData(window.location.origin + '/child-app/testData/ratingTop.json');
-        var capacityPromise = makePromiseToGetData(window.location.origin + '/child-app/testData/capacityTop.json');
-        var speedPromise = makePromiseToGetData(window.location.origin + '/child-app/testData/speedTop.json');
+        var ratingPromise = makePromiseToGetData(window.location.origin + '/rating-top');
+        var capacityPromise = makePromiseToGetData(window.location.origin + '/capacity-top');
+        var speedPromise = makePromiseToGetData(window.location.origin + '/speed-top');
 
         Promise.all([ratingPromise, capacityPromise, speedPromise]).then(function (resultArray) {
             resultArray = resultArray.map(function (tableObj) {
@@ -128,12 +128,12 @@ if (document.body.classList.contains('stats-body')) {
     };
 
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', window.location.origin + '/child-app/testData/statsTable.json', true);
+    xhr.open('GET', window.location.origin + '/stats-table', true);
     xhr.setRequestHeader('Content-Type', 'application/json');
 
     xhr.onload = function () {
         if (xhr.status === 200) {
-            var tableData = JSON.parse(xhr.responseText).data;
+            var tableData = JSON.parse(xhr.responseText);
             var personalStats = document.querySelector('.stats__personal');
             var statsTable = createPersonalTable(tableData);
             var statsTableHeadings = [].concat(_toConsumableArray(statsTable.querySelectorAll('.stats__heading')));
@@ -174,4 +174,3 @@ if (document.body.classList.contains('stats-body')) {
         currentTable = newTable;
     });
 }
-//# sourceMappingURL=statsControl.js.map

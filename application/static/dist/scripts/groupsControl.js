@@ -190,6 +190,8 @@ if (document.body.classList.contains('groups-body')) {
 
                 setButton.addEventListener('click', function (event) {
                     event.preventDefault();
+                    event.preventDefault();
+                    event.preventDefault();
 
                     var homeworkObj = {
                         selectedStudents: [].concat(_toConsumableArray(list.querySelectorAll('option:checked'))).map(function (_ref3) {
@@ -219,11 +221,11 @@ if (document.body.classList.contains('groups-body')) {
 
                     var xhr = new XMLHttpRequest();
 
-                    xhr.open('POST', window.location.origin + '/set-homework', true);
+                    xhr.open('POST', window.location.origin + '/homework', true);
                     xhr.setRequestHeader('Content-Type', 'application/json');
 
                     xhr.onload = function () {
-                        if (xhr.status === 200 || xhr.status === 201) {
+                        if (xhr.status === 200) {
                             notify(true, 'Задание задано', 'success');
                         } else {
                             notify(true, '\u0427\u0442\u043E-\u0442\u043E \u043F\u043E\u0448\u043B\u043E \u043D\u0435 \u0442\u0430\u043A. \u041A\u043E\u0434 \u043E\u0448\u0438\u0431\u043A\u0438: (' + xhr.status + ')', 'failure');
@@ -246,9 +248,9 @@ if (document.body.classList.contains('groups-body')) {
 
                     var xhr = new XMLHttpRequest();
                     xhr.overrideMimeType('application/json');
-                    xhr.open('POST', window.location.origin + '/groups/delete', true);
+                    xhr.open('DELETE', window.location.origin + '/groups', true);
                     xhr.onload = function () {
-                        if (xhr.status === 200 || xhr.status === 204) {
+                        if (xhr.status === 200) {
                             location.reload(true);
                         } else {
                             notify(true, '\u041F\u0440\u043E\u0438\u0437\u043E\u0448\u043B\u0430 \u043E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438 \u0443\u0434\u0430\u043B\u0435\u043D\u0438\u0438 (' + xhr.status + ')', 'failure');
@@ -300,9 +302,9 @@ if (document.body.classList.contains('groups-body')) {
 
                         var xhr = new XMLHttpRequest();
                         xhr.overrideMimeType('application/json');
-                        xhr.open('POST', window.location.origin + '/groups/red', true);
+                        xhr.open('PATCH', window.location.origin + '/groups', true);
                         xhr.onload = function () {
-                            if (xhr.status === 200 || xhr.status === 201) {
+                            if (xhr.status === 200) {
                                 location.reload(true);
                             } else {
                                 notify(true, '\u041F\u0440\u043E\u0438\u0437\u043E\u0448\u043B\u0430 \u043E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438 \u0440\u0435\u0434\u0430\u043A\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u0438 (' + xhr.status + ')', 'failure');
@@ -443,7 +445,7 @@ if (document.body.classList.contains('groups-body')) {
     var placeForData = document.querySelector('.action-place');
     var groupsListElement = document.querySelector('.groups__list');
     // TODO Изменить запрос
-    var promiseGroupList = getGroupsData(window.location.origin + '/testData/groupList.json');
+    var promiseGroupList = getGroupsData(window.location.origin + '/groups');
     promiseGroupList.then(function (groupList) {
         groupsListForRed = groupList;
         groupsListElement.removeChild(groupsListElement.firstElementChild);
@@ -465,7 +467,7 @@ if (document.body.classList.contains('groups-body')) {
 
                     xhr.onload = function () {
                         if (xhr.status === 200) {
-                            var table = createPersonalTable(JSON.parse(xhr.responseText).data);
+                            var table = createPersonalTable(JSON.parse(xhr.responseText));
                             table.style.animationName = 'fade';
                             table.style.animationDuration = '1s';
                             placeForData.replaceChild(table, placeForData.firstElementChild);
@@ -519,11 +521,11 @@ if (document.body.classList.contains('groups-body')) {
                     var _currentFreeStudents = groupsListForRed[groupsListForRed.length - 1].students.slice();
 
                     var xhr = new XMLHttpRequest();
-                    xhr.open('POST', window.location.origin + '/groups/add', true);
+                    xhr.open('POST', window.location.origin + '/groups', true);
                     xhr.setRequestHeader('Content-Type', 'application/json');
 
                     xhr.onload = function () {
-                        if (xhr.status === 200 || xhr.status === 201) {
+                        if (xhr.status === 200) {
                             location.reload(true);
                         } else {
                             notify(true, '\u041F\u0440\u043E\u0438\u0437\u043E\u0448\u043B\u0430 \u043E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u0438 \u0441\u043E\u0437\u0434\u0430\u043D\u0438\u0438 (' + xhr.status + ')', 'failure');
@@ -622,4 +624,3 @@ function inputControl(button, role, event) {
 }
 
 var optionsForHomeworkTemplate = '<div class="settings__theme settings__item">\n' + '                        <span class="settings__label col-12">\n' + '                            Выберите тему:\n' + '                        </span>\n' + '                        <div class="settings__theme-holder">\n' + '                            <span class="settings__theme-name">Просто</span>\n' + '                            <div class="settings__theme-placeholder"></div>\n' + '                            <input type="checkbox" name="theme" id="theme0_1" class="settings__theme-option" value="0_1">\n' + '                            <label for="theme0_1" class="settings__theme-label">2</label>\n' + '                            <input type="checkbox" name="theme" id="theme0_2" class="settings__theme-option" value="0_2">\n' + '                            <label for="theme0_2" class="settings__theme-label">3</label>\n' + '                            <input type="checkbox" name="theme" id="theme0_3" class="settings__theme-option" value="0_3">\n' + '                            <label for="theme0_3" class="settings__theme-label">4</label>\n' + '                            <input type="checkbox" name="theme" id="theme0_4" class="settings__theme-option" value="0_4">\n' + '                            <label for="theme0_4" class="settings__theme-label">5</label>\n' + '                            <input type="checkbox" name="theme" id="theme0_5" class="settings__theme-option" value="0_5">\n' + '                            <label for="theme0_5" class="settings__theme-label">6</label>\n' + '                            <input type="checkbox" name="theme" id="theme0_6" class="settings__theme-option" value="0_6">\n' + '                            <label for="theme0_6" class="settings__theme-label">7</label>\n' + '                            <input type="checkbox" name="theme" id="theme0_7" class="settings__theme-option" value="0_7">\n' + '                            <label for="theme0_7" class="settings__theme-label">8</label>\n' + '                            <input type="checkbox" name="theme" id="theme0_8" class="settings__theme-option" value="0_8">\n' + '                            <label for="theme0_8" class="settings__theme-label">9</label>\n' + '                        </div>\n' + '                        <div class="settings__theme-holder">\n' + '                            <span class="settings__theme-name">Друг</span>\n' + '                            <input type="checkbox" name="theme" id="theme1_3" class="settings__theme-option" value="1_3">\n' + '                            <label for="theme1_3" class="settings__theme-label">4</label>\n' + '                            <input type="checkbox" name="theme" id="theme1_2" class="settings__theme-option" value="1_2">\n' + '                            <label for="theme1_2" class="settings__theme-label">3</label>\n' + '                            <input type="checkbox" name="theme" id="theme1_1" class="settings__theme-option" value="1_1">\n' + '                            <label for="theme1_1" class="settings__theme-label">2</label>\n' + '                            <input type="checkbox" name="theme" id="theme1_0" class="settings__theme-option" value="1_0">\n' + '                            <label for="theme1_0" class="settings__theme-label">1</label>\n' + '                        </div>\n' + '                        <div class="settings__theme-holder">\n' + '                            <span class="settings__theme-name">Брат</span>\n' + '                            <input type="checkbox" name="theme" id="theme2_8" class="settings__theme-option" value="2_8">\n' + '                            <label for="theme2_8" class="settings__theme-label">9</label>\n' + '                            <input type="checkbox" name="theme" id="theme2_7" class="settings__theme-option" value="2_7">\n' + '                            <label for="theme2_7" class="settings__theme-label">8</label>\n' + '                            <input type="checkbox" name="theme" id="theme2_6" class="settings__theme-option" value="2_6">\n' + '                            <label for="theme2_6" class="settings__theme-label">7</label>\n' + '                            <input type="checkbox" name="theme" id="theme2_5" class="settings__theme-option" value="2_5">\n' + '                            <label for="theme2_5" class="settings__theme-label">6</label>\n' + '                            <input type="checkbox" name="theme" id="theme2_4" class="settings__theme-option" value="2_4">\n' + '                            <label for="theme2_4" class="settings__theme-label">5</label>\n' + '                            <input type="checkbox" name="theme" id="theme2_3" class="settings__theme-option" value="2_3">\n' + '                            <label for="theme2_3" class="settings__theme-label">4</label>\n' + '                            <input type="checkbox" name="theme" id="theme2_2" class="settings__theme-option" value="2_2">\n' + '                            <label for="theme2_2" class="settings__theme-label">3</label>\n' + '                            <input type="checkbox" name="theme" id="theme2_1" class="settings__theme-option" value="2_1">\n' + '                            <label for="theme2_1" class="settings__theme-label">2</label>\n' + '                            <input type="checkbox" name="theme" id="theme2_0" class="settings__theme-option" value="2_0">\n' + '                            <label for="theme2_0" class="settings__theme-label">1</label>\n' + '                        </div>\n' + '                        <div class="settings__theme-holder">\n' + '                            <span class="settings__theme-name">Друг+Брат</span>\n' + '                            <div class="settings__theme-placeholder"></div>\n' + '                            <input type="checkbox" name="theme" id="theme3_5" class="settings__theme-option" value="3_5">\n' + '                            <label for="theme3_5" class="settings__theme-label">6</label>\n' + '                            <input type="checkbox" name="theme" id="theme3_6" class="settings__theme-option" value="3_6">\n' + '                            <label for="theme3_6" class="settings__theme-label">7</label>\n' + '                            <input type="checkbox" name="theme" id="theme3_7" class="settings__theme-option" value="3_7">\n' + '                            <label for="theme3_7" class="settings__theme-label">8</label>\n' + '                            <input type="checkbox" name="theme" id="theme3_8" class="settings__theme-option" value="3_8">\n' + '                            <label for="theme3_8" class="settings__theme-label">9</label>\n' + '                        </div>\n' + '                    </div>\n' + '                    <div class="settings__speed settings__item">\n' + '                        <span class="settings__label">\n' + '                            Настройте скорость смены чисел:\n' + '                        </span>\n' + '                        <div class="settings__buttons-wrapper">\n' + '                            <button class="settings__dec-speed button_dec button_dark-theme">-</button>\n' + '                            <input type="text" class="settings__speed-value input_light-theme settings__input"\n' + '                                   title="Настройте скорость смены чисел" value="0.5 сек" step="0.1" max="10" min="0.5">\n' + '                            <button class="settings__inc-speed button_inc button_dark-theme">+</button>\n' + '                        </div>\n' + '                    </div>\n' + '                    <div class="settings__capacity settings__item">\n' + '                        <span class="settings__label">\n' + '                            Настройте разрядность чисел:\n' + '                        </span>\n' + '                        <div class="settings__buttons-wrapper">\n' + '                            <button class="settings__dec-capacity button_dec button_dark-theme">-</button>\n' + '                            <input type="text" class="settings__capacity-value input_light-theme settings__input"\n' + '                                   title="Настройте разрядность чисел" value="2" step="1" min="1" max="5">\n' + '                            <button class="settings__inc-capacity button_inc button_dark-theme">+</button>\n' + '                        </div>\n' + '                    </div>\n' + '                    <div class="settings__quantity settings__item">\n' + '                        <span class="settings__label">\n' + '                            Настройте количество чисел:\n' + '                        </span>\n' + '                        <div class="settings__buttons-wrapper">\n' + '                            <button class="settings__dec-quantity button_dec button_dark-theme">-</button>\n' + '                            <input type="text" class="settings__quantity-value input_light-theme settings__input"\n' + '                                   title="Настройте количество чисел" step="1" value="3" min="1" max="1000">\n' + '                            <button class="settings__inc-quantity button_inc button_dark-theme">+</button>\n' + '                        </div>\n' + '                    </div>\n';
-//# sourceMappingURL=groupsControl.js.map

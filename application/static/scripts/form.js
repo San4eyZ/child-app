@@ -112,7 +112,6 @@ resetFormBtn.addEventListener('click', function (event) {
     }
 });
 
-
 function showWindow(element, isFromPage, event) {
     event.preventDefault();
     if (isFromPage) {

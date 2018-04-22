@@ -56,7 +56,7 @@ if (document.body.classList.contains('settings-body')) {
                     confirm: values[2]
                 };
 
-                let link =  window.location.origin + (inputs[0].type === 'email' ? '/changeEmail' : '/changePass');
+                let link =  window.location.origin + (inputs[0].type === 'email' ? '/change-email' : '/change-pass');
                 sendData(JSON.stringify(data), link, true, endCallback, errorCallback);
             } else {
                 notify(true, 'Пожалуйста, заполните все поля.', 'warning');

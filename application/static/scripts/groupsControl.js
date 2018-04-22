@@ -7,7 +7,7 @@ if (document.body.classList.contains('groups-body')) {
     let placeForData = document.querySelector('.action-place');
     let groupsListElement = document.querySelector('.groups__list');
 // TODO Изменить запрос
-    let promiseGroupList = getGroupsData(`${window.location.origin}/testData/groupList.json`);
+    let promiseGroupList = getGroupsData(`${window.location.origin}/groups`);
     promiseGroupList.then(groupList => {
         groupsListForRed = groupList;
         groupsListElement.removeChild(groupsListElement.firstElementChild);
@@ -26,7 +26,7 @@ if (document.body.classList.contains('groups-body')) {
 
                 xhr.onload = function () {
                     if (xhr.status === 200) {
-                        let table = createPersonalTable(JSON.parse(xhr.responseText).data);
+                        let table = createPersonalTable(JSON.parse(xhr.responseText));
                         table.style.animationName = 'fade';
                         table.style.animationDuration = '1s';
                         placeForData.replaceChild(table, placeForData.firstElementChild);
@@ -80,11 +80,11 @@ if (document.body.classList.contains('groups-body')) {
                     let currentFreeStudents = groupsListForRed[groupsListForRed.length - 1].students.slice();
 
                     let xhr = new XMLHttpRequest();
-                    xhr.open('POST', `${window.location.origin}/groups/add`, true);
+                    xhr.open('POST', `${window.location.origin}/groups`, true);
                     xhr.setRequestHeader('Content-Type', 'application/json');
 
                     xhr.onload = function () {
-                        if (xhr.status === 200 || xhr.status === 201) {
+                        if (xhr.status === 200) {
                             location.reload(true);
                         } else {
                             notify(true, `Произошла ошибка при создании (${xhr.status})`, 'failure');
@@ -256,6 +256,8 @@ if (document.body.classList.contains('groups-body')) {
 
                 setButton.addEventListener('click', function (event) {
                     event.preventDefault();
+                    event.preventDefault();
+                    event.preventDefault();
 
                     let homeworkObj = {
                         selectedStudents: [...list.querySelectorAll('option:checked')].map(({value}) => value),
@@ -279,11 +281,11 @@ if (document.body.classList.contains('groups-body')) {
 
                     let xhr = new XMLHttpRequest();
 
-                    xhr.open('POST', `${window.location.origin}/set-homework`, true);
+                    xhr.open('POST', `${window.location.origin}/homework`, true);
                     xhr.setRequestHeader('Content-Type', 'application/json');
 
                     xhr.onload = function () {
-                        if (xhr.status === 200 || xhr.status === 201) {
+                        if (xhr.status === 200) {
                             notify(true, 'Задание задано', 'success');
                         } else {
                             notify(true, `Что-то пошло не так. Код ошибки: (${xhr.status})`, 'failure');
@@ -304,9 +306,9 @@ if (document.body.classList.contains('groups-body')) {
                 notify('true', 'Вы действительно хотите удалить группу?', 'confirm', function () {
                     let xhr = new XMLHttpRequest();
                     xhr.overrideMimeType('application/json');
-                    xhr.open('POST', `${window.location.origin}/groups/delete`, true);
+                    xhr.open('DELETE', `${window.location.origin}/groups`, true);
                     xhr.onload = function () {
-                        if (xhr.status === 200 || xhr.status === 204) {
+                        if (xhr.status === 200) {
                             location.reload(true);
                         } else {
                             notify(true, `Произошла ошибка при удалении (${xhr.status})`, 'failure');
@@ -356,9 +358,9 @@ if (document.body.classList.contains('groups-body')) {
 
                         let xhr = new XMLHttpRequest();
                         xhr.overrideMimeType('application/json');
-                        xhr.open('POST', `${window.location.origin}/groups/red`, true);
+                        xhr.open('PATCH', `${window.location.origin}/groups`, true);
                         xhr.onload = function () {
-                            if (xhr.status === 200 || xhr.status === 201) {
+                            if (xhr.status === 200) {
                                 location.reload(true);
                             } else {
                                 notify(true, `Произошла ошибка при редактировании (${xhr.status})`, 'failure');

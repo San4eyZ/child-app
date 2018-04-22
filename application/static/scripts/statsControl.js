@@ -1,11 +1,11 @@
 if (document.body.classList.contains('stats-body')) {
     let xhr = new XMLHttpRequest();
-    xhr.open('GET', `${window.location.origin}/child-app/testData/statsTable.json`, true);
+    xhr.open('GET', `${window.location.origin}/stats-table`, true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     
     xhr.onload = function () {
         if (xhr.status === 200) {
-            let tableData = JSON.parse(xhr.responseText).data;
+            let tableData = JSON.parse(xhr.responseText);
             let personalStats = document.querySelector('.stats__personal');
             let statsTable = createPersonalTable(tableData);
             let statsTableHeadings = [...statsTable.querySelectorAll('.stats__heading')];
@@ -45,9 +45,9 @@ if (document.body.classList.contains('stats-body')) {
     });
 
     function loadRatingTables() {
-        let ratingPromise = makePromiseToGetData(`${window.location.origin}/child-app/testData/ratingTop.json`);
-        let capacityPromise = makePromiseToGetData(`${window.location.origin}/child-app/testData/capacityTop.json`);
-        let speedPromise = makePromiseToGetData(`${window.location.origin}/child-app/testData/speedTop.json`);
+        let ratingPromise = makePromiseToGetData(`${window.location.origin}/rating-top`);
+        let capacityPromise = makePromiseToGetData(`${window.location.origin}/capacity-top`);
+        let speedPromise = makePromiseToGetData(`${window.location.origin}/speed-top`);
 
         Promise.all([ratingPromise, capacityPromise, speedPromise]).then(
             function (resultArray) {

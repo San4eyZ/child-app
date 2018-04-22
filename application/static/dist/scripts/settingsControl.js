@@ -120,7 +120,7 @@ if (document.body.classList.contains('settings-body')) {
                             confirm: values[2]
                         };
 
-                        var link = window.location.origin + (inputs[0].type === 'email' ? '/changeEmail' : '/changePass');
+                        var link = window.location.origin + (inputs[0].type === 'email' ? '/change-email' : '/change-pass');
                         sendData(JSON.stringify(data), link, true, endCallback, errorCallback);
                     } else {
                         notify(true, 'Пожалуйста, заполните все поля.', 'warning');
@@ -150,4 +150,3 @@ function calculateHeight(element) {
         return init + parseInt(computedStyle.height) + parseInt(computedStyle.marginTop) + parseInt(computedStyle.marginBottom) + parseInt(computedStyle.borderTopWidth) + parseInt(computedStyle.borderBottomWidth) + parseInt(computedStyle.paddingBottom) + parseInt(computedStyle.paddingTop);
     }, 0);
 }
-//# sourceMappingURL=settingsControl.js.map

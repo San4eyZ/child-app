@@ -78,4 +78,3 @@ function notify(isFixed, message, type, cb) {
         element.removeChild(overlay);
     }
 }
-//# sourceMappingURL=notify.js.map

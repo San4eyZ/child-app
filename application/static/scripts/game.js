@@ -188,11 +188,11 @@ CreateGame.prototype = {
             if (Number(answerField.value) === this.answer) {
                 answerField.style.backgroundColor = '#1fc113';
                 answerField.value = 'Правильно!';
-                this.sendResult(window.location.origin + (this.homeworkId ? '/homeworkResult' : '/gameResult'), 'success')
+                this.sendResult(window.location.origin + (this.homeworkId ? '/homework-result' : '/game-result'), 'success')
             } else {
                 answerField.style.backgroundColor = '#ff2b0a';
                 answerField.value = 'Ошибка, попробуйте снова';
-                this.sendResult(window.location.origin + (this.homeworkId ? '/homeworkResult' : '/gameResult'), 'failure')
+                this.sendResult(window.location.origin + (this.homeworkId ? '/homework-result' : '/game-result'), 'failure')
             }
             answerField.disabled = true;
             submitAnswer.disabled = true;
@@ -216,7 +216,6 @@ if (document.body.classList.contains('game-body')) {
     let decButtons = document.querySelectorAll('.button_dec');
     let fields = document.querySelectorAll('.settings__input');
     let themeCheckers = [...gameInterface.querySelectorAll('.settings__theme-option')];
-    console.log(themeCheckers);
 
     themeCheckers.forEach(checker => checker.addEventListener('change', function (event) {
         let neighbourCheckers = [...this.parentElement.getElementsByTagName('input')];
@@ -248,6 +247,8 @@ if (document.body.classList.contains('game-body')) {
         xhr.open('POST', window.location.origin + '/generator', true);
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.onload = function () {
+            this.classList.remove('btn-loading_light');
+
             if (xhr.status === 200) {
                 setTimeout(function () {
                     this.disabled = false;
@@ -276,7 +277,6 @@ if (document.body.classList.contains('game-body')) {
                 game.gameInit();
             } else {
                 this.disabled = false;
-                this.classList.remove('btn-loading_light');
                 notify(true, `Что-то пошло не так: (Код ошибки - ${xhr.status})`, 'failure');
             }
         }.bind(this);
@@ -378,8 +378,7 @@ if (document.body.classList.contains('homework-body')) {
     let homeworkElement = document.querySelector('.homework');
 
     let xhr = new XMLHttpRequest();
-    // TODO изсменить запрос
-    xhr.open('GET', `${window.location.origin}/testData/homeworkConfig.json`, true);
+    xhr.open('GET', `${window.location.origin}/homework`, true);
 
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.onload = function () {
@@ -402,7 +401,7 @@ if (document.body.classList.contains('homework-body')) {
                 let headerMargin = parseInt(getComputedStyle(homeworkElement.firstElementChild).marginBottom);
                 let tasksHeight = parseInt(getComputedStyle(homeworkElement.children[1]).height) * 4;
                 let tasksMargin = parseInt(getComputedStyle(homeworkElement.children[1]).marginBottom) * 4;
-                console.log(headerHeight, tasksHeight);
+
                 homeworkElement.style.height = (headerHeight + tasksHeight + headerMargin + tasksMargin) + 'px';
             })
         } else if (xhr.status === 404) {
