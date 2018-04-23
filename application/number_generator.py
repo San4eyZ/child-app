@@ -242,4 +242,4 @@ def generate(theme_options, speed, capacity, quantity):
     for theme, level in theme_options:
         difficulties.append(TypeAndNumber(int(theme), int(level)))
     g = Generator(capacity, difficulties, quantity)
-    return g.get_list_of_numbers()
+    return g.get_list_of_numbers(), g.rating

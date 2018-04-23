@@ -43,14 +43,15 @@ class StudentsTable(Table):
         self.db = db_instance
         self.tb_name = 'Students'
         self.db_name = db_name
-        self.columns = ('Name', 'Surname', 'Number_of_group', 'Rating',
+        self.columns = ('Id', 'Name', 'Surname', 'Number_of_group', 'Rating',
                         'Teachers_id')
+        self.student_count = 0
 
     def create(self):
         with self.db:
             cur = self.db.cursor()
             query = '''CREATE TABLE IF NOT EXISTS {}.{} (
-            Id INT PRIMARY KEY AUTO_INCREMENT,
+            Id INT,
             Name VARCHAR(25),
             Surname VARCHAR(25),
             Number_of_group INT,
@@ -134,6 +135,8 @@ class StudentsTable(Table):
         super().execute(query, self.db)
 
     def insert_records(self, records):
+        self.student_count += 1
+        records = [self.student_count] + records
         super().insert(self.db, self.db_name, self.tb_name, self.columns, records)
 
 
@@ -186,7 +189,8 @@ class TeachersTable(Table):
         self.db = db_instance
         self.tb_name = 'Teachers'
         self.db_name = db_name
-        self.columns = ('Teachers_name', 'Teachers_surname')
+        self.columns = ('Id','Teachers_name', 'Teachers_surname')
+        self.teacher_count = 0
 
     def create(self):
         with self.db:
@@ -199,6 +203,8 @@ class TeachersTable(Table):
             cur.execute(query)
 
     def insert_records(self, records):
+        self.teacher_count += 1
+        records = [self.teacher_count] + records
         super().insert(self.db, self.db_name, self.tb_name, self.columns, records)
 
     def fetch_full_name(self, id):
@@ -214,6 +220,64 @@ class TeachersTable(Table):
         super().execute(query, self.db)
 
 
+class StudentAuthorizationTable(Table):
+    def __init__(self, db_name, db_instance):
+        self.db = db_instance
+        self.tb_name = 'StudentAuthorization'
+        self.db_name = db_name
+        self.columns = ('student_id', 'login', 'hash')
+
+    def create(self):
+        with self.db:
+            cur = self.db.cursor()
+            query = '''CREATE TABLE IF NOT EXISTS {}.{} (
+                   Id INT PRIMARY KEY AUTO_INCREMENT,
+                   student_id INT,
+                   login VARCHAR(256),
+                   hash VARCHAR(256)
+                   )'''.format(self.db_name, self.tb_name)
+            cur.execute(query)
+
+    def insert_records(self, records):
+        super().insert(self.db, self.db_name, self.tb_name, self.columns, records)
+
+    def select_student_id(self, login, student_hash):
+        query = '''SELECT student_id, FROM {}.{} WHERE login={} AND hash={}'''.\
+            format(self.db_name, self.tb_name, login, student_hash)
+        res = super().execute(query, self.db)
+        if res:
+            return res[0]
+
+
+class TeacherAuthorizationTable(Table):
+    def __init__(self, db_name, db_instance):
+        self.db = db_instance
+        self.tb_name = 'TeacherAuthorization'
+        self.db_name = db_name
+        self.columns = ('teacher_id','login', 'hash')
+
+    def create(self):
+        with self.db:
+            cur = self.db.cursor()
+            query = '''CREATE TABLE IF NOT EXISTS {}.{} (
+                   Id INT PRIMARY KEY AUTO_INCREMENT,
+                   teacher_id INT,
+                   login VARCHAR(256),
+                   hash VARCHAR(256)
+                   )'''.format(self.db_name, self.tb_name)
+            cur.execute(query)
+
+    def insert_records(self, records):
+        super().insert(self.db, self.db_name, self.tb_name, self.columns, records)
+
+    def select_teacher_id(self, login, student_hash):
+        query = '''SELECT teacher_id, FROM {}.{} WHERE login={} AND hash={}'''.\
+            format(self.db_name, self.tb_name, login, student_hash)
+        res = super().execute(query, self.db)
+        if res:
+            return res[0]
+
+
 class DBHandler:
     def __init__(self, host, user, passwd, db_name):
         self.db_name = db_name
@@ -224,7 +288,9 @@ class DBHandler:
             host=self.host, user=self.user, passwd=self.passwd, db=self.db_name)
         self.tables = {'students': StudentsTable(self.db_name, self.db),
                        'hw': HWHistoryTable(self.db_name, self.db),
-                       'teachers': TeachersTable(self.db_name, self.db)}
+                       'teachers': TeachersTable(self.db_name, self.db),
+                       'teacher_auth': TeacherAuthorizationTable(self.db_name, self.db),
+                       'student_auth': StudentAuthorizationTable(self.db_name, self.db)}
         for key in self.tables:
             self.tables[key].create()
 
@@ -243,7 +309,7 @@ class DBHandler:
     def fetch_students_of_teacher(self, teachers_id):
         return self.tables['students'].fetch_students_of_teacher(teachers_id)
 
-    def fetch_all_students_information(self, students_id):
+    def _fetch_all_students_information(self, students_id):
         return self.tables['students'].fetch_full_students_information(students_id)[0] + \
                self.tables['teachers'].fetch_full_name(
                    self.tables['students'].fetch_teachers_id(students_id)[0][0])[0]
@@ -268,6 +334,33 @@ class DBHandler:
 
     def insert_records(self, table_name, records):
         self.tables[table_name].insert_records(records)
+
+    def teacher_exist(self, login, teacher_hash):
+        if self.tables['teacher_auth'].select_teacher_id(login, teacher_hash):
+            return True
+        return False
+
+    def student_exist(self, login, student_hash):
+        if self.tables['student_auth'].select_student_id(login, student_hash):
+            return True
+        return False
+
+    def fetch_student_information(self, login, student_hash):
+        student_id = self.tables['student_auth'].select_student_id(login, student_hash)
+        if student_id:
+            return [student_id] + self._fetch_all_students_information(student_id)
+
+    def register_student(self, login, student_hash, student_information):
+        self.insert_records('students', [student_information])
+        self.insert_records('student_auth', [
+            (self.tables['students'].student_count, login, student_hash)
+            ])
+
+    def register_teacher(self, login, teacher_hash, teacher_information):
+        self.insert_records('teachers', [teacher_information])
+        self.insert_records('teacher_auth', [
+            (self.tables['teachers'].teacher_count, login, teacher_hash)
+            ])
 
     def close(self):
         self.db.close()

@@ -3,6 +3,7 @@ from _mysql_exceptions import OperationalError
 
 from application.db_worker import DBHandler
 from application import config
+from application.utils import Storage
 
 
 def create_db_handler():
@@ -28,6 +29,7 @@ except OperationalError:
         exit('Please, create database specified in config file.')
 
 app = Flask(__name__)
+storage = Storage()
 
 from application.views import views
 from application.views import teacher_views

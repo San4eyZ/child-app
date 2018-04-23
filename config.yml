@@ -1,5 +1,5 @@
 db_settings:
   host: 127.0.0.1
   user: root
-  password:
-  db_name: child-app
+  password: 301290as
+  db_name: child_app
